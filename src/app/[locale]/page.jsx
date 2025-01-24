@@ -1,11 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function Home() {
+  const t = useTranslations('HomePage')
   const scrollRef = useRef(null);
-
   // Scroll left function
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -110,6 +111,9 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl">
           <h1 className="text-6xl font-extrabold text-white leading-tight">
             Find Your Perfect Match
+          </h1>
+          <h1 className="text-6xl font-extrabold text-white leading-tight">
+           {t('title')}
           </h1>
           <p className="mt-4 text-xl text-gray-200">
             Your journey to a happy and fulfilling life starts here. Trusted by

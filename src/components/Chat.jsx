@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { FaComments } from "react-icons/fa";
 const Chat = () => {

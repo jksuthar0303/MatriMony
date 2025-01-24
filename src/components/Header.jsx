@@ -1,10 +1,37 @@
-import { useState } from 'react';
-import Link from 'next/link';
+"use client";
+
+import { useState,useEffect } from 'react';
 import { FaUserCircle, FaHeart } from 'react-icons/fa';
-import { IoMenu, IoClose } from 'react-icons/io5';
+import { IoMenu, IoClose,IoChevronDown } from 'react-icons/io5';
+import { useRouter } from 'next/navigation';
+import { Link } from '@/i18n/routing';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  const [currentLanguage, setCurrentLanguage] = useState('en');
+
+  // Detect current language from URL and set the state
+  useEffect(() => {
+    const pathLanguage = window.location.pathname.split('/')[1];
+    if (pathLanguage === 'en' || pathLanguage === 'hi') {
+      setCurrentLanguage(pathLanguage);
+    }
+  }, []);
+
+  // Function to toggle between English and Hindi
+  const handleLanguageToggle = () => {
+    const newLanguage = currentLanguage === 'en' ? 'hi' : 'en';
+    setCurrentLanguage(newLanguage);
+
+    const currentPath = window.location.pathname;
+    const regex = /^\/(en|hi)/; // Match the language code at the start
+    const newPath = currentPath.match(regex)
+      ? currentPath.replace(regex, `/${newLanguage}`)
+      : `/${newLanguage}${currentPath}`;
+
+    router.push(newPath);
+  };
 
   return (
     <header className="bg-white text-pink-600 p-4 shadow-md sticky top-0 z-50">
@@ -16,7 +43,7 @@ const Header = () => {
             MyLifepair
           </Link>
         </h1>
-
+        
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex space-x-6 xl:space-x-8 font-medium">
           <Link href="/" className="hover:text-pink-500 transition-all">
@@ -32,6 +59,14 @@ const Header = () => {
             Contact Us
           </Link>
         </nav>
+
+        {/* Language Toggle Button */}
+        <button
+      onClick={handleLanguageToggle}
+      className="bg-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-pink-500 transition-all"
+    >
+      {currentLanguage === 'en' ? 'Switch to हिंदी' : 'Switch to English'}
+    </button>
 
         {/* CTA and User Actions */}
         <div className="hidden md:flex items-center space-x-4 md:space-x-6">
