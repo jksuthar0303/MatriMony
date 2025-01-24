@@ -11,6 +11,12 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+        openSans: ['Open Sans', 'sans-serif'],
+        bebas: ['Bebas Neue', 'serif'],
+        londrina: ['Londrina Outline', 'serif']
+      },
     },
   },
   plugins: [],
