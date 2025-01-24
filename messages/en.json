@@ -1,6 +1,85 @@
 {
-    "HomePage": {
-      "title": "Hello world!",
-      "about": "Go to the about page"
+  "HomePage": {
+    "title": "Find Your Perfect Match",
+    "description": "Your journey to a happy and fulfilling life starts here. Trusted by thousands to find the right life partner.",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "successfulMatches": "Over 500,000 successful matches",
+    "verifiedProfiles": "100% Verified Profiles"
+  },
+  "Header": {
+    "home": "Home",
+    "memberships": "Memberships",
+    "successStories": "Success Stories",
+    "contactUs": "Contact Us",
+    "register": "Register",
+    "login": "Login",
+    "wishlist": "Wishlist"
+  },
+  "Filters": {
+    "findYourPerfectMatch": "Find Your Perfect Match",
+    "lookingFor": "Looking for...",
+    "minAge": "Min Age",
+    "maxAge": "Max Age",
+    "selectCaste": "Select Caste",
+    "selectSubCaste": "Select Sub-Caste",
+    "qualification": "Qualification",
+    "occupation": "Occupation",
+    "state": "State",
+    "city": "City",
+    "manglik": "Manglik",
+    "divyang": "Divyang",
+    "secondMarriage": "Second Marriage",
+    "searchButton": "Search"
+  },
+  "Options": {
+    "gneder":{
+        "male": "Male",
+        "female": "Female"
+    },
+    "caste": {
+      "suthar": "Suthar"
+    },
+    "Sub-Caste":{
+        "kulriya": "Kulriya",
+        "jhambad": "Jhambad",
+        "mandan": "Mandan",
+        "makad": "Makad",
+        "nagal": "Nagal"
+    },
+    "qualification": {
+      "bachelor": "Bachelor's",
+      "master": "Master's",
+      "phd": "PhD",
+      "diploma": "Diploma"
+    },
+    "occupation": {
+      "doctor": "Doctor",
+      "engineer": "Engineer",
+      "teacher": "Teacher",
+      "business": "Business"
+    },
+    "state": {
+      "rajasthan": "Rajasthan"
+    },
+    "city": {
+      "bikaner": "Bikaner",
+      "jaipur": "Jaipur"
     }
+  },
+  "Footer": {
+    "aboutUs": "About Us",
+    "aboutText": "MyLifepair is a leading matrimony platform, dedicated to helping individuals find their life partner with ease and trust. Our platform connects people across communities, providing a safe space for their life-changing journey.",
+    "quickLinks": "Quick Links",
+    "about": "About",
+    "contact": "Contact",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "contactUs": "Contact Us",
+    "email": "Email:",
+    "phone": "Phone:",
+    "address": "Address:",
+    "followUs": "Follow Us",
+    "copyright": "© 2025 MyLifepair. All Rights Reserved."
   }
+}

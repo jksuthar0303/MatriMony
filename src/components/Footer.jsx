@@ -1,40 +1,44 @@
+import { useTranslations } from "next-intl";
+
 const Footer = () => {
+      const t = useTranslations('Footer')
+  
     return (
       <div className="bg-pink-600 text-white py-8">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* About Us */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">About Us</h3>
+              <h3 className="text-lg font-semibold">{t('aboutUs')}</h3>
               <p className="text-sm">
-                MyLifepair is a leading matrimony platform, dedicated to helping individuals find their life partner with ease and trust. Our platform connects people across communities, providing a safe space for their life-changing journey.
+                {t('aboutText')}
               </p>
             </div>
   
             {/* Quick Links */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Quick Links</h3>
+              <h3 className="text-lg font-semibold">{t('quickLinks')}</h3>
               <ul className="text-sm space-y-2">
-                <li><a href="/about" className="hover:text-gray-200">About</a></li>
-                <li><a href="/contact" className="hover:text-gray-200">Contact</a></li>
-                <li><a href="/terms" className="hover:text-gray-200">Terms & Conditions</a></li>
-                <li><a href="/privacy" className="hover:text-gray-200">Privacy Policy</a></li>
+                <li><a href="/about" className="hover:text-gray-200">{t('about')}</a></li>
+                <li><a href="/contact" className="hover:text-gray-200">{t('contact')}</a></li>
+                <li><a href="/terms" className="hover:text-gray-200">{t('terms')}</a></li>
+                <li><a href="/privacy" className="hover:text-gray-200">{t('privacy')}</a></li>
               </ul>
             </div>
   
             {/* Contact Us */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Contact Us</h3>
+              <h3 className="text-lg font-semibold">{t('contactUs')}</h3>
               <ul className="text-sm space-y-2">
-                <li>Email: <a href="mailto:support@mylifepair.com" className="hover:text-gray-200">support@mylifepair.com</a></li>
-                <li>Phone: +1 (800) 123-4567</li>
-                <li>Address: 123 Matrimony Street, City, Country</li>
+                <li>{t('email')} <a href="mailto:support@mylifepair.com" className="hover:text-gray-200">support@mylifepair.com</a></li>
+                <li>{t('phone')} +1 (800) 123-4567</li>
+                <li>{t('address')} 123 Matrimony Street, City, Country</li>
               </ul>
             </div>
   
             {/* Social Media */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Follow Us</h3>
+              <h3 className="text-lg font-semibold">{t('followUs')}</h3>
               <div className="flex space-x-4">
                 <a href="https://facebook.com" className="hover:text-gray-200">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6"><path d="M22 12l-5.2 4v4H13v-4h-2V8h2V5.3c0-3 1.8-4.8 4.8-4.8 1.4 0 2.7.1 3.2.2V6h-2.3c-1 0-1.3.5-1.3 1.3v2.3h3.6l-.4 3h-3.2v4h5.4l.4-3H22z"/></svg>
@@ -52,7 +56,7 @@ const Footer = () => {
   
         {/* Footer Bottom */}
         <div className="mt-8 border-t border-gray-700 pt-4 text-center text-sm">
-          <p>&copy; 2025 MyLifepair. All Rights Reserved.</p>
+          <p>&copy; {t('copyright')}</p>
         </div>
       </div>
     );

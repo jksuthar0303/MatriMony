@@ -1,7 +1,87 @@
 {
-    "HomePage": {
-      "title": "नमस्ते दुनिया!",
-      "about": "अबाउट पेज पर जाएं"
+  "HomePage": {
+    "title": "अपना आदर्श साथी खोजें",
+    "description": "आपकी खुशहाल और पूर्ण जीवन यात्रा यहाँ से शुरू होती है। हजारों लोगों द्वारा सही जीवन साथी खोजने के लिए भरोसा किया गया।",
+    "getStarted": "शुरू करें",
+    "learnMore": "और जानें",
+    "successfulMatches": "500,000 से अधिक सफल जोड़े",
+    "verifiedProfiles": "100% सत्यापित प्रोफाइल"
+  },
+  "Filters": {
+    "findYourPerfectMatch": "अपना आदर्श साथी खोजें",
+    "lookingFor": "खोज रहे हैं...",
+    "minAge": "न्यूनतम आयु",
+    "maxAge": "अधिकतम आयु",
+    "selectCaste": "कास्ट चयन करें",
+    "selectSubCaste": "उप-कास्ट चयन करें",
+    "qualification": "योग्यता",
+    "occupation": "व्यवसाय",
+    "state": "राज्य",
+    "city": "शहर",
+    "manglik": "मंगलिक",
+    "divyang": "दिड़व्यांग",
+    "secondMarriage": "दूसरी शादी",
+    "searchButton": "खोजें"
+  },
+  "Options": {
+    "gender":{
+        "male": "पुरुष",
+        "female": "महिला"
+    },
+    "caste": {
+      "suthar": "सुथार"
+    },
+    "Sub-Caste":{
+        "kulriya": "कुलरिया",
+      "jhambad": "जांभड़",
+      "mandan": "मांडण",
+      "makad": "माकड़",
+      "nagal": "नागल"
+    },
+    "qualification": {
+      "bachelor": "स्नातक",
+      "master": "स्नातकोत्तर",
+      "phd": "पीएचडी",
+      "diploma": "डिप्लोमा"
+    },
+    "occupation": {
+      "doctor": "डॉक्टर",
+      "engineer": "इंजीनियर",
+      "teacher": "शिक्षक",
+      "business": "व्यवसाय"
+    },
+    "state": {
+      "rajasthan": "राजस्थान"
+    },
+    "city": {
+      "bikaner": "बीकानेर",
+      "jaipur": "जयपुर"
     }
+  },
+  "Header": {
+    "home": "होम",
+    "memberships": "सदस्यताएँ",
+    "successStories": "सफल जोड़े",
+    "contactUs": "संपर्क करें",
+    "register": "रजिस्टर करें",
+    "login": "लॉगिन करें",
+    "wishlist": "विशलिस्ट"
+  },
+ "Footer": {
+    "aboutUs": "हमारे बारे में",
+    "aboutText": "MyLifepair एक प्रमुख शादी प्लेटफ़ॉर्म है, जो व्यक्तियों को आसानी से और विश्वास के साथ अपना जीवन साथी ढूंढने में मदद करने के लिए समर्पित है। हमारा प्लेटफ़ॉर्म समुदायों के बीच लोगों को जोड़ता है, जो उनके जीवन-परिवर्तनकारी यात्रा के लिए एक सुरक्षित स्थान प्रदान करता है।",
+    "quickLinks": "त्वरित लिंक",
+    "about": "के बारे में",
+    "contact": "संपर्क करें",
+    "terms": "नियम और शर्तें",
+    "privacy": "गोपनीयता नीति",
+    "contactUs": "संपर्क करें",
+    "email": "ईमेल:",
+    "phone": "फोन:",
+    "address": "पता:",
+    "followUs": "हमसे जुड़ें",
+    "copyright": "© 2025 MyLifepair. सर्वाधिकार सुरक्षित।"
   }
   
+  
+}

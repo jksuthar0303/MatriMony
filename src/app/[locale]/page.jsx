@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function Home() {
-  const t = useTranslations('HomePage')
+  const t = useTranslations();
   const scrollRef = useRef(null);
   // Scroll left function
   const scrollLeft = () => {
@@ -110,53 +110,50 @@ export default function Home() {
         {/* Main Content */}
         <div className="relative z-10 max-w-4xl">
           <h1 className="text-6xl font-extrabold text-white leading-tight">
-            Find Your Perfect Match
+            {t("HomePage.title")}
           </h1>
-          <h1 className="text-6xl font-extrabold text-white leading-tight">
-           {t('title')}
-          </h1>
+
           <p className="mt-4 text-xl text-gray-200">
-            Your journey to a happy and fulfilling life starts here. Trusted by
-            thousands to find the right life partner.
+            {t("HomePage.description")}
           </p>
           <div className="mt-6 space-x-4">
             <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
-              Get Started
+              {t("HomePage.getStarted")}
             </button>
             <button className="bg-white text-pink-600 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-all">
-              Learn More
+              {t("HomePage.learnMore")}
             </button>
           </div>
         </div>
 
         {/* Decorative Elements */}
         <div className="absolute bottom-10 left-10 text-white text-lg hidden md:block">
-          <p>
-            Over <span className="font-bold">500,000</span> successful matches
-          </p>
+          <p>{t("HomePage.successfulMatches")}</p>
         </div>
         <div className="absolute top-10 right-10 bg-pink-600 text-white py-2 px-6 rounded-full hidden md:block">
-          <span className="font-semibold">100% Verified Profiles</span>
+          <span className="font-semibold">
+            {t("HomePage.verifiedProfiles")}
+          </span>
         </div>
       </div>
 
       {/* Search Filters Section */}
       <div className="bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
-          Find Your Perfect Match
+          {t("Filters.findYourPerfectMatch")}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Looking For */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option value="">Looking for...</option>
-            <option value="bride">Male</option>
-            <option value="groom">Female</option>
+            <option value="">{t("Filters.lookingFor")}</option>
+            <option value="bride">{t("Options.gender.male")}</option>
+            <option value="groom">{t("Options.gender.female")}</option>
           </select>
 
           {/* Min Age Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option value="">Min Age</option>
+            <option value="">{t("Filters.minAge")}</option>
             {Array.from({ length: 18 }, (_, i) => (
               <option key={i + 18} value={i + 18}>
                 {i + 18}
@@ -166,7 +163,7 @@ export default function Home() {
 
           {/* Max Age Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option value="">Max Age</option>
+            <option value="">{t("Filters.maxAge")}</option>
             {Array.from({ length: 18 }, (_, i) => (
               <option key={i + 18} value={i + 18}>
                 {i + 18}
@@ -176,101 +173,108 @@ export default function Home() {
 
           {/* Caste Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option value="">Select Caste</option>
-            <option value="general">Suthar</option>
+            <option value="">{t("Filters.selectCaste")}</option>
+            <option value="">{t("Options.caste.suthar")}</option>
           </select>
 
           {/* Sub-Caste Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option value="">Select Sub-Caste</option>
-            <option value="brahmin">Kulriya</option>
-            <option value="brahmin">Jhambad</option>
-            <option value="rajput">Mandan</option>
-            <option value="yadav">Makad</option>
-            <option value="gupta">Nagal</option>
+            <option value="">{t("Filters.selectSubCaste")}</option>
+            <option value="">{t("Options.Sub-Caste.kulriya")}</option>
+            <option value="">{t("Options.Sub-Caste.jhambad")}</option>
+            <option value="">{t("Options.Sub-Caste.mandan")}</option>
+            <option value="">{t("Options.Sub-Caste.makad")}</option>
+            <option value="">{t("Options.Sub-Caste.nagal")}</option>
           </select>
 
           {/* Qualification Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option>Qualification</option>
-            <option>Bachelor's</option>
-            <option>Master's</option>
-            <option>PhD</option>
-            <option>Diploma</option>
+            <option>{t("Filters.qualification")}</option>
+            <option>{t("Options.qualification.bachelor")}</option>
+            <option>{t("Options.qualification.master")}</option>
+            <option>{t("Options.qualification.phd")}</option>
+            <option>{t("Options.qualification.diploma")}</option>
           </select>
 
           {/* Occupation Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option>Occupation</option>
-            <option>Doctor</option>
-            <option>Engineer</option>
-            <option>Teacher</option>
-            <option>Business</option>
+            <option>{t("Filters.occupation")}</option>
+            <option>{t("Options.occupation.doctor")}</option>
+            <option>{t("Options.occupation.engineer")}</option>
+            <option>{t("Options.occupation.teacher")}</option>
+            <option>{t("Options.occupation.business")}</option>
           </select>
 
-          {/* State */}
+          {/* State Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option>State</option>
-            <option>Rajasthan</option>
+            <option>{t("Filters.state")}</option>
+            <option>{t("Options.state.rajasthan")}</option>
           </select>
 
-          {/* City */}
+          {/* City Dropdown */}
           <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
-            <option>City</option>
-            <option>Bikaner</option>
-            <option>Jaipur</option>
+            <option>{t("Filters.city")}</option>
+            <option>{t("Options.city.bikaner")}</option>
+            <option>{t("Options.city.jaipur")}</option>
           </select>
         </div>
 
         {/* Additional Filters - Radio Buttons */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          <div className="flex items-center space-x-4">
-            <span className="font-semibold text-gray-600">Manglik:</span>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="manglik"
-                value="Yes"
-                className="accent-pink-600"
-              />
-              <span>Yes</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="manglik"
-                value="No"
-                className="accent-pink-600"
-              />
-              <span>No</span>
-            </label>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <span className="font-semibold text-gray-600">Divyang:</span>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="divyang"
-                value="Yes"
-                className="accent-pink-600"
-              />
-              <span>Yes</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="divyang"
-                value="No"
-                className="accent-pink-600"
-              />
-              <span>No</span>
-            </label>
-          </div>
-
+          {/* Manglik */}
           <div className="flex items-center space-x-4">
             <span className="font-semibold text-gray-600">
-              Second Marriage:
+              {t("Filters.manglik")}:
+            </span>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="manglik"
+                value="Yes"
+                className="accent-pink-600"
+              />
+              <span>Yes</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="manglik"
+                value="No"
+                className="accent-pink-600"
+              />
+              <span>No</span>
+            </label>
+          </div>
+
+          {/* Divyang */}
+          <div className="flex items-center space-x-4">
+            <span className="font-semibold text-gray-600">
+              {t("Filters.divyang")}:
+            </span>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="divyang"
+                value="Yes"
+                className="accent-pink-600"
+              />
+              <span>Yes</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="divyang"
+                value="No"
+                className="accent-pink-600"
+              />
+              <span>No</span>
+            </label>
+          </div>
+
+          {/* Second Marriage */}
+          <div className="flex items-center space-x-4">
+            <span className="font-semibold text-gray-600">
+              {t("Filters.secondMarriage")}:
             </span>
             <label className="flex items-center space-x-2">
               <input
@@ -296,7 +300,7 @@ export default function Home() {
         {/* Search Button */}
         <div className="mt-8 text-center">
           <button className="bg-pink-600 w-96 text-white py-3 px-8 rounded-lg hover:bg-pink-700 transition-all">
-            Search
+            {t("Filters.searchButton")}
           </button>
         </div>
       </div>
@@ -355,73 +359,75 @@ export default function Home() {
 
       {/* Success Stories Section */}
       <div className="bg-white p-8 rounded-lg shadow-lg">
-  <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
-    Success Stories
-  </h2>
-  <div className="space-y-6">
-    {/* Success Story 1 */}
-    <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition-all">
-      <div className="flex-shrink-0 w-32 h-32 mb-4 md:mb-0">
-        <img
-          src="https://images.pexels.com/photos/30311841/pexels-photo-30311841/free-photo-of-romantic-outdoor-wedding-photography-with-bouquet.jpeg?auto=compress&cs=tinysrgb&w=400"
-          alt="Ankit & Priya"
-          className="w-full h-full object-cover rounded-full"
-        />
-      </div>
-      <div className="flex-1 text-center md:text-left">
-        <p className="text-lg text-gray-700 mb-3">
-          "Thanks to MyLifepair, we found each other and tied the knot. It was a smooth experience, and we're grateful!"
-        </p>
-        <p className="font-bold text-gray-600 text-lg">- Ankit & Priya</p>
-      </div>
-    </div>
+        <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
+          Success Stories
+        </h2>
+        <div className="space-y-6">
+          {/* Success Story 1 */}
+          <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition-all">
+            <div className="flex-shrink-0 w-32 h-32 mb-4 md:mb-0">
+              <img
+                src="https://images.pexels.com/photos/30311841/pexels-photo-30311841/free-photo-of-romantic-outdoor-wedding-photography-with-bouquet.jpeg?auto=compress&cs=tinysrgb&w=400"
+                alt="Ankit & Priya"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <p className="text-lg text-gray-700 mb-3">
+                "Thanks to MyLifepair, we found each other and tied the knot. It
+                was a smooth experience, and we're grateful!"
+              </p>
+              <p className="font-bold text-gray-600 text-lg">- Ankit & Priya</p>
+            </div>
+          </div>
 
-    {/* Success Story 2 */}
-    <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition-all">
-      <div className="flex-shrink-0 w-32 h-32 mb-4 md:mb-0">
-        <img
-          src="https://images.pexels.com/photos/30311847/pexels-photo-30311847/free-photo-of-joyful-couple-piggyback-in-spring-garden.jpeg?auto=compress&cs=tinysrgb&w=400"
-          alt="Rahul & Sneha"
-          className="w-full h-full object-cover rounded-full"
-        />
-      </div>
-      <div className="flex-1 text-center md:text-left">
-        <p className="text-lg text-gray-700 mb-3">
-          "A truly wonderful platform that helped us connect beyond boundaries. Highly recommended!"
-        </p>
-        <p className="font-bold text-gray-600 text-lg">- Rahul & Sneha</p>
-      </div>
-    </div>
+          {/* Success Story 2 */}
+          <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition-all">
+            <div className="flex-shrink-0 w-32 h-32 mb-4 md:mb-0">
+              <img
+                src="https://images.pexels.com/photos/30311847/pexels-photo-30311847/free-photo-of-joyful-couple-piggyback-in-spring-garden.jpeg?auto=compress&cs=tinysrgb&w=400"
+                alt="Rahul & Sneha"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <p className="text-lg text-gray-700 mb-3">
+                "A truly wonderful platform that helped us connect beyond
+                boundaries. Highly recommended!"
+              </p>
+              <p className="font-bold text-gray-600 text-lg">- Rahul & Sneha</p>
+            </div>
+          </div>
 
-    {/* Success Story 3 */}
-    <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition-all">
-      <div className="flex-shrink-0 w-32 h-32 mb-4 md:mb-0">
-        <img
-          src="https://images.pexels.com/photos/30358216/pexels-photo-30358216/free-photo-of-romantic-wedding-embrace-in-san-felipe-mexico.jpeg?auto=compress&cs=tinysrgb&w=400"
-          alt="Vishal & Neha"
-          className="w-full h-full object-cover rounded-full"
-        />
-      </div>
-      <div className="flex-1 text-center md:text-left">
-        <p className="text-lg text-gray-700 mb-3">
-          "MyLifepair made the journey of finding my life partner so much easier. It’s a life-changing experience!"
-        </p>
-        <p className="font-bold text-gray-600 text-lg">- Vishal & Neha</p>
-      </div>
-    </div>
-  </div>
+          {/* Success Story 3 */}
+          <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition-all">
+            <div className="flex-shrink-0 w-32 h-32 mb-4 md:mb-0">
+              <img
+                src="https://images.pexels.com/photos/30358216/pexels-photo-30358216/free-photo-of-romantic-wedding-embrace-in-san-felipe-mexico.jpeg?auto=compress&cs=tinysrgb&w=400"
+                alt="Vishal & Neha"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <p className="text-lg text-gray-700 mb-3">
+                "MyLifepair made the journey of finding my life partner so much
+                easier. It’s a life-changing experience!"
+              </p>
+              <p className="font-bold text-gray-600 text-lg">- Vishal & Neha</p>
+            </div>
+          </div>
+        </div>
 
-  {/* Show More Button */}
-  <div className="text-center mt-6">
-    <button
-      onClick={() => (window.location.href = "/success-stories")}
-      className="px-6 py-2 w-56 bg-pink-600 text-white rounded-lg hover:bg-pink-500 transition-all"
-    >
-      Show More
-    </button>
-  </div>
-</div>
-
+        {/* Show More Button */}
+        <div className="text-center mt-6">
+          <button
+            onClick={() => (window.location.href = "/success-stories")}
+            className="px-6 py-2 w-56 bg-pink-600 text-white rounded-lg hover:bg-pink-500 transition-all"
+          >
+            Show More
+          </button>
+        </div>
+      </div>
 
       {/* Call-to-Action Section */}
       <div className="bg-pink-600 text-white text-center p-8 rounded-lg shadow-lg">
