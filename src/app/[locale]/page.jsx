@@ -1,12 +1,21 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function Home() {
+  const [profiles, setProfiles] = useState([]);
   const t = useTranslations();
   const scrollRef = useRef(null);
+
+  useEffect(() => {
+    // Replace with your backend API URL
+    fetch('http://localhost:5000/api/get-profiles')
+      .then((response) => response.json())
+      .then((data) => setProfiles(data))
+      .catch((error) => console.error('Error fetching profiles:', error));
+  }, []);
   // Scroll left function
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -40,57 +49,7 @@ export default function Home() {
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
 
-  const profiles = [
-    {
-      name: "Priya Sharma",
-      age: 28,
-      occupation: "Doctor",
-      location: "Delhi",
-      image: "https://randomuser.me/api/portraits/women/50.jpg",
-    },
-    {
-      name: "Amit Verma",
-      age: 30,
-      occupation: "Engineer",
-      location: "Mumbai",
-      image: "https://randomuser.me/api/portraits/men/50.jpg",
-    },
-    {
-      name: "Anjali Gupta",
-      age: 27,
-      occupation: "Lawyer",
-      location: "Bangalore",
-      image: "https://randomuser.me/api/portraits/women/45.jpg",
-    },
-    {
-      name: "Rahul Sharma",
-      age: 29,
-      occupation: "Architect",
-      location: "Pune",
-      image: "https://randomuser.me/api/portraits/men/40.jpg",
-    },
-    {
-      name: "Sneha Mehta",
-      age: 26,
-      occupation: "Teacher",
-      location: "Chennai",
-      image: "https://randomuser.me/api/portraits/women/55.jpg",
-    },
-    {
-      name: "Vishal Kumar",
-      age: 32,
-      occupation: "Software Developer",
-      location: "Bangalore",
-      image: "https://randomuser.me/api/portraits/men/42.jpg",
-    },
-    {
-      name: "Neha Patel",
-      age: 24,
-      occupation: "Nurse",
-      location: "Ahmedabad",
-      image: "https://randomuser.me/api/portraits/women/52.jpg",
-    },
-  ];
+
 
   return (
     <div className="p-4 space-y-12">
@@ -307,55 +266,55 @@ export default function Home() {
 
       {/* Featured Profiles Section */}
       <div className="bg-gray-100 p-8 rounded-lg shadow-lg relative">
-        <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
-          Featured Profiles
-        </h2>
+      <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
+        Featured Profiles
+      </h2>
 
-        {/* Scrollable Profiles Section */}
-        <div className="relative overflow-hidden">
-          <div
-            className="flex space-x-6 overflow-x-scroll scroll-smooth scrollbar-hide"
-            ref={scrollRef}
-          >
-            {profiles.map((profile, index) => (
-              <div
-                key={index}
-                className="p-6 bg-white rounded-lg shadow-md min-w-[250px]"
-              >
-                <img
-                  src={profile.image}
-                  alt="Profile"
-                  className="w-32 h-32 mx-auto rounded-full"
-                />
-                <h3 className="text-xl font-bold text-center mt-4">
-                  {profile.name}
-                </h3>
-                <p className="text-center text-gray-600">
-                  Age: {profile.age} | {profile.occupation} | {profile.location}
-                </p>
-                <button className="mt-4 w-full bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all">
-                  View Profile
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Left and Right Scroll Buttons */}
-          <button
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-pink-600 text-white p-3 rounded-full shadow-lg hover:bg-pink-700 transition-all"
-            onClick={scrollLeft}
-          >
-            <FaChevronLeft size={20} />
-          </button>
-
-          <button
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-pink-600 text-white p-3 rounded-full shadow-lg hover:bg-pink-700 transition-all"
-            onClick={scrollRight}
-          >
-            <FaChevronRight size={20} />
-          </button>
+      {/* Scrollable Profiles Section */}
+      <div className="relative overflow-hidden">
+        <div
+          className="flex space-x-6 overflow-x-scroll scroll-smooth scrollbar-hide"
+          ref={scrollRef}
+        >
+          {profiles.map((profile, index) => (
+            <div
+              key={index}
+              className="p-6 bg-white rounded-lg shadow-md min-w-[250px]"
+            >
+              <img
+                src={profile.image}
+                alt="Profile"
+                className="w-32 h-32 mx-auto rounded-full"
+              />
+              <h3 className="text-xl font-bold text-center mt-4">
+                {profile.name}
+              </h3>
+              <p className="text-center text-gray-600">
+                Age: {profile.age} | {profile.occupation} | {profile.location}
+              </p>
+              <button className="mt-4 w-full bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all">
+                View Profile
+              </button>
+            </div>
+          ))}
         </div>
+
+        {/* Left and Right Scroll Buttons */}
+        <button
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-pink-600 text-white p-3 rounded-full shadow-lg hover:bg-pink-700 transition-all"
+          onClick={scrollLeft}
+        >
+          <FaChevronLeft size={20} />
+        </button>
+
+        <button
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-pink-600 text-white p-3 rounded-full shadow-lg hover:bg-pink-700 transition-all"
+          onClick={scrollRight}
+        >
+          <FaChevronRight size={20} />
+        </button>
       </div>
+    </div>
 
       {/* Success Stories Section */}
       <div className="bg-white p-8 rounded-lg shadow-lg">
