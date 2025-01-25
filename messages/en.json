@@ -17,7 +17,8 @@
     "contactUs": "Contact Us",
     "register": "Register",
     "login": "Login",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "profile": "Profile"
   },
   "Filters": {
     "findYourPerfectMatch": "Find Your Perfect Match",
@@ -37,8 +38,8 @@
   },
   "Options": {
     "gender": {
-      "male": "Male",
-      "female": "Female"
+      "male": "Bride",
+      "female": "Groom"
     },
     "caste": {
       "suthar": "Suthar"
@@ -68,6 +69,18 @@
     "city": {
       "bikaner": "Bikaner",
       "jaipur": "Jaipur"
+    },
+    "manglik":  {
+      "yes": "include",
+      "no": "exclude"
+    },
+    "divyang":  {
+      "yes": "include",
+      "no": "exclude"
+    },
+    "secondMarriage":  {
+      "yes": "include",
+      "no": "exclude"
     }
   },
   "Profiles":{
@@ -121,6 +134,7 @@
     "single":"Single",
     "married":"Married",
     "divorced":"Divorced",
+    "widowed":"Widowed",
     "agreeTerms": "I agree to the",
     "termsAndConditions": "Terms and Conditions",
     "continue": "Continue",

@@ -1,28 +1,30 @@
 "use client";
 
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaUserCircle, FaHeart } from 'react-icons/fa';
-import { IoMenu, IoClose,IoChevronDown } from 'react-icons/io5';
+import { IoMenu, IoClose } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const t = useTranslations('Header')
-  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const t = useTranslations('Header');
   const router = useRouter();
   const [currentLanguage, setCurrentLanguage] = useState('en');
 
-  // Detect current language from URL and set the state
   useEffect(() => {
-    const pathLanguage = window.location.pathname.split('/')[1];
-    if (pathLanguage === 'en' || pathLanguage === 'hi') {
-      setCurrentLanguage(pathLanguage);
-    }
+    // Check if the user is authenticated
+    const checkAuth = async () => {
+      const res = await fetch('/api/users/login');
+      const data = await res.json();
+      setIsAuthenticated(data.isAuthenticated);
+    };
+
+    checkAuth();
   }, []);
 
-  // Function to toggle between English and Hindi
   const handleLanguageToggle = () => {
     const newLanguage = currentLanguage === 'en' ? 'hi' : 'en';
     setCurrentLanguage(newLanguage);
@@ -39,49 +41,57 @@ const Header = () => {
   return (
     <header className="bg-white text-pink-600 p-4 shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex flex-wrap justify-between items-center">
-        
         {/* Logo */}
         <h1 className="text-2xl md:text-3xl font-extrabold">
           <Link href="/" className="flex items-center">
             MyLifepair
           </Link>
         </h1>
-        
+
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex space-x-6 xl:space-x-8 font-medium">
           <Link href="/" className="hover:text-pink-500 transition-all">
             {t('home')}
           </Link>
           <Link href="/memberships" className="hover:text-pink-500 transition-all">
-          {t('memberships')}
+            {t('memberships')}
           </Link>
           <Link href="/success-stories" className="hover:text-pink-500 transition-all">
-          {t('successStories')}
+            {t('successStories')}
           </Link>
           <Link href="/contact-us" className="hover:text-pink-500 transition-all">
-          {t('contactUs')}
+            {t('contactUs')}
           </Link>
         </nav>
 
         {/* Language Toggle Button */}
         <button
-      onClick={handleLanguageToggle}
-      className="bg-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-pink-500 transition-all"
-    >
-      {currentLanguage === 'en' ? 'Switch to हिंदी' : 'Switch to English'}
-    </button>
+          onClick={handleLanguageToggle}
+          className="bg-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-pink-500 transition-all"
+        >
+          {currentLanguage === 'en' ? 'Switch to हिंदी' : 'Switch to English'}
+        </button>
 
         {/* CTA and User Actions */}
         <div className="hidden md:flex items-center space-x-4 md:space-x-6">
-          <Link href="/register">
-            <button className="bg-pink-600 text-white px-4 md:px-6 py-2 rounded-full font-semibold hover:bg-pink-600 transition-all">
-            {t('register')}
-            </button>
-          </Link>
-          <Link href="/login" className="flex items-center space-x-2 hover:text-pink-500 transition-all">
-            <FaUserCircle className="text-xl md:text-2xl" />
-            <span className="hidden sm:block">{t('login')}</span>
-          </Link>
+          {!isAuthenticated ? (
+            <>
+              <Link href="/register">
+                <button className="bg-pink-600 text-white px-4 md:px-6 py-2 rounded-full font-semibold hover:bg-pink-600 transition-all">
+                  {t('register')}
+                </button>
+              </Link>
+              <Link href="/login" className="flex items-center space-x-2 hover:text-pink-500 transition-all">
+                <FaUserCircle className="text-xl md:text-2xl" />
+                <span className="hidden sm:block">{t('login')}</span>
+              </Link>
+            </>
+          ) : (
+            <Link href="/profile" className="flex items-center space-x-2 hover:text-pink-500 transition-all">
+              <FaUserCircle className="text-xl md:text-2xl" />
+              <span className="hidden sm:block">{t('profile')}</span>
+            </Link>
+          )}
           <Link href="/wishlist" className="flex items-center space-x-2 hover:text-pink-500 transition-all">
             <FaHeart className="text-xl md:text-2xl" />
             <span className="hidden sm:block">{t('wishlist')}</span>
@@ -113,24 +123,33 @@ const Header = () => {
             <IoClose />
           </button>
           <Link href="/" className="text-xl font-semibold hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
-           {t('home')}
+            {t('home')}
           </Link>
           <Link href="/memberships" className="text-xl font-semibold hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
-          {t('memberships')}
+            {t('memberships')}
           </Link>
           <Link href="/success-stories" className="text-xl font-semibold hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
-          {t('successStories')}
+            {t('successStories')}
           </Link>
           <Link href="/contact-us" className="text-xl font-semibold hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
-          {t('contactUs')}
+            {t('contactUs')}
           </Link>
-          <Link href="/register" className="bg-pink-600 text-white text-center py-3 rounded-lg font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
-            {t('register')}
-          </Link>
-          <Link href="/login" className="flex items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
-            <FaUserCircle className="text-2xl" />
-            <span>{t('login')}</span>
-          </Link>
+          {!isAuthenticated ? (
+            <>
+              <Link href="/register" className="bg-pink-600 text-white text-center py-3 rounded-lg font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
+                {t('register')}
+              </Link>
+              <Link href="/login" className="flex items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
+                <FaUserCircle className="text-2xl" />
+                <span>{t('login')}</span>
+              </Link>
+            </>
+          ) : (
+            <Link href="/profile" className="flex items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
+              <FaUserCircle className="text-2xl" />
+              <span>{t('profile')}</span>
+            </Link>
+          )}
           <Link href="/wishlist" className="flex items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
             <FaHeart className="text-2xl" />
             <span>{t('wishlist')}</span>

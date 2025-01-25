@@ -6,6 +6,18 @@ import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function Home() {
+  const [lookingFor, setLookingFor] = useState("bride");
+  const [minAge, setMinAge] = useState("18");
+  const [maxAge, setMaxAge] = useState("");
+  const [caste, setCaste] = useState("suthar");
+  const [subCaste, setSubCaste] = useState("");
+  const [qualification, setQualification] = useState("");
+  const [occupation, setOccupation] = useState("");
+  const [state, setState] = useState("rajasthan");
+  const [city, setCity] = useState("bikaner");
+  const [manglik, setManglik] = useState("No");
+  const [divyang, setDivyang] = useState("No");
+  const [secondMarriage, setSecondMarriage] = useState("No");
   const [profiles, setProfiles] = useState([]);
   const [stories, setStories] = useState([]);
   const [autoScroll, setAutoScroll] = useState(true);
@@ -67,7 +79,9 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [autoScroll]);
-
+  const handleChange = (setter) => (e) => {
+    setter(e.target.value);
+  };
   return (
     <div className="p-4 space-y-12">
       {/* Hero Section */}
@@ -121,40 +135,62 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Looking For */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={lookingFor}
+            onChange={handleChange(setLookingFor)}
+          >
             <option value="">{t("Filters.lookingFor")}</option>
             <option value="bride">{t("Options.gender.male")}</option>
             <option value="groom">{t("Options.gender.female")}</option>
           </select>
 
           {/* Min Age Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={minAge}
+            onChange={handleChange(setMinAge)}
+          >
             <option value="">{t("Filters.minAge")}</option>
-            {Array.from({ length: 18 }, (_, i) => (
+            {Array.from({ length: 43 }, (_, i) => (
               <option key={i + 18} value={i + 18}>
                 {i + 18}
               </option>
             ))}
+            <option value="60+">60+</option>
           </select>
 
           {/* Max Age Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={maxAge}
+            onChange={handleChange(setMaxAge)}
+          >
             <option value="">{t("Filters.maxAge")}</option>
-            {Array.from({ length: 18 }, (_, i) => (
+            {Array.from({ length: 43 }, (_, i) => (
               <option key={i + 18} value={i + 18}>
                 {i + 18}
               </option>
             ))}
+            <option value="60+">60+</option>
           </select>
 
           {/* Caste Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={caste}
+            onChange={handleChange(setCaste)}
+          >
             <option value="">{t("Filters.selectCaste")}</option>
-            <option value="">{t("Options.caste.suthar")}</option>
+            <option value="suthar">{t("Options.caste.suthar")}</option>
           </select>
 
           {/* Sub-Caste Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={subCaste}
+            onChange={handleChange(setSubCaste)}
+          >
             <option value="">{t("Filters.selectSubCaste")}</option>
             <option value="">{t("Options.Sub-Caste.kulriya")}</option>
             <option value="">{t("Options.Sub-Caste.jhambad")}</option>
@@ -164,7 +200,11 @@ export default function Home() {
           </select>
 
           {/* Qualification Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={qualification}
+            onChange={handleChange(setQualification)}
+          >
             <option>{t("Filters.qualification")}</option>
             <option>{t("Options.qualification.bachelor")}</option>
             <option>{t("Options.qualification.master")}</option>
@@ -173,7 +213,11 @@ export default function Home() {
           </select>
 
           {/* Occupation Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={occupation}
+            onChange={handleChange(setOccupation)}
+          >
             <option>{t("Filters.occupation")}</option>
             <option>{t("Options.occupation.doctor")}</option>
             <option>{t("Options.occupation.engineer")}</option>
@@ -182,16 +226,23 @@ export default function Home() {
           </select>
 
           {/* State Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={state}
+            onChange={handleChange(setState)}
+          >
             <option>{t("Filters.state")}</option>
-            <option>{t("Options.state.rajasthan")}</option>
+            <option value="rajasthan">{t("Options.state.rajasthan")}</option>
           </select>
 
           {/* City Dropdown */}
-          <select className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600">
+          <select
+            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+            value={city}
+            onChange={handleChange(setCity)}
+          >
             <option>{t("Filters.city")}</option>
-            <option>{t("Options.city.bikaner")}</option>
-            <option>{t("Options.city.jaipur")}</option>
+            <option value="bikaner">{t("Options.city.bikaner")}</option>
           </select>
         </div>
 
@@ -208,8 +259,10 @@ export default function Home() {
                 name="manglik"
                 value="Yes"
                 className="accent-pink-600"
+                checked={manglik === "Yes"}
+                onChange={() => setManglik("Yes")}
               />
-              <span>Yes</span>
+              <span>{t("Options.manglik.yes")}</span>
             </label>
             <label className="flex items-center space-x-2">
               <input
@@ -217,8 +270,10 @@ export default function Home() {
                 name="manglik"
                 value="No"
                 className="accent-pink-600"
+                checked={manglik === "No"}
+                onChange={() => setManglik("No")}
               />
-              <span>No</span>
+              <span>{t("Options.manglik.no")}</span>
             </label>
           </div>
 
@@ -233,8 +288,10 @@ export default function Home() {
                 name="divyang"
                 value="Yes"
                 className="accent-pink-600"
+                checked={divyang === "Yes"}
+                onChange={() => setDivyang("Yes")}
               />
-              <span>Yes</span>
+              <span>{t("Options.divyang.yes")}</span>
             </label>
             <label className="flex items-center space-x-2">
               <input
@@ -242,8 +299,10 @@ export default function Home() {
                 name="divyang"
                 value="No"
                 className="accent-pink-600"
+                checked={divyang === "No"}
+                onChange={() => setDivyang("No")}
               />
-              <span>No</span>
+              <span>{t("Options.divyang.no")}</span>
             </label>
           </div>
 
@@ -258,8 +317,10 @@ export default function Home() {
                 name="secondMarriage"
                 value="Yes"
                 className="accent-pink-600"
+                checked={secondMarriage === "Yes"}
+                onChange={() => setSecondMarriage("Yes")}
               />
-              <span>Yes</span>
+              <span>{t("Options.secondMarriage.yes")}</span>
             </label>
             <label className="flex items-center space-x-2">
               <input
@@ -267,17 +328,12 @@ export default function Home() {
                 name="secondMarriage"
                 value="No"
                 className="accent-pink-600"
+                checked={secondMarriage === "No"}
+                onChange={() => setSecondMarriage("No")}
               />
-              <span>No</span>
+              <span>{t("Options.secondMarriage.no")}</span>
             </label>
           </div>
-        </div>
-
-        {/* Search Button */}
-        <div className="mt-8 text-center">
-          <button className="bg-pink-600 w-56 text-white py-3 px-8 rounded-lg hover:bg-pink-700 transition-all">
-            {t("Filters.searchButton")}
-          </button>
         </div>
       </div>
 
@@ -345,43 +401,36 @@ export default function Home() {
         <h2 className="text-3xl font-semibold text-center mb-8 text-pink-600">
           {t("SuccessStories.successStories")}
         </h2>
-        {
-          loading ? (
+        {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="loader"></div>
           </div>
-        ) : <div
-             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-       {
-  stories.slice(0, 3).map((story, index) => (
-    <div 
-      key={index}
-      className="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <div className="flex flex-col items-center">
-        <div className="w-32 h-32 mb-4">
-          <img
-            src={story.image}
-            alt={story.name}
-            className="w-full h-full object-cover rounded-full border-4 border-pink-500 group-hover:scale-105 transition-all"
-          />
-        </div>
-        <div className="text-center">
-          <p className="text-lg text-gray-700 mb-4">
-            {story.story}
-          </p>
-          <p className="font-bold text-gray-600 text-lg">
-            - {story.name}
-          </p>
-        </div>
-      </div>
-    </div>
-  ))
-}
-
-        </div>
-        }
-        
-        
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {stories.slice(0, 3).map((story, index) => (
+              <div
+                key={index}
+                className="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              >
+                <div className="flex flex-col items-center">
+                  <div className="w-32 h-32 mb-4">
+                    <img
+                      src={story.image}
+                      alt={story.name}
+                      className="w-full h-full object-cover rounded-full border-4 border-pink-500 group-hover:scale-105 transition-all"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg text-gray-700 mb-4">{story.story}</p>
+                    <p className="font-bold text-gray-600 text-lg">
+                      - {story.name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Show More Button */}
         <div className="text-center mt-8">

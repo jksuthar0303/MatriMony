@@ -16,8 +16,8 @@
     "lookingFor": "खोज रहे हैं...",
     "minAge": "न्यूनतम आयु",
     "maxAge": "अधिकतम आयु",
-    "selectCaste": "कास्ट चयन करें",
-    "selectSubCaste": "उप-कास्ट चयन करें",
+    "selectCaste": "जाति चयन करें",
+    "selectSubCaste": "उप जाति चयन करें",
     "qualification": "योग्यता",
     "occupation": "व्यवसाय",
     "state": "राज्य",
@@ -29,8 +29,8 @@
   },
   "Options": {
     "gender": {
-      "male": "पुरुष",
-      "female": "महिला"
+      "male": "वधु चाहिए",
+      "female": "वर चाहिए"
     },
     "caste": {
       "suthar": "सुथार"
@@ -60,6 +60,18 @@
     "city": {
       "bikaner": "बीकानेर",
       "jaipur": "जयपुर"
+    },
+    "manglik":  {
+      "yes": "शामिल करें",
+      "no": "हटाएं"
+    },
+    "divyang":  {
+      "yes": "शामिल करें",
+      "no": "हटाएं"
+    },
+    "secondMarriage":  {
+      "yes": "शामिल करें",
+      "no": "हटाएं"
     }
   },
   "Profiles":{
@@ -76,7 +88,8 @@
     "contactUs": "संपर्क करें",
     "register": "रजिस्टर करें",
     "login": "लॉगिन करें",
-    "wishlist": "विशलिस्ट"
+    "wishlist": "विशलिस्ट",
+    "profile": "प्रोफाइल"
   },
   "Footer": {
     "aboutUs": "हमारे बारे में",
@@ -122,6 +135,7 @@
     "single":"अविवाहित",
     "married":"विवाहित",
     "divorced":"तलाकशुदा",
+    "widowed":"विधवा",
     "agreeTerms": "मैं नियम और शर्तों से सहमत हूँ",
     "termsAndConditions": "नियम और शर्तें",
     "continue": "जारी रखें",
