@@ -33,7 +33,7 @@
     "searchButton": "Search"
   },
   "Options": {
-    "gneder":{
+    "gender":{
         "male": "Male",
         "female": "Female"
     },

@@ -1,5 +1,6 @@
 "use client";
 
+import UserList from "@/components/UserList";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -83,6 +84,7 @@ export default function Home() {
               {t("HomePage.learnMore")}
             </button>
           </div>
+          <UserList />
         </div>
 
         {/* Decorative Elements */}
