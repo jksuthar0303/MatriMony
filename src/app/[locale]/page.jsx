@@ -352,32 +352,32 @@ export default function Home() {
           </div>
         ) : <div
              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          stories.map((story, index) => (
-           
-            <div 
-            key={index}
-          className="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <div className="flex flex-col items-center">
-              <div className="w-32 h-32 mb-4">
-                <img
-                  src={story.image}
-                  alt={story.name}
-                  className="w-full h-full object-cover rounded-full border-4 border-pink-500 group-hover:scale-105 transition-all"
-                />
-              </div>
-              <div className="text-center">
-                <p className="text-lg text-gray-700 mb-4">
-                {story.story}
-                </p>
-                <p className="font-bold text-gray-600 text-lg">
-                  - {story.name}
-                </p>
-              </div>
-            </div>
-          </div>
-          ))
-        }
+       {
+  stories.slice(0, 3).map((story, index) => (
+    <div 
+      key={index}
+      className="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 mb-4">
+          <img
+            src={story.image}
+            alt={story.name}
+            className="w-full h-full object-cover rounded-full border-4 border-pink-500 group-hover:scale-105 transition-all"
+          />
+        </div>
+        <div className="text-center">
+          <p className="text-lg text-gray-700 mb-4">
+            {story.story}
+          </p>
+          <p className="font-bold text-gray-600 text-lg">
+            - {story.name}
+          </p>
+        </div>
+      </div>
+    </div>
+  ))
+}
+
         </div>
         }
         
