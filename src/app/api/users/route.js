@@ -14,24 +14,21 @@ export async function GET() {
 export async function POST(req) {
   try {
     await connectMongo();
-
-    // Parse JSON data from request body
     const body = await req.json();
-    const { name, email, age } = body;
+    const { name, age, occupation, location, image, profilePic } = body;
 
-    // Validate required fields
-    if (!name || !email) {
-      return new Response(JSON.stringify({ message: 'Name and Email are required' }), { status: 400 });
-    }
+    const newUser = new User({
+      name,
+      age,
+      occupation,
+      location,
+      image,
+      profilePic,
+    });
 
-    // Create a new user in the database
-    const newUser = new User({ name, email, age });
     await newUser.save();
-
     return new Response(JSON.stringify({ message: 'User created successfully', user: newUser }), { status: 201 });
-
   } catch (error) {
-    console.error('Error creating user:', error);
     return new Response(JSON.stringify({ message: 'Error creating user', error: error.message }), { status: 500 });
   }
 }

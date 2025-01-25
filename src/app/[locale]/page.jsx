@@ -11,12 +11,14 @@ export default function Home() {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    // Replace with your backend API URL
-    fetch('http://localhost:5000/api/get-profiles')
-      .then((response) => response.json())
-      .then((data) => setProfiles(data))
-      .catch((error) => console.error('Error fetching profiles:', error));
+    async function fetchUsers() {
+      const res = await fetch('/api/users');
+      const data = await res.json();
+      setProfiles(data);
+    }
+    fetchUsers();
   }, []);
+
   // Scroll left function
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -68,7 +70,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
         {/* Main Content */}
-        <div className="relative z-10 max-w-4xl">
+        <div className="relative max-w-4xl">
           <h1 className="text-6xl font-extrabold text-white leading-tight">
             {t("HomePage.title")}
           </h1>
@@ -76,7 +78,7 @@ export default function Home() {
           <p className="mt-4 text-xl text-gray-200">
             {t("HomePage.description")}
           </p>
-          <div className="mt-6 space-x-4">
+          <div className="mt-6 flex justify-center gap-4">
             <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
               {t("HomePage.getStarted")}
             </button>
@@ -88,10 +90,10 @@ export default function Home() {
         </div>
 
         {/* Decorative Elements */}
-        <div className="absolute bottom-10 left-10 text-white text-lg hidden md:block">
+        <div className="absolute bottom-5 lg:bottom-10 left-10 text-white text-lg md:block">
           <p>{t("HomePage.successfulMatches")}</p>
         </div>
-        <div className="absolute top-10 right-10 bg-pink-600 text-white py-2 px-6 rounded-full hidden md:block">
+        <div className="absolute top-10 right-10 hidden bg-pink-600 text-white py-2 px-6 rounded-full md:block">
           <span className="font-semibold">
             {t("HomePage.verifiedProfiles")}
           </span>
@@ -260,7 +262,7 @@ export default function Home() {
 
         {/* Search Button */}
         <div className="mt-8 text-center">
-          <button className="bg-pink-600 w-96 text-white py-3 px-8 rounded-lg hover:bg-pink-700 transition-all">
+          <button className="bg-pink-600 w-56 text-white py-3 px-8 rounded-lg hover:bg-pink-700 transition-all">
             {t("Filters.searchButton")}
           </button>
         </div>
