@@ -86,7 +86,6 @@ export default function Home() {
               {t("HomePage.learnMore")}
             </button>
           </div>
-          <UserList />
         </div>
 
         {/* Decorative Elements */}
