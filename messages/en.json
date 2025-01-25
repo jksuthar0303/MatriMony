@@ -5,7 +5,10 @@
     "getStarted": "Get Started",
     "learnMore": "Learn More",
     "successfulMatches": "Over 500,000 successful matches",
-    "verifiedProfiles": "100% Verified Profiles"
+    "verifiedProfiles": "100% Verified Profiles",
+    "readyToFindMatch": "Ready to Find Your Match?",
+    "joinNow": "Join now and start your journey with us!",
+    "registerNow": "Register Now"
   },
   "Header": {
     "home": "Home",
@@ -33,19 +36,19 @@
     "searchButton": "Search"
   },
   "Options": {
-    "gender":{
-        "male": "Male",
-        "female": "Female"
+    "gender": {
+      "male": "Male",
+      "female": "Female"
     },
     "caste": {
       "suthar": "Suthar"
     },
-    "Sub-Caste":{
-        "kulriya": "Kulriya",
-        "jhambad": "Jhambad",
-        "mandan": "Mandan",
-        "makad": "Makad",
-        "nagal": "Nagal"
+    "Sub-Caste": {
+      "kulriya": "Kulriya",
+      "jhambad": "Jhambad",
+      "mandan": "Mandan",
+      "makad": "Makad",
+      "nagal": "Nagal"
     },
     "qualification": {
       "bachelor": "Bachelor's",
@@ -67,6 +70,13 @@
       "jaipur": "Jaipur"
     }
   },
+  "Profiles":{
+    "profiles":"Profiles"
+  },
+  "SuccessStories":{
+    "successStories":"Success Stories",
+    "showmore":"Show More"
+  },
   "Footer": {
     "aboutUs": "About Us",
     "aboutText": "MyLifepair is a leading matrimony platform, dedicated to helping individuals find their life partner with ease and trust. Our platform connects people across communities, providing a safe space for their life-changing journey.",
@@ -81,5 +91,74 @@
     "address": "Address:",
     "followUs": "Follow Us",
     "copyright": "© 2025 MyLifepair. All Rights Reserved."
+  },
+  "ChatBox":{
+    "chatSupport": "Chat Support",
+    "welcomeMessage": "Welcome to chat support! How can we assist you today?",
+    "typeYourMessage": "Type your message..."
+  },  
+  "Register": {
+    "welcomeText": "Welcome to Our Matrimony Service",
+    "introText": "We are committed to helping you find your perfect match. Create your profile now to begin your journey!",
+    "createAccount": "Create New Account",
+    "matchmakingService": "We provide the best match-making service.",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "fullName": "Full Name",
+    "enterFullName":"Enter Your Full Name",
+    "mobileNo": "Mobile No",
+    "enterMobileNo": "Enter Your Mobile No.",
+    "email": "Email ID",
+    "enterEmail":"Enter Your Email",
+    "createPassword": "Create Password",
+    "enterCreatePassword":"Create Your Password",
+    "confirmPassword": "Confirm Password",
+    "enterConfirmPassword": "Confirm Your Password",
+    "dob": "Date of Birth",
+    "maritalStatus": "Marital Status",
+    "select":"select",
+    "single":"Single",
+    "married":"Married",
+    "divorced":"Divorced",
+    "agreeTerms": "I agree to the",
+    "termsAndConditions": "Terms and Conditions",
+    "continue": "Continue",
+    "alreadyAccount": "Already have an account?",
+    "login":" Log in"
+  },
+  "Login":{
+    "welcomeBack": "Welcome Back...",
+    "introText": "We are happy to see you again. Please log in to continue to your dashboard.",
+    "loginToAccount": "Login to Your Account",
+    "enterCredentials": "Enter your credentials to access your account.",
+    "emailID": "Email ID",
+    "enterEmail": "Enter your email",
+    "password": "Password",
+    "enterPassword": "Enter your password",
+    "rememberMe": "Remember me",
+    "login": "Login",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create One"
+  },
+  "ContactUs":{
+    "contactUs": "Contact Us",
+    "contactDescription": "Have any questions or need support? Get in touch with us using the form below or contact us directly.",
+    "sendMessage": "Send Us a Message",
+    "yourName": "Your Name",
+    "enterYourName": "Enter your name",
+    "yourEmail": "Your Email",
+    "enterYourEmail": "Enter your email",
+    "yourPhone": "Your Phone",
+    "enterYourPhone": "Enter your phone number",
+    "yourMessage": "Your Message",
+    "writeYourMessage": "Write your message",
+    "sendMessageButton": "Send Message",
+    "contactInformation": "Contact Information",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "location": "123 Love Street, Romance City, 56789"
   }
+  
 }

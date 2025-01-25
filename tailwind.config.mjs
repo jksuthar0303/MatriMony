@@ -20,4 +20,8 @@ export default {
     },
   },
   plugins: [],
+   // Add custom spinner style here
+   safelist: [
+    'loader', // Ensure that this class gets purged correctly
+  ],
 };

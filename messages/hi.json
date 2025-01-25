@@ -5,7 +5,11 @@
     "getStarted": "शुरू करें",
     "learnMore": "और जानें",
     "successfulMatches": "500,000 से अधिक सफल जोड़े",
-    "verifiedProfiles": "100% सत्यापित प्रोफाइल"
+    "verifiedProfiles": "100% सत्यापित प्रोफाइल",
+
+    "readyToFindMatch": "क्या आप अपनी जोड़ी ढूंढने के लिए तैयार हैं?",
+    "joinNow": "जुड़ें और हमारे साथ अपनी यात्रा शुरू करें!",
+    "registerNow": "रजिस्टर करें"
   },
   "Filters": {
     "findYourPerfectMatch": "अपना आदर्श साथी खोजें",
@@ -19,20 +23,20 @@
     "state": "राज्य",
     "city": "शहर",
     "manglik": "मंगलिक",
-    "divyang": "दिड़व्यांग",
+    "divyang": "दिव्यांग",
     "secondMarriage": "दूसरी शादी",
     "searchButton": "खोजें"
   },
   "Options": {
-    "gender":{
-        "male": "पुरुष",
-        "female": "महिला"
+    "gender": {
+      "male": "पुरुष",
+      "female": "महिला"
     },
     "caste": {
       "suthar": "सुथार"
     },
-    "Sub-Caste":{
-        "kulriya": "कुलरिया",
+    "Sub-Caste": {
+      "kulriya": "कुलरिया",
       "jhambad": "जांभड़",
       "mandan": "मांडण",
       "makad": "माकड़",
@@ -58,6 +62,13 @@
       "jaipur": "जयपुर"
     }
   },
+  "Profiles":{
+    "profiles":"प्रोफाइल्स"
+  },
+  "SuccessStories":{
+    "successStories":"सफल जोड़े ",
+    "showmore":"और देखे"
+  },
   "Header": {
     "home": "होम",
     "memberships": "सदस्यताएँ",
@@ -67,7 +78,7 @@
     "login": "लॉगिन करें",
     "wishlist": "विशलिस्ट"
   },
- "Footer": {
+  "Footer": {
     "aboutUs": "हमारे बारे में",
     "aboutText": "MyLifepair एक प्रमुख शादी प्लेटफ़ॉर्म है, जो व्यक्तियों को आसानी से और विश्वास के साथ अपना जीवन साथी ढूंढने में मदद करने के लिए समर्पित है। हमारा प्लेटफ़ॉर्म समुदायों के बीच लोगों को जोड़ता है, जो उनके जीवन-परिवर्तनकारी यात्रा के लिए एक सुरक्षित स्थान प्रदान करता है।",
     "quickLinks": "त्वरित लिंक",
@@ -81,7 +92,74 @@
     "address": "पता:",
     "followUs": "हमसे जुड़ें",
     "copyright": "© 2025 MyLifepair. सर्वाधिकार सुरक्षित।"
+  },
+  "ChatBox":{
+    "chatSupport": "चैट सपोर्ट",
+    "welcomeMessage": "चैट सपोर्ट में आपका स्वागत है! हम आपकी आज कैसे सहायता कर सकते हैं?",
+    "typeYourMessage": "अपना संदेश लिखें..."
+  },  
+  "Register": {
+    "welcomeText": "हमारे विवाह सेवा में आपका स्वागत है",
+    "introText": "हम आपकी आदर्श जोड़ी खोजने में मदद करने के लिए प्रतिबद्ध हैं। अपनी प्रोफ़ाइल बनाएं और अपनी यात्रा शुरू करें!",
+    "createAccount": "नया खाता बनाएं",
+    "matchmakingService": "हम सर्वोत्तम मैच-मेकिंग सेवा प्रदान करते हैं।",
+    "gender": "लिंग",
+    "male": "पुरुष",
+    "female": "महिला",
+    "fullName": "पूरा नाम",
+    "enterFullName":"अपना पूरा नाम दर्ज करें",
+    "mobileNo": "मोबाइल नंबर",
+    "enterMobileNo": "अपना मोबाइल नंबर दर्ज करें",
+    "email": "ईमेल आईडी",
+    "enterEmail":"अपना ईमेल दर्ज करें",
+    "createPassword": "पासवर्ड बनाएं",
+    "enterCreatePassword":"अपना पासवर्ड बनाएं",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "enterConfirmPassword": "अपना पासवर्ड की पुष्टि करें",
+    "dob": "जन्म तिथि",
+    "maritalStatus": "वैवाहिक स्थिति",
+    "select":"चयन करें",
+    "single":"अविवाहित",
+    "married":"विवाहित",
+    "divorced":"तलाकशुदा",
+    "agreeTerms": "मैं नियम और शर्तों से सहमत हूँ",
+    "termsAndConditions": "नियम और शर्तें",
+    "continue": "जारी रखें",
+    "alreadyAccount": "क्या आपके पास पहले से खाता है?",
+    "login":"लॉग इन करें"
+  },
+  "Login":{
+    "welcomeBack": "आपका स्वागत है...",
+    "introText": "हमें फिर से आपको देख कर खुशी हो रही है। कृपया अपने डैशबोर्ड तक पहुँचने के लिए लॉगिन करें।",
+    "loginToAccount": "अपने खाते में लॉगिन करें",
+    "enterCredentials": "अपने खाते तक पहुँचने के लिए अपने क्रेडेंशियल्स दर्ज करें।",
+    "emailID": "ईमेल आईडी",
+    "enterEmail": "अपना ईमेल दर्ज करें",
+    "password": "पासवर्ड",
+    "enterPassword": "अपना पासवर्ड दर्ज करें",
+    "rememberMe": "मुझे याद रखें",
+    "login": "लॉगिन करें",
+    "noAccount": "क्या आपके पास खाता नहीं है?",
+    "createAccount": "एक खाता बनाएं"
+  },
+  "ContactUs":{
+    "contactUs": "संपर्क करें",
+    "contactDescription": "कोई प्रश्न है या सहायता चाहिए? नीचे दिए गए फ़ॉर्म का उपयोग करके हमसे संपर्क करें या सीधे हमसे संपर्क करें।",
+    "sendMessage": "हमें एक संदेश भेजें",
+    "yourName": "आपका नाम",
+    "enterYourName": "अपना नाम दर्ज करें",
+    "yourEmail": "आपका ईमेल",
+    "enterYourEmail": "अपना ईमेल दर्ज करें",
+    "yourPhone": "आपका फ़ोन",
+    "enterYourPhone": "अपना फ़ोन नंबर दर्ज करें",
+    "yourMessage": "आपका संदेश",
+    "writeYourMessage": "अपना संदेश लिखें",
+    "sendMessageButton": "संदेश भेजें",
+    "contactInformation": "संपर्क जानकारी",
+    "phone": "फोन",
+    "email": "ईमेल",
+    "address": "पता",
+    "location": "123 लव स्ट्रीट, रोमांस सिटी, 56789"
   }
-  
   
 }

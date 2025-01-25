@@ -1,8 +1,12 @@
 "use client";
 
+import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export default function Register() {
+    const t = useTranslations("Register");
+  
   const [formData, setFormData] = useState({
     gender: "",
     fullName: "",
@@ -49,26 +53,26 @@ export default function Register() {
       <div className="max-w-7xl w-full bg-white shadow-lg rounded-lg p-8 flex flex-col lg:flex-row">
         {/* Welcome Section */}
         <div className="lg:w-1/3 bg-pink-600 text-white p-6 rounded-lg mb-8 lg:mb-0 lg:mr-8 flex flex-col justify-center">
-          <h2 className="text-2xl font-bold mb-4">Welcome to Our Matrimony Service</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('welcomeText')}</h2>
           <p className="text-lg">
-            We are committed to helping you find your perfect match. Create your profile now to begin your journey!
+           {t("introText")}
           </p>
         </div>
 
         {/* Registration Form */}
         <div className="lg:w-2/3">
           <h1 className="text-3xl font-bold text-pink-600 text-center mb-6">
-            Create New Account
+            {t("createAccount")}
           </h1>
           <p className="text-center text-gray-700 mb-8">
-            We provide the best match-making service.
+            {t("matchmakingService")}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Gender */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Gender
+                {t("gender")}
               </label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2">
@@ -81,7 +85,7 @@ export default function Register() {
                     onChange={handleChange}
                     required
                   />
-                  Male
+                  {t("male")}
                 </label>
                 <label className="flex items-center gap-2">
                   <input
@@ -93,7 +97,7 @@ export default function Register() {
                     onChange={handleChange}
                     required
                   />
-                  Female
+                  {t("female")}
                 </label>
               </div>
             </div>
@@ -101,14 +105,14 @@ export default function Register() {
             {/* Full Name */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Full Name
+                {t("fullName")}
               </label>
               <input
                 type="text"
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder="Enter your full name"
+                placeholder= {t("enterFullName")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -117,14 +121,14 @@ export default function Register() {
             {/* Mobile Number */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Mobile No
+                {t("mobileNo")}
               </label>
               <input
                 type="tel"
                 name="mobile"
                 value={formData.mobile}
                 onChange={handleChange}
-                placeholder="Enter your mobile number"
+                placeholder={t("enterMobileNo")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -133,14 +137,14 @@ export default function Register() {
             {/* Email */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Email ID
+                {t("email")}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter your email"
+                placeholder={t("enterEmail")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -149,14 +153,14 @@ export default function Register() {
             {/* Password */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Create a Password
+                {t("createPassword")}
               </label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Create your password"
+                placeholder={t("enterCreatePassword")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -165,14 +169,14 @@ export default function Register() {
             {/* Confirm Password */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Confirm Password
+                {t("confirmPassword")}
               </label>
               <input
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Confirm your password"
+                placeholder={t("enterConfirmPassword")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -181,7 +185,7 @@ export default function Register() {
             {/* Date of Birth */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Date of Birth
+                {t("dob")}
               </label>
               <input
                 type="date"
@@ -196,7 +200,7 @@ export default function Register() {
             {/* Marital Status */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                Marital Status
+                {t("maritalStatus")}
               </label>
               <select
                 name="maritalStatus"
@@ -205,10 +209,10 @@ export default function Register() {
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               >
-                <option value="">Select</option>
-                <option value="Single">Single</option>
-                <option value="Married">Married</option>
-                <option value="Divorced">Divorced</option>
+                <option value="">{t("select")}</option>
+                <option value="Single">{t("single")}</option>
+                <option value="Married">{t("married")}</option>
+                <option value="Divorced">{t("divorced")}</option>
               </select>
             </div>
 
@@ -226,9 +230,9 @@ export default function Register() {
                 required
               />
               <span className="ml-2 text-gray-700">
-                I agree to the{" "}
+                {t("agreeTerms")}{" "}
                 <a href="#" className="text-pink-600 underline">
-                  Terms and Conditions
+                  {t("termsAndConditions")}
                 </a>
               </span>
             </div>
@@ -237,14 +241,14 @@ export default function Register() {
               type="submit"
               className="w-full bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-500 transition-all"
             >
-              Continue
+              {t("continue")}
             </button>
 
             <p className="text-center mt-4">
-              Already have an account?{" "}
-              <a href="/login" className="text-pink-600 font-semibold">
-                Log in
-              </a>
+              {t("alreadyAccount")}{" "}
+              <Link href="/login" className="text-pink-600 font-semibold">
+  {t("login")}
+</Link>
             </p>
           </form>
         </div>
