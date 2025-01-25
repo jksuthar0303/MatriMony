@@ -81,7 +81,6 @@ export async function GET(req) {
   }
 
   try {
-    // Verify the JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     return new Response(
