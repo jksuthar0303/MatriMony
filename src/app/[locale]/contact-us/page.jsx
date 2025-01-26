@@ -39,7 +39,7 @@ export default function ContactUs() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                {t("yourName")}
+                {t("form.yourName")}
               </label>
               <input
                 type="text"
@@ -47,14 +47,14 @@ export default function ContactUs() {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:border-pink-500 focus:ring-pink-500 outline-none"
-                placeholder={t("enterYourName")}
+                placeholder={t("form.enterYourName")}
                 required
               />
             </div>
 
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                {t("yourEmail")}
+                {t("form.yourEmail")}
               </label>
               <input
                 type="email"
@@ -62,14 +62,14 @@ export default function ContactUs() {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:border-pink-500 focus:ring-pink-500 outline-none"
-                placeholder={t("enterYourEmail")}
+                placeholder={t("form.enterYourEmail")}
                 required
               />
             </div>
 
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                {t("yourPhone")}
+                {t("form.yourPhone")}
               </label>
               <input
                 type="tel"
@@ -77,21 +77,21 @@ export default function ContactUs() {
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:border-pink-500 focus:ring-pink-500 outline-none"
-                placeholder={t("enterYourPhone")}
+                placeholder={t("form.enterYourPhone")}
                 required
               />
             </div>
 
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                {t("yourMessage")}
+                {t("form.yourMessage")}
               </label>
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 h-32 focus:border-pink-500 focus:ring-pink-500 outline-none"
-                placeholder={t("writeYourMessage")}
+                placeholder={t("form.writeYourMessage")}
                 required
               ></textarea>
             </div>
@@ -100,19 +100,19 @@ export default function ContactUs() {
               type="submit"
               className="w-full bg-pink-600 text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition-all"
             >
-              {t("sendMessageButton")}
+              {t("form.sendMessageButton")}
             </button>
           </form>
         </div>
 
         {/* Contact Details */}
         <div className="bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-2xl font-semibold text-pink-600 mb-6">{t("contactInformation")}</h2>
+          <h2 className="text-2xl font-semibold text-pink-600 mb-6">{t("contactInfo.contactInformation")}</h2>
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
               <FaPhoneAlt className="text-pink-600 text-2xl" />
               <div>
-                <p className="text-gray-700 font-medium">{t("phone")}</p>
+                <p className="text-gray-700 font-medium">{t("contactInfo.phone")}</p>
                 <p className="text-gray-500">+1 234 567 890</p>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function ContactUs() {
             <div className="flex items-center space-x-4">
               <FaEnvelope className="text-pink-600 text-2xl" />
               <div>
-                <p className="text-gray-700 font-medium">{t("email")}</p>
+                <p className="text-gray-700 font-medium">{t("contactInfo.email")}</p>
                 <p className="text-gray-500">support@mylifepair.com</p>
               </div>
             </div>
@@ -128,7 +128,7 @@ export default function ContactUs() {
             <div className="flex items-center space-x-4">
               <FaMapMarkerAlt className="text-pink-600 text-2xl" />
               <div>
-                <p className="text-gray-700 font-medium">{t("address")}</p>
+                <p className="text-gray-700 font-medium">{t("contactInfo.address")}</p>
                 <p className="text-gray-500">123 Love Street, Romance City, 56789</p>
               </div>
             </div>

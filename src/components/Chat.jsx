@@ -12,7 +12,7 @@ const Chat = () => {
       {isOpen ? (
         <div className="w-80 h-96 bg-white shadow-lg rounded-lg border border-gray-300 flex flex-col">
           <div className="bg-pink-600 text-white p-4 flex justify-between items-center rounded-t-lg">
-            <h3 className="text-lg font-semibold">{t("chatSupport")}</h3>
+            <h3 className="text-lg font-semibold">{t("title")}</h3>
             <button
               className="text-white text-xl"
               onClick={() => setIsOpen(false)}
@@ -21,12 +21,12 @@ const Chat = () => {
             </button>
           </div>
           <div className="flex-1 p-4 overflow-y-auto text-gray-700">
-            <p>{t("welcomeMessage")}</p>
+            <p>{t("messages.welcomeMessage")}</p>
           </div>
           <div className="p-4 border-t border-gray-300">
             <input
               type="text"
-              placeholder={t("typeYourMessage")}
+              placeholder={t("messages.typeYourMessage")}
               className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#e24169]"
             />
           </div>

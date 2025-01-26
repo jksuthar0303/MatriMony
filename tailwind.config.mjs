@@ -15,7 +15,8 @@ export default {
         roboto: ['Roboto', 'sans-serif'],
         openSans: ['Open Sans', 'sans-serif'],
         bebas: ['Bebas Neue', 'serif'],
-        londrina: ['Londrina Outline', 'serif']
+        londrina: ['Londrina Outline', 'serif'],
+        playwrite:['Playwrite IN','serif'],
       },
     },
   },

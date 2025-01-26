@@ -8,12 +8,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   age: { type: Number },
-  maritalStatus: { 
-    type: String,
-    enum: ['Single', 'Married', 'Divorced', 'Widowed'],
-    required: true
-  },
-  agree:{type: Boolean,require:true ,default:true},
+  agree:{type: Boolean,require:true ,default:false},
   occupation: { type: String },
   location: { type: String },
   image: { type: String },

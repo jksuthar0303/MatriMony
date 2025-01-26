@@ -15,7 +15,6 @@ export async function POST(req) {
         email,
         password,
         dateOfBirth,
-        maritalStatus,
         agree,
       } = await req.json();
   
@@ -27,7 +26,6 @@ export async function POST(req) {
         !email ||
         !password ||
         !dateOfBirth ||
-        !maritalStatus ||
         agree === undefined
       ) {
         return new Response(
@@ -64,7 +62,6 @@ export async function POST(req) {
         email,
         password: hashedPassword,
         dateOfBirth,
-        maritalStatus,
       });
   
       await newUser.save();
@@ -78,9 +75,9 @@ export async function POST(req) {
    // Set token in HTTP-only cookie (secure option, prevent client-side access)
    const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // Ensure it's only sent over HTTPS in production
+    // secure: process.env.NODE_ENV === 'production', 
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    path: '/', // Token is available across the whole domain
+    path: '/', 
   };
 
       // Return response with token in header

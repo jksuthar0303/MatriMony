@@ -76,14 +76,14 @@ export default function Login() {
             {/* Email */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                {t("emailID")}
+                {t("fields.emailID")}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder={t("enterEmail")}
+                placeholder={t("fields.enterEmail")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -92,14 +92,14 @@ export default function Login() {
             {/* Password */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                {t("password")}
+                {t("fields.password")}
               </label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder={t("enterPassword")}
+                placeholder={t("fields.enterPassword")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -114,7 +114,7 @@ export default function Login() {
                 onChange={() => setRememberMe(!rememberMe)}
                 className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
               />
-              <span className="ml-2 text-gray-700">{t("rememberMe")}</span>
+              <span className="ml-2 text-gray-700">{t("fields.rememberMe")}</span>
             </div>
 
             <button
@@ -143,14 +143,14 @@ export default function Login() {
       </svg>
     </div>
   ) : (
-    t("login")
+    t("buttons.login")
   )}
 </button>
 
             <p className="text-center mt-4">
-              {t("noAccount")}{" "}
+              {t("buttons.noAccount")}{" "}
               <Link href="/register" className="text-pink-600 font-semibold">
-                {t("createAccount")}
+                {t("buttons.createAccount")}
               </Link>
             </p>
           </form>

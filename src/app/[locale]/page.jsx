@@ -8,11 +8,11 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 export default function Home() {
   const [lookingFor, setLookingFor] = useState("bride");
   const [minAge, setMinAge] = useState("18");
-  const [maxAge, setMaxAge] = useState("");
+  const [maxAge, setMaxAge] = useState("60+");
   const [caste, setCaste] = useState("suthar");
-  const [subCaste, setSubCaste] = useState("");
-  const [qualification, setQualification] = useState("");
-  const [occupation, setOccupation] = useState("");
+  const [subCaste, setSubCaste] = useState("kulriya");
+  const [qualification, setQualification] = useState("graduation");
+  const [occupation, setOccupation] = useState("labour");
   const [state, setState] = useState("rajasthan");
   const [city, setCity] = useState("bikaner");
   const [manglik, setManglik] = useState("No");
@@ -108,21 +108,21 @@ export default function Home() {
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
-              {t("HomePage.getStarted")}
+              {t("HomePage.buttons.getStarted")}
             </button>
             <button className="bg-white text-pink-600 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-all">
-              {t("HomePage.learnMore")}
+              {t("HomePage.buttons.learnMore")}
             </button>
           </div>
         </div>
 
         {/* Decorative Elements */}
         <div className="absolute bottom-5 lg:bottom-10 left-10 text-white text-lg md:block">
-          <p>{t("HomePage.successfulMatches")}</p>
+          <p>{t("HomePage.highlights.successfulMatches")}</p>
         </div>
         <div className="absolute top-10 right-10 hidden bg-pink-600 text-white py-2 px-6 rounded-full md:block">
           <span className="font-semibold">
-            {t("HomePage.verifiedProfiles")}
+            {t("HomePage.highlights.verifiedProfiles")}
           </span>
         </div>
       </div>
@@ -130,128 +130,172 @@ export default function Home() {
       {/* Search Filters Section */}
       <div className="bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold text-center mb-6 text-pink-600">
-          {t("Filters.findYourPerfectMatch")}
+          {t("Filters.title")}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {/* Looking For */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={lookingFor}
-            onChange={handleChange(setLookingFor)}
-          >
-            <option value="">{t("Filters.lookingFor")}</option>
-            <option value="bride">{t("Options.gender.male")}</option>
-            <option value="groom">{t("Options.gender.female")}</option>
-          </select>
+          <div>
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.lookingFor")}
+            </span>
+            <select
+              className="p-3 border w-full rounded-lg focus:ring-pink-500 mt-2 focus:border-pink-500 accent-pink-600"
+              value={lookingFor}
+              onChange={handleChange(setLookingFor)}
+            >
+              <option value="bride">{t("Options.gender.male")}</option>
+              <option value="groom">{t("Options.gender.female")}</option>
+            </select>
+          </div>
+          <div className="col-span-2">
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.age")}
+            </span>
+            <div className="flex items-center mt-2 space-x-2">
+              <select
+                className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+                value={minAge}
+                onChange={handleChange(setMinAge)}
+              >
+                {Array.from({ length: 43 }, (_, i) => (
+                  <option key={i + 18} value={i + 18}>
+                    {i + 18}
+                  </option>
+                ))}
+                <option value="60+">60+</option>
+              </select>
+              <span className="font-bold text-sm text-gray-400">To</span>
+              {/* Max Age Dropdown */}
+              <select
+                className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+                value={maxAge}
+                onChange={handleChange(setMaxAge)}
+              >
+                {Array.from({ length: 43 }, (_, i) => (
+                  <option key={i + 18} value={i + 18}>
+                    {i + 18}
+                  </option>
+                ))}
+                <option value="60+">60+</option>
+              </select>
+            </div>
+          </div>
 
-          {/* Min Age Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={minAge}
-            onChange={handleChange(setMinAge)}
-          >
-            <option value="">{t("Filters.minAge")}</option>
-            {Array.from({ length: 43 }, (_, i) => (
-              <option key={i + 18} value={i + 18}>
-                {i + 18}
+          <div>
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.caste.selectCaste")}
+            </span>
+            {/* Caste Dropdown */}
+            <select
+              className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600 mt-2"
+              value={caste}
+              onChange={handleChange(setCaste)}
+            >
+              <option value="suthar">{t("Options.caste.suthar")}</option>
+            </select>
+          </div>
+          <div>
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.caste.selectSubCaste")}
+            </span>
+            {/* Sub-Caste Dropdown */}
+            <select
+              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+              value={subCaste}
+              onChange={handleChange(setSubCaste)}
+            >
+              <option value="kulriya">{t("Options.subCaste.kulriya")}</option>
+              <option value="">{t("Options.subCaste.jhambad")}</option>
+              <option value="">{t("Options.subCaste.mandan")}</option>
+              <option value="">{t("Options.subCaste.makad")}</option>
+              <option value="">{t("Options.subCaste.nagal")}</option>
+            </select>
+          </div>
+          <div>
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.qualification")}
+            </span>
+            {/* Qualification Dropdown */}
+            <select
+              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+              value={qualification}
+              onChange={handleChange(setQualification)}
+            >
+              <option>{t("Options.qualification.secondary")}</option>
+              <option>{t("Options.qualification.sr_sec")}</option>
+              <option value="graduation">
+                {t("Options.qualification.graduation")}
               </option>
-            ))}
-            <option value="60+">60+</option>
-          </select>
+              <option>{t("Options.qualification.pg")}</option>
+              <option>{t("Options.qualification.bachelor")}</option>
+              <option>{t("Options.qualification.master")}</option>
+              <option>{t("Options.qualification.phd")}</option>
+              <option>{t("Options.qualification.diploma")}</option>
+              <option>{t("Options.qualification.other_professional")}</option>
+              <option>{t("Options.qualification.nil")}</option>
+            </select>
+          </div>
 
-          {/* Max Age Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={maxAge}
-            onChange={handleChange(setMaxAge)}
-          >
-            <option value="">{t("Filters.maxAge")}</option>
-            {Array.from({ length: 43 }, (_, i) => (
-              <option key={i + 18} value={i + 18}>
-                {i + 18}
+          <div>
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.occupation")}
+            </span>
+            {/* Occupation Dropdown */}
+            <select
+              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+              value={occupation}
+              onChange={handleChange(setOccupation)}
+            >
+              <option>{t("Options.occupation.doctor")}</option>
+              <option>{t("Options.occupation.engineer")}</option>
+              <option>{t("Options.occupation.teacher")}</option>
+              <option>{t("Options.occupation.self_employed")}</option>
+              <option>{t("Options.occupation.govt_service")}</option>
+              <option>{t("Options.occupation.pvt_service")}</option>
+              <option value="labour">{t("Options.occupation.labour")}</option>
+              <option>{t("Options.occupation.student")}</option>
+              <option>{t("Options.occupation.none")}</option>
+            </select>
+          </div>
+          <div>
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.location.state")}
+            </span>
+            {/* State Dropdown */}
+            <select
+              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+              value={state}
+              onChange={handleChange(setState)}
+            >
+              <option value="rajasthan">
+                {t("Options.location.state.rajasthan")}
               </option>
-            ))}
-            <option value="60+">60+</option>
-          </select>
-
-          {/* Caste Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={caste}
-            onChange={handleChange(setCaste)}
-          >
-            <option value="">{t("Filters.selectCaste")}</option>
-            <option value="suthar">{t("Options.caste.suthar")}</option>
-          </select>
-
-          {/* Sub-Caste Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={subCaste}
-            onChange={handleChange(setSubCaste)}
-          >
-            <option value="">{t("Filters.selectSubCaste")}</option>
-            <option value="">{t("Options.Sub-Caste.kulriya")}</option>
-            <option value="">{t("Options.Sub-Caste.jhambad")}</option>
-            <option value="">{t("Options.Sub-Caste.mandan")}</option>
-            <option value="">{t("Options.Sub-Caste.makad")}</option>
-            <option value="">{t("Options.Sub-Caste.nagal")}</option>
-          </select>
-
-          {/* Qualification Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={qualification}
-            onChange={handleChange(setQualification)}
-          >
-            <option>{t("Filters.qualification")}</option>
-            <option>{t("Options.qualification.bachelor")}</option>
-            <option>{t("Options.qualification.master")}</option>
-            <option>{t("Options.qualification.phd")}</option>
-            <option>{t("Options.qualification.diploma")}</option>
-          </select>
-
-          {/* Occupation Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={occupation}
-            onChange={handleChange(setOccupation)}
-          >
-            <option>{t("Filters.occupation")}</option>
-            <option>{t("Options.occupation.doctor")}</option>
-            <option>{t("Options.occupation.engineer")}</option>
-            <option>{t("Options.occupation.teacher")}</option>
-            <option>{t("Options.occupation.business")}</option>
-          </select>
-
-          {/* State Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={state}
-            onChange={handleChange(setState)}
-          >
-            <option>{t("Filters.state")}</option>
-            <option value="rajasthan">{t("Options.state.rajasthan")}</option>
-          </select>
-
-          {/* City Dropdown */}
-          <select
-            className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-            value={city}
-            onChange={handleChange(setCity)}
-          >
-            <option>{t("Filters.city")}</option>
-            <option value="bikaner">{t("Options.city.bikaner")}</option>
-          </select>
+            </select>
+          </div>
+          <div>
+            <span className="font-bold text-pink-600">
+              {t("Filters.fields.location.city")}
+            </span>
+            {/* City Dropdown */}
+            <select
+              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
+              value={city}
+              onChange={handleChange(setCity)}
+            >
+              <option value="bikaner">
+                {t("Options.location.city.bikaner")}
+              </option>
+            </select>
+          </div>
         </div>
 
         {/* Additional Filters - Radio Buttons */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           {/* Manglik */}
           <div className="flex items-center space-x-4">
-            <span className="font-semibold text-gray-600">
-              {t("Filters.manglik")}:
+            <span className="font-semibold text-pink-600">
+              {t("Filters.fields.preferences.manglik")}:
             </span>
             <label className="flex items-center space-x-2">
               <input
@@ -262,7 +306,7 @@ export default function Home() {
                 checked={manglik === "Yes"}
                 onChange={() => setManglik("Yes")}
               />
-              <span>{t("Options.manglik.yes")}</span>
+              <span>{t("Options.preferences.manglik.yes")}</span>
             </label>
             <label className="flex items-center space-x-2">
               <input
@@ -273,14 +317,14 @@ export default function Home() {
                 checked={manglik === "No"}
                 onChange={() => setManglik("No")}
               />
-              <span>{t("Options.manglik.no")}</span>
+              <span>{t("Options.preferences.manglik.no")}</span>
             </label>
           </div>
 
           {/* Divyang */}
           <div className="flex items-center space-x-4">
-            <span className="font-semibold text-gray-600">
-              {t("Filters.divyang")}:
+            <span className="font-semibold text-pink-600">
+              {t("Filters.fields.preferences.divyang")}:
             </span>
             <label className="flex items-center space-x-2">
               <input
@@ -291,7 +335,7 @@ export default function Home() {
                 checked={divyang === "Yes"}
                 onChange={() => setDivyang("Yes")}
               />
-              <span>{t("Options.divyang.yes")}</span>
+              <span>{t("Options.preferences.divyang.yes")}</span>
             </label>
             <label className="flex items-center space-x-2">
               <input
@@ -302,14 +346,14 @@ export default function Home() {
                 checked={divyang === "No"}
                 onChange={() => setDivyang("No")}
               />
-              <span>{t("Options.divyang.no")}</span>
+              <span>{t("Options.preferences.divyang.no")}</span>
             </label>
           </div>
 
           {/* Second Marriage */}
           <div className="flex items-center space-x-4">
-            <span className="font-semibold text-gray-600">
-              {t("Filters.secondMarriage")}:
+            <span className="font-semibold text-pink-600">
+              {t("Filters.fields.preferences.secondMarriage")}:
             </span>
             <label className="flex items-center space-x-2">
               <input
@@ -320,7 +364,7 @@ export default function Home() {
                 checked={secondMarriage === "Yes"}
                 onChange={() => setSecondMarriage("Yes")}
               />
-              <span>{t("Options.secondMarriage.yes")}</span>
+              <span>{t("Options.preferences.secondMarriage.yes")}</span>
             </label>
             <label className="flex items-center space-x-2">
               <input
@@ -331,16 +375,24 @@ export default function Home() {
                 checked={secondMarriage === "No"}
                 onChange={() => setSecondMarriage("No")}
               />
-              <span>{t("Options.secondMarriage.no")}</span>
+              <span>{t("Options.preferences.secondMarriage.no")}</span>
             </label>
           </div>
+        </div>
+        <div className="text-center mt-8">
+          <button
+            onClick={handleClick}
+            className="px-8 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-500 w-56 transition-all"
+          >
+            {t("Filters.actions.searchButton")}
+          </button>
         </div>
       </div>
 
       {/* Featured Profiles Section */}
       <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg relative">
         <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4 md:mb-6 text-pink-600">
-          {t("Profiles.profiles")}
+          {t("Profiles.title")}
         </h2>
 
         {loading ? (
@@ -399,7 +451,7 @@ export default function Home() {
       {/* Success Stories Section */}
       <div className="bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold text-center mb-8 text-pink-600">
-          {t("SuccessStories.successStories")}
+          {t("SuccessStories.title")}
         </h2>
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -436,9 +488,9 @@ export default function Home() {
         <div className="text-center mt-8">
           <button
             onClick={handleClick}
-            className="px-8 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-500 transition-all"
+            className="px-8 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-500 w-56 transition-all"
           >
-            {t("SuccessStories.showmore")}
+            {t("SuccessStories.showMore")}
           </button>
         </div>
       </div>
@@ -446,11 +498,11 @@ export default function Home() {
       {/* Call-to-Action Section */}
       <div className="bg-pink-600 text-white text-center p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold mb-4">
-          {t("HomePage.readyToFindMatch")}
+          {t("HomePage.callToAction.readyToFindMatch")}
         </h2>
-        <p className="text-lg mb-6"> {t("HomePage.joinNow")}</p>
+        <p className="text-lg mb-6"> {t("HomePage.callToAction.joinNow")}</p>
         <button className="bg-white text-pink-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-200">
-          {t("HomePage.registerNow")}
+          {t("HomePage.buttons.registerNow")}
         </button>
       </div>
     </div>

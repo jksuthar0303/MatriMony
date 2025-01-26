@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 
 export default function Register() {
   const t = useTranslations("Register");
@@ -15,13 +15,12 @@ export default function Register() {
     password: "",
     confirmPassword: "",
     dob: "",
-    maritalStatus: "",
     agree: false,
   });
 
   const [error, setError] = useState(""); 
   const [success, setSuccess] = useState("");
-
+const router = useRouter();
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -48,7 +47,6 @@ export default function Register() {
       email: formData.email,
       password: formData.password,
       dateOfBirth: formData.dob,
-      maritalStatus: formData.maritalStatus,
       agree: formData.agree,
     };
   
@@ -67,7 +65,7 @@ export default function Register() {
       if (response.ok) {
         // Handle success message
         setSuccess(result.message);
-        
+  
         // Clear form fields
         setFormData({
           gender: "",
@@ -82,7 +80,9 @@ export default function Register() {
         });
   
         // Redirect to homepage after successful registration
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");  // Make sure the redirect happens after the success message
+        }, 1500);  // Adding a small delay before the redirect to show the success message
       } else {
         setError(result.message || "Registration failed.");
       }
@@ -90,7 +90,6 @@ export default function Register() {
       setError("Error registering user. Please try again.");
     }
   };
-  
 
   return (
     <div className="bg-gray-50 min-h-screen flex items-center justify-center p-8">
@@ -115,7 +114,7 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Gender */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("gender")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.gender")}</label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2">
                   <input
@@ -127,7 +126,7 @@ export default function Register() {
                     onChange={handleChange}
                     required
                   />
-                  {t("male")}
+                  {t("genderOptions.male")}
                 </label>
                 <label className="flex items-center gap-2">
                   <input
@@ -139,20 +138,20 @@ export default function Register() {
                     onChange={handleChange}
                     required
                   />
-                  {t("female")}
+                  {t("genderOptions.female")}
                 </label>
               </div>
             </div>
 
             {/* Full Name */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("fullName")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.fullName")}</label>
               <input
                 type="text"
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder={t("enterFullName")}
+                placeholder={t("fields.enterFullName")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -160,13 +159,13 @@ export default function Register() {
 
             {/* Mobile Number */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("mobileNo")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.mobileNo")}</label>
               <input
                 type="tel"
                 name="mobile"
                 value={formData.mobile}
                 onChange={handleChange}
-                placeholder={t("enterMobileNo")}
+                placeholder={t("fields.enterMobileNo")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -174,13 +173,13 @@ export default function Register() {
 
             {/* Email */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("email")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.email")}</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder={t("enterEmail")}
+                placeholder={t("fields.enterEmail")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -188,13 +187,13 @@ export default function Register() {
 
             {/* Password */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("createPassword")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.createPassword")}</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder={t("enterCreatePassword")}
+                placeholder={t("fields.enterCreatePassword")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -202,13 +201,13 @@ export default function Register() {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("confirmPassword")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.confirmPassword")}</label>
               <input
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder={t("enterConfirmPassword")}
+                placeholder={t("fields.enterConfirmPassword")}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               />
@@ -216,7 +215,7 @@ export default function Register() {
 
             {/* Date of Birth */}
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("dob")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.dob")}</label>
               <input
                 type="date"
                 name="dob"
@@ -227,9 +226,9 @@ export default function Register() {
               />
             </div>
 
-            {/* Marital Status */}
+            {/* Marital Status
             <div>
-              <label className="block text-gray-700 font-medium mb-2">{t("maritalStatus")}</label>
+              <label className="block text-gray-700 font-medium mb-2">{t("fields.maritalStatus")}</label>
               <select
                 name="maritalStatus"
                 value={formData.maritalStatus}
@@ -237,13 +236,13 @@ export default function Register() {
                 className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 required
               >
-                <option value="">{t("select")}</option>
-                <option value="Single">{t("single")}</option>
-                <option value="Married">{t("married")}</option>
-                <option value="Divorced">{t("divorced")}</option>
-                <option value="Widowed">{t("widowed")}</option>
+                <option value="">{t("maritalStatusOptions.select")}</option>
+                <option value="Single">{t("maritalStatusOptions.single")}</option>
+                <option value="Married">{t("maritalStatusOptions.married")}</option>
+                <option value="Divorced">{t("maritalStatusOptions.divorced")}</option>
+                <option value="Widowed">{t("maritalStatusOptions.widowed")}</option>
               </select>
-            </div>
+            </div> */}
 
             {/* Terms & Conditions */}
             <div className="flex items-center">
@@ -256,9 +255,9 @@ export default function Register() {
                 required
               />
               <span className="ml-2 text-gray-700">
-                {t("agreeTerms")}{" "}
+                {t("agreeTerms.agreeTerms")}{" "}
                 <a href="#" className="text-pink-600 underline">
-                  {t("termsAndConditions")}
+                  {t("agreeTerms.termsAndConditions")}
                 </a>
               </span>
             </div>
@@ -267,13 +266,13 @@ export default function Register() {
               type="submit"
               className="w-full bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-500 transition-all"
             >
-              {t("continue")}
+              {t("buttons.continue")}
             </button>
 
             <p className="text-center mt-4">
-              {t("alreadyAccount")}{" "}
+              {t("buttons.alreadyAccount")}{" "}
               <Link href="/login" className="text-pink-600 font-semibold">
-                {t("login")}
+                {t("buttons.login")}
               </Link>
             </p>
           </form>

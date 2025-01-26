@@ -2,30 +2,44 @@
   "HomePage": {
     "title": "अपना आदर्श साथी खोजें",
     "description": "आपकी खुशहाल और पूर्ण जीवन यात्रा यहाँ से शुरू होती है। हजारों लोगों द्वारा सही जीवन साथी खोजने के लिए भरोसा किया गया।",
-    "getStarted": "शुरू करें",
-    "learnMore": "और जानें",
-    "successfulMatches": "500,000 से अधिक सफल जोड़े",
-    "verifiedProfiles": "100% सत्यापित प्रोफाइल",
-
-    "readyToFindMatch": "क्या आप अपनी जोड़ी ढूंढने के लिए तैयार हैं?",
-    "joinNow": "जुड़ें और हमारे साथ अपनी यात्रा शुरू करें!",
-    "registerNow": "रजिस्टर करें"
+    "buttons": {
+      "getStarted": "शुरू करें",
+      "learnMore": "और जानें",
+      "registerNow": "रजिस्टर करें"
+    },
+    "highlights": {
+      "successfulMatches": "500,000 से अधिक सफल जोड़े",
+      "verifiedProfiles": "100% सत्यापित प्रोफाइल"
+    },
+    "callToAction": {
+      "readyToFindMatch": "क्या आप अपनी जोड़ी ढूंढने के लिए तैयार हैं?",
+      "joinNow": "जुड़ें और हमारे साथ अपनी यात्रा शुरू करें!"
+    }
   },
   "Filters": {
-    "findYourPerfectMatch": "अपना आदर्श साथी खोजें",
-    "lookingFor": "खोज रहे हैं...",
-    "minAge": "न्यूनतम आयु",
-    "maxAge": "अधिकतम आयु",
-    "selectCaste": "जाति चयन करें",
-    "selectSubCaste": "उप जाति चयन करें",
-    "qualification": "योग्यता",
-    "occupation": "व्यवसाय",
-    "state": "राज्य",
-    "city": "शहर",
-    "manglik": "मंगलिक",
-    "divyang": "दिव्यांग",
-    "secondMarriage": "दूसरी शादी",
-    "searchButton": "खोजें"
+    "title": "अपना आदर्श साथी खोजें",
+    "fields": {
+      "lookingFor": "खोज रहे हैं...",
+      "age":"आयु",
+      "caste": {
+        "selectCaste": "जाति चयन करें",
+        "selectSubCaste": "उप जाति चयन करें"
+      },
+      "qualification": "योग्यता चयन करें",
+      "occupation": "व्यवसाय चयन करें",
+      "location": {
+        "state": "राज्य चयन करें",
+        "city": "शहर चयन करें"
+      },
+      "preferences": {
+        "manglik": "मंगलिक",
+        "divyang": "दिव्यांग",
+        "secondMarriage": "दूसरी शादी"
+      }
+    },
+    "actions": {
+      "searchButton": "खोजें"
+    }
   },
   "Options": {
     "gender": {
@@ -35,7 +49,7 @@
     "caste": {
       "suthar": "सुथार"
     },
-    "Sub-Caste": {
+    "subCaste": {
       "kulriya": "कुलरिया",
       "jhambad": "जांभड़",
       "mandan": "मांडण",
@@ -43,137 +57,185 @@
       "nagal": "नागल"
     },
     "qualification": {
-      "bachelor": "स्नातक",
-      "master": "स्नातकोत्तर",
+      "secondary": "माध्यमिक",
+      "sr_sec": "सीनियर सेकेंडरी",
+      "graduation": "स्नातक",
+      "pg": "स्नातकोत्तर",
+      "bachelor": "स्नातक की डिग्री",
+      "master": "मास्टर की डिग्री",
       "phd": "पीएचडी",
-      "diploma": "डिप्लोमा"
+      "diploma": "डिप्लोमा",
+      "other_professional": "अन्य (व्यावसायिक)",
+      "nil": "कोई नहीं"
     },
     "occupation": {
       "doctor": "डॉक्टर",
       "engineer": "इंजीनियर",
       "teacher": "शिक्षक",
-      "business": "व्यवसाय"
+      "business": "व्यवसाय",
+      "self_employed": "व्यवसाय/स्व-नियोजित",
+      "govt_service": "सरकारी सेवा",
+      "pvt_service": "निजी सेवा",
+      "labour": "श्रमिक",
+      "student": "छात्र",
+      "none": "कोई नहीं"
     },
-    "state": {
-      "rajasthan": "राजस्थान"
+    "location": {
+      "state": {
+        "rajasthan": "राजस्थान"
+      },
+      "city": {
+        "bikaner": "बीकानेर",
+        "jaipur": "जयपुर"
+      }
     },
-    "city": {
-      "bikaner": "बीकानेर",
-      "jaipur": "जयपुर"
-    },
-    "manglik":  {
-      "yes": "शामिल करें",
-      "no": "हटाएं"
-    },
-    "divyang":  {
-      "yes": "शामिल करें",
-      "no": "हटाएं"
-    },
-    "secondMarriage":  {
-      "yes": "शामिल करें",
-      "no": "हटाएं"
+    "preferences": {
+      "manglik": {
+        "yes": "शामिल करें",
+        "no": "हटाएं"
+      },
+      "divyang": {
+        "yes": "शामिल करें",
+        "no": "हटाएं"
+      },
+      "secondMarriage": {
+        "yes": "शामिल करें",
+        "no": "हटाएं"
+      }
     }
   },
-  "Profiles":{
-    "profiles":"प्रोफाइल्स"
+  "Profiles": {
+    "title": "प्रोफाइल्स"
   },
-  "SuccessStories":{
-    "successStories":"सफल जोड़े ",
-    "showmore":"और देखे"
+  "SuccessStories": {
+    "title": "सफल जोड़े",
+    "showMore": "और देखें"
   },
   "Header": {
-    "home": "होम",
-    "memberships": "सदस्यताएँ",
-    "successStories": "सफल जोड़े",
-    "contactUs": "संपर्क करें",
-    "register": "रजिस्टर करें",
-    "login": "लॉगिन करें",
-    "wishlist": "विशलिस्ट",
-    "profile": "प्रोफाइल"
+    "navLinks": {
+      "home": "होम",
+      "memberships": "सदस्यताएँ",
+      "successStories": "सफल जोड़े",
+      "contactUs": "संपर्क करें",
+      "register": "रजिस्टर करें",
+      "login": "लॉगिन करें",
+      "wishlist": "विशलिस्ट",
+      "profile": "प्रोफाइल"
+    }
   },
   "Footer": {
-    "aboutUs": "हमारे बारे में",
-    "aboutText": "MyLifepair एक प्रमुख शादी प्लेटफ़ॉर्म है, जो व्यक्तियों को आसानी से और विश्वास के साथ अपना जीवन साथी ढूंढने में मदद करने के लिए समर्पित है। हमारा प्लेटफ़ॉर्म समुदायों के बीच लोगों को जोड़ता है, जो उनके जीवन-परिवर्तनकारी यात्रा के लिए एक सुरक्षित स्थान प्रदान करता है।",
-    "quickLinks": "त्वरित लिंक",
-    "about": "के बारे में",
+  "about": {
+    "title": "हमारे बारे में",
+    "description": "Sagairisthe एक प्रमुख विवाह मंच है, जो व्यक्तियों को उनके जीवनसाथी को आसानी और विश्वास के साथ खोजने में मदद करने के लिए समर्पित है। हमारा मंच विभिन्न समुदायों में लोगों को जोड़ता है, उनके जीवन बदलने वाली यात्रा के लिए एक सुरक्षित स्थान प्रदान करता है।"
+  },
+  "quickLinks": {
+    "title": "क्विकलिंक",
+    "about": "हमारे बारे में",
     "contact": "संपर्क करें",
     "terms": "नियम और शर्तें",
-    "privacy": "गोपनीयता नीति",
-    "contactUs": "संपर्क करें",
+    "privacy": "गोपनीयता नीति"
+  },
+  "contactInfo": {
+    "title": "संपर्क करें",
     "email": "ईमेल:",
     "phone": "फोन:",
     "address": "पता:",
-    "followUs": "हमसे जुड़ें",
-    "copyright": "© 2025 MyLifepair. सर्वाधिकार सुरक्षित।"
+    "followUs": "हमसे जुड़ें"
   },
-  "ChatBox":{
-    "chatSupport": "चैट सपोर्ट",
-    "welcomeMessage": "चैट सपोर्ट में आपका स्वागत है! हम आपकी आज कैसे सहायता कर सकते हैं?",
-    "typeYourMessage": "अपना संदेश लिखें..."
-  },  
+  "copyright": "© 2025 Sagairisthe. सर्वाधिकार सुरक्षित।"
+},
+
+  "ChatBox": {
+    "title": "चैट सपोर्ट",
+    "messages": {
+      "welcomeMessage": "चैट सपोर्ट में आपका स्वागत है! हम आपकी आज कैसे सहायता कर सकते हैं?",
+      "typeYourMessage": "अपना संदेश लिखें..."
+    }
+  },
   "Register": {
-    "welcomeText": "हमारे विवाह सेवा में आपका स्वागत है",
-    "introText": "हम आपकी आदर्श जोड़ी खोजने में मदद करने के लिए प्रतिबद्ध हैं। अपनी प्रोफ़ाइल बनाएं और अपनी यात्रा शुरू करें!",
-    "createAccount": "नया खाता बनाएं",
-    "matchmakingService": "हम सर्वोत्तम मैच-मेकिंग सेवा प्रदान करते हैं।",
+  "welcomeText": "हमारी विवाह सेवा में आपका स्वागत है",
+  "introText": "हम आपकी आदर्श साथी खोजने में आपकी मदद करने के लिए प्रतिबद्ध हैं। अब अपना प्रोफ़ाइल बनाकर अपनी यात्रा शुरू करें!",
+  "createAccount": "नया खाता बनाएं",
+  "matchmakingService": "हम बेहतरीन मैचमेकिंग सेवा प्रदान करते हैं।",
+  "fields": {
     "gender": "लिंग",
-    "male": "पुरुष",
-    "female": "महिला",
     "fullName": "पूरा नाम",
-    "enterFullName":"अपना पूरा नाम दर्ज करें",
+    "enterFullName": "अपना पूरा नाम दर्ज करें",
     "mobileNo": "मोबाइल नंबर",
     "enterMobileNo": "अपना मोबाइल नंबर दर्ज करें",
     "email": "ईमेल आईडी",
-    "enterEmail":"अपना ईमेल दर्ज करें",
+    "enterEmail": "अपना ईमेल दर्ज करें",
     "createPassword": "पासवर्ड बनाएं",
-    "enterCreatePassword":"अपना पासवर्ड बनाएं",
+    "enterCreatePassword": "अपना पासवर्ड बनाएं",
     "confirmPassword": "पासवर्ड की पुष्टि करें",
-    "enterConfirmPassword": "अपना पासवर्ड की पुष्टि करें",
+    "enterConfirmPassword": "अपना पासवर्ड फिर से दर्ज करें",
     "dob": "जन्म तिथि",
-    "maritalStatus": "वैवाहिक स्थिति",
-    "select":"चयन करें",
-    "single":"अविवाहित",
-    "married":"विवाहित",
-    "divorced":"तलाकशुदा",
-    "widowed":"विधवा",
-    "agreeTerms": "मैं नियम और शर्तों से सहमत हूँ",
-    "termsAndConditions": "नियम और शर्तें",
+    "maritalStatus": "वैवाहिक स्थिति"
+  },
+  "buttons": {
     "continue": "जारी रखें",
     "alreadyAccount": "क्या आपके पास पहले से खाता है?",
-    "login":"लॉग इन करें"
+    "login": "लॉग इन करें"
   },
-  "Login":{
-    "welcomeBack": "आपका स्वागत है...",
-    "introText": "हमें फिर से आपको देख कर खुशी हो रही है। कृपया अपने डैशबोर्ड तक पहुँचने के लिए लॉगिन करें।",
-    "loginToAccount": "अपने खाते में लॉगिन करें",
-    "enterCredentials": "अपने खाते तक पहुँचने के लिए अपने क्रेडेंशियल्स दर्ज करें।",
+  "genderOptions": {
+    "male": "पुरुष",
+    "female": "महिला"
+  },
+  "maritalStatusOptions": {
+    "select": "चुनें",
+    "single": "अविवाहित",
+    "married": "विवाहित",
+    "divorced": "तलाकशुदा",
+    "widowed": "विधवा"
+  },
+  "agreeTerms": {
+    "agreeTerms": "मैं सहमत हूं",
+    "termsAndConditions": "नियम और शर्तें"
+  }
+},
+"Login": {
+  "welcomeBack": "आपका स्वागत है...",
+  "introText": "हमें आपको फिर से देख कर खुशी हुई। कृपया अपनी डैशबोर्ड पर जारी रखने के लिए लॉग इन करें।",
+  "loginToAccount": "अपने खाते में लॉग इन करें",
+  "enterCredentials": "अपने खाते तक पहुँचने के लिए अपनी क्रेडेंशियल्स दर्ज करें।",
+  "fields": {
     "emailID": "ईमेल आईडी",
     "enterEmail": "अपना ईमेल दर्ज करें",
     "password": "पासवर्ड",
     "enterPassword": "अपना पासवर्ड दर्ज करें",
-    "rememberMe": "मुझे याद रखें",
-    "login": "लॉगिन करें",
+    "rememberMe": "मुझे याद रखें"
+  },
+  "buttons": {
+    "login": "लॉग इन करें",
     "noAccount": "क्या आपके पास खाता नहीं है?",
     "createAccount": "एक खाता बनाएं"
-  },
-  "ContactUs":{
-    "contactUs": "संपर्क करें",
-    "contactDescription": "कोई प्रश्न है या सहायता चाहिए? नीचे दिए गए फ़ॉर्म का उपयोग करके हमसे संपर्क करें या सीधे हमसे संपर्क करें।",
-    "sendMessage": "हमें एक संदेश भेजें",
+  }
+},
+
+
+ "ContactUs": {
+  "contactUs": "संपर्क करें",
+  "contactDescription": "कोई प्रश्न है या सहायता की आवश्यकता है? नीचे दिए गए फ़ॉर्म का उपयोग करके हमसे संपर्क करें या सीधे संपर्क करें।",
+  "sendMessage": "संदेश भेजें",
+
+  "form": {
     "yourName": "आपका नाम",
     "enterYourName": "अपना नाम दर्ज करें",
     "yourEmail": "आपका ईमेल",
     "enterYourEmail": "अपना ईमेल दर्ज करें",
-    "yourPhone": "आपका फ़ोन",
-    "enterYourPhone": "अपना फ़ोन नंबर दर्ज करें",
+    "yourPhone": "आपका फोन",
+    "enterYourPhone": "अपना फोन नंबर दर्ज करें",
     "yourMessage": "आपका संदेश",
     "writeYourMessage": "अपना संदेश लिखें",
-    "sendMessageButton": "संदेश भेजें",
+    "sendMessageButton": "संदेश भेजें"
+  },
+  "contactInfo": {
     "contactInformation": "संपर्क जानकारी",
     "phone": "फोन",
     "email": "ईमेल",
-    "address": "पता",
-    "location": "123 लव स्ट्रीट, रोमांस सिटी, 56789"
+    "address": "पता"
   }
-  
 }
+
+}
+
