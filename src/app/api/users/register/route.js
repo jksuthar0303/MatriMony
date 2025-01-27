@@ -70,13 +70,14 @@ export async function POST(req) {
       const token = jwt.sign(
         { userId: newUser._id, email: newUser.email },
         process.env.JWT_SECRET,
-        { expiresIn: "7d" } // Token valid for 7 days
+        { expiresIn: "30d" } // Token valid for 7 days
       );
    // Set token in HTTP-only cookie (secure option, prevent client-side access)
    const cookieOptions = {
     httpOnly: true,
     // secure: process.env.NODE_ENV === 'production', 
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+
     path: '/', 
   };
 
@@ -99,5 +100,5 @@ export async function POST(req) {
         { status: 500 }
       );
     }
-  }
+}
   

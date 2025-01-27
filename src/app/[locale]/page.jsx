@@ -1,41 +1,123 @@
 "use client";
 
-import { useRouter } from "@/i18n/routing";
+import Dropdown from "@/components/Dropdown";
+import { Link, useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { options } from "@/option/dropDownOptions";
+import DropdownWithCheck from "@/components/DropdownWithCheck";
 
 export default function Home() {
   const [lookingFor, setLookingFor] = useState("bride");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [minAge, setMinAge] = useState("18");
   const [maxAge, setMaxAge] = useState("60+");
   const [caste, setCaste] = useState("suthar");
-  const [subCaste, setSubCaste] = useState("kulriya");
-  const [qualification, setQualification] = useState("graduation");
-  const [occupation, setOccupation] = useState("labour");
-  const [state, setState] = useState("rajasthan");
-  const [city, setCity] = useState("bikaner");
+  const [subCaste, setSubCaste] = useState(["kulriya"]);
+  const [qualification, setQualification] = useState(["none"]);
+  const [occupation, setOccupation] = useState(["labour"]);
+  const [state, setState] = useState(["rajasthan"]);
+  const [city, setCity] = useState(["bikaner"]);
   const [manglik, setManglik] = useState("No");
   const [divyang, setDivyang] = useState("No");
   const [secondMarriage, setSecondMarriage] = useState("No");
   const [profiles, setProfiles] = useState([]);
   const [stories, setStories] = useState([]);
-  const [autoScroll, setAutoScroll] = useState(true);
   const [loading, setLoading] = useState(true);
   const t = useTranslations();
-  const scrollRef = useRef(null);
   const router = useRouter();
+  const [likedProfiles, setLikedProfiles] = useState({});
+  const {
+    cities,
+    gender,
+    minAgeOptions,
+    maxAgeOptions,
+    casteOptions,
+    subCasteOptions,
+    qualificationOptions,
+    occupationOptions,
+    stateOptions,
+  } = options(t);
+
+  const handleLikeClick = async (wishlistUserId) => {
+    try {
+      // Use fetch with credentials to send the auth token
+      const response = await fetch("/api/wishlists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Ensure cookies are sent
+        body: JSON.stringify({ wishlistUserId }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+
+      setLikedProfiles((prev) => ({
+        ...prev,
+        [wishlistUserId]: !prev[wishlistUserId],
+      }));
+
+      alert(data.message);
+    } catch (error) {
+      alert(error.message || "Failed to update wishlist");
+    }
+  };
 
   const handleClick = () => {
     router.push("/success-stories");
   };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const res = await fetch("/api/users/login");
+      const data = await res.json();
+      setIsAuthenticated(data.isAuthenticated);
+    };
+
+    checkAuth();
+  }, []);
+
   useEffect(() => {
     async function fetchUsers() {
-      const res = await fetch("/api/users");
-      const data = await res.json();
-      setProfiles(data);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Ensure cookies are sent
+        });
+
+        // Check if the response is okay (status 200-299)
+        if (!res.ok) {
+          throw new Error("Failed to fetch users");
+        }
+
+        const data = await res.json();
+
+        // Check if the response body is empty
+        if (!data || data.length === 0) {
+          throw new Error("No data received");
+        }
+
+        // If the response data contains an error indicating no token or user is not authenticated
+        if (data.message === "No token found") {
+          // Handle case for no token - show all users
+          setProfiles(data.users); // Assuming data.users contains the list of all users
+        } else {
+          // Handle case for logged-in users (wishlist filtering)
+          setProfiles(data);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
+      }
     }
+
     fetchUsers();
   }, []);
 
@@ -48,40 +130,11 @@ export default function Home() {
     }
     fetchStories();
   }, []);
-  // Scroll left function
-  // Handle scroll left and right
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
-    }
-  };
 
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
-    }
-  };
-
-  // Auto-scroll effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (autoScroll && scrollRef.current) {
-        scrollRef.current.scrollBy({ left: 200, behavior: "smooth" });
-
-        if (
-          scrollRef.current.scrollLeft + scrollRef.current.clientWidth >=
-          scrollRef.current.scrollWidth
-        ) {
-          scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
-        }
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [autoScroll]);
   const handleChange = (setter) => (e) => {
     setter(e.target.value);
   };
+
   return (
     <div className="p-4 space-y-12">
       {/* Hero Section */}
@@ -99,21 +152,38 @@ export default function Home() {
 
         {/* Main Content */}
         <div className="relative max-w-4xl">
-          <h1 className="text-6xl font-extrabold text-white leading-tight">
-            {t("HomePage.title")}
-          </h1>
+          {!isAuthenticated ? (
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+              {t("HomePage.title")}
+            </h1>
+          ) : (
+            <div className="flex sm:flex-col md:flex-row lg:flex-row items-center justify-center">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                {t("HomePage.welcome")}
+              </h1>
+              <span className="text-4xl md:text-4xl ml-2 mt-3 lg:text-6xl font-extrabold text-pink-600 font-playwrite">
+                {t("HomePage.domain")}
+              </span>
+            </div>
+          )}
 
           <p className="mt-4 text-xl text-gray-200">
             {t("HomePage.description")}
           </p>
-          <div className="mt-6 flex justify-center gap-4">
-            <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
-              {t("HomePage.buttons.getStarted")}
-            </button>
-            <button className="bg-white text-pink-600 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-all">
-              {t("HomePage.buttons.learnMore")}
-            </button>
-          </div>
+          {!isAuthenticated ? (
+            <div className="mt-6 flex justify-center gap-4">
+              <Link href="/register">
+                <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
+                  {t("HomePage.buttons.getStarted")}
+                </button>
+              </Link>
+              <Link href="/learn-more">
+                <button className="bg-white text-pink-600 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-all">
+                  {t("HomePage.buttons.learnMore")}
+                </button>
+              </Link>
+            </div>
+          ) : null}
         </div>
 
         {/* Decorative Elements */}
@@ -136,162 +206,83 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {/* Looking For */}
           <div>
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.lookingFor")}
-            </span>
-            <select
-              className="p-3 border w-full rounded-lg focus:ring-pink-500 mt-2 focus:border-pink-500 accent-pink-600"
-              value={lookingFor}
-              onChange={handleChange(setLookingFor)}
-            >
-              <option value="bride">{t("Options.gender.male")}</option>
-              <option value="groom">{t("Options.gender.female")}</option>
-            </select>
+            <Dropdown
+              options={gender}
+              selectedValue={lookingFor}
+              onChange={setLookingFor}
+              label={t("Filters.fields.lookingFor")}
+            />
           </div>
           <div className="col-span-2">
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.age")}
-            </span>
-            <div className="flex items-center mt-2 space-x-2">
-              <select
-                className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-                value={minAge}
-                onChange={handleChange(setMinAge)}
-              >
-                {Array.from({ length: 43 }, (_, i) => (
-                  <option key={i + 18} value={i + 18}>
-                    {i + 18}
-                  </option>
-                ))}
-                <option value="60+">60+</option>
-              </select>
-              <span className="font-bold text-sm text-gray-400">To</span>
-              {/* Max Age Dropdown */}
-              <select
-                className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-                value={maxAge}
-                onChange={handleChange(setMaxAge)}
-              >
-                {Array.from({ length: 43 }, (_, i) => (
-                  <option key={i + 18} value={i + 18}>
-                    {i + 18}
-                  </option>
-                ))}
-                <option value="60+">60+</option>
-              </select>
+            <div className="flex items-center space-x-6">
+              <Dropdown
+                options={minAgeOptions}
+                selectedValue={minAge}
+                onChange={setMinAge}
+                label={t("Filters.fields.minAge")}
+              />
+              <Dropdown
+                options={maxAgeOptions}
+                selectedValue={maxAge}
+                onChange={setMaxAge}
+                label={t("Filters.fields.maxAge")}
+              />
             </div>
           </div>
 
           <div>
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.caste.selectCaste")}
-            </span>
-            {/* Caste Dropdown */}
-            <select
-              className="p-3 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600 mt-2"
-              value={caste}
-              onChange={handleChange(setCaste)}
-            >
-              <option value="suthar">{t("Options.caste.suthar")}</option>
-            </select>
+            <Dropdown
+              options={casteOptions}
+              selectedValue={caste}
+              onChange={setCaste}
+              label={t("Filters.fields.caste.selectCaste")}
+            />
           </div>
           <div>
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.caste.selectSubCaste")}
-            </span>
-            {/* Sub-Caste Dropdown */}
-            <select
-              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-              value={subCaste}
-              onChange={handleChange(setSubCaste)}
-            >
-              <option value="kulriya">{t("Options.subCaste.kulriya")}</option>
-              <option value="">{t("Options.subCaste.jhambad")}</option>
-              <option value="">{t("Options.subCaste.mandan")}</option>
-              <option value="">{t("Options.subCaste.makad")}</option>
-              <option value="">{t("Options.subCaste.nagal")}</option>
-            </select>
+            <DropdownWithCheck
+              options={subCasteOptions}
+              selectedValues={subCaste}
+              onChange={setSubCaste}
+              label="Select SubCaste"
+            />
           </div>
           <div>
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.qualification")}
-            </span>
-            {/* Qualification Dropdown */}
-            <select
-              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-              value={qualification}
-              onChange={handleChange(setQualification)}
-            >
-              <option>{t("Options.qualification.secondary")}</option>
-              <option>{t("Options.qualification.sr_sec")}</option>
-              <option value="graduation">
-                {t("Options.qualification.graduation")}
-              </option>
-              <option>{t("Options.qualification.pg")}</option>
-              <option>{t("Options.qualification.bachelor")}</option>
-              <option>{t("Options.qualification.master")}</option>
-              <option>{t("Options.qualification.phd")}</option>
-              <option>{t("Options.qualification.diploma")}</option>
-              <option>{t("Options.qualification.other_professional")}</option>
-              <option>{t("Options.qualification.nil")}</option>
-            </select>
+            <DropdownWithCheck
+              options={qualificationOptions}
+              selectedValues={qualification}
+              onChange={setQualification}
+              label={t("Filters.fields.qualification")}
+            />
           </div>
 
           <div>
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.occupation")}
-            </span>
-            {/* Occupation Dropdown */}
-            <select
-              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-              value={occupation}
-              onChange={handleChange(setOccupation)}
-            >
-              <option>{t("Options.occupation.doctor")}</option>
-              <option>{t("Options.occupation.engineer")}</option>
-              <option>{t("Options.occupation.teacher")}</option>
-              <option>{t("Options.occupation.self_employed")}</option>
-              <option>{t("Options.occupation.govt_service")}</option>
-              <option>{t("Options.occupation.pvt_service")}</option>
-              <option value="labour">{t("Options.occupation.labour")}</option>
-              <option>{t("Options.occupation.student")}</option>
-              <option>{t("Options.occupation.none")}</option>
-            </select>
+            <DropdownWithCheck
+              options={occupationOptions}
+              selectedValues={occupation}
+              onChange={setOccupation}
+              label={t("Filters.fields.occupation")}
+            />
           </div>
           <div>
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.location.state")}
-            </span>
-            {/* State Dropdown */}
-            <select
-              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-              value={state}
-              onChange={handleChange(setState)}
-            >
-              <option value="rajasthan">
-                {t("Options.location.state.rajasthan")}
-              </option>
-            </select>
+            <DropdownWithCheck
+              options={stateOptions}
+              selectedValues={state}
+              onChange={setState}
+              label={t("Filters.fields.location.state")}
+            />
           </div>
           <div>
-            <span className="font-bold text-pink-600">
-              {t("Filters.fields.location.city")}
-            </span>
-            {/* City Dropdown */}
-            <select
-              className="p-3 mt-2 border rounded-lg w-full focus:ring-pink-500 focus:border-pink-500 accent-pink-600"
-              value={city}
-              onChange={handleChange(setCity)}
-            >
-              <option value="bikaner">
-                {t("Options.location.city.bikaner")}
-              </option>
-            </select>
+            <DropdownWithCheck
+              options={cities}
+              selectedValues={city}
+              onChange={setCity}
+              label={t("Filters.fields.location.city")}
+            />
           </div>
         </div>
 
         {/* Additional Filters - Radio Buttons */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {/* Manglik */}
           <div className="flex items-center space-x-4">
             <span className="font-semibold text-pink-600">
@@ -390,6 +381,7 @@ export default function Home() {
       </div>
 
       {/* Featured Profiles Section */}
+
       <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg relative">
         <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4 md:mb-6 text-pink-600">
           {t("Profiles.title")}
@@ -400,50 +392,46 @@ export default function Home() {
             <div className="loader"></div>
           </div>
         ) : (
-          <div
-            className="flex space-x-6 overflow-x-scroll scroll-smooth scrollbar-hide snap-x snap-mandatory h-[350px]"
-            ref={scrollRef}
-          >
-            {profiles.map((profile, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {profiles.slice(0, 4).map((profile, index) => (
               <div
-                key={index}
-                className="p-6 bg-white rounded-lg shadow-md min-w-[80%] md:min-w-[250px] h-[320px] snap-center mx-auto"
-                onMouseEnter={() => setAutoScroll(false)}
-                onMouseLeave={() => setAutoScroll(true)}
+                key={profile.id} // Make sure profile has a unique 'id'
+                className="bg-white h-[450px] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-100"
               >
-                <div className="relative">
-                  <img
-                    src={profile.image}
-                    alt="Profile"
-                    className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full border-4 border-pink-500 hover:scale-105 transition-all"
-                  />
+                <img
+                  src={profile.image}
+                  alt="Profile"
+                  className="w-full h-72 object-cover rounded-md mb-4"
+                />
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg md:text-xl font-bold text-center text-pink-600">
+                    {profile.name}
+                  </h3>
+                  <div
+                    onClick={() => handleLikeClick(profile._id)}
+                    className="cursor-pointer"
+                    title={
+                      likedProfiles[profile._id]
+                        ? "Remove from likes"
+                        : "Add to likes"
+                    }
+                  >
+                    {likedProfiles[profile._id] ? (
+                      <FaHeart color="red" size={20} />
+                    ) : (
+                      <FaRegHeart color="red" size={20} />
+                    )}
+                  </div>
                 </div>
-                <h3 className="text-lg md:text-xl font-bold text-center mt-3 md:mt-4">
-                  {profile.name}
-                </h3>
+
                 <p className="text-center text-gray-600 text-sm md:text-base">
                   Age: {profile.age} | {profile.occupation} | {profile.location}
                 </p>
-                <button className="mt-4 w-full bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all">
+                <button className="w-full mt-4 bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all">
                   View Profile
                 </button>
               </div>
             ))}
-
-            {/* Left and Right Scroll Buttons */}
-            <button
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-pink-600 text-white p-3 rounded-full shadow-lg hover:bg-pink-700 transition-all"
-              onClick={scrollLeft}
-            >
-              <FaChevronLeft size={20} />
-            </button>
-
-            <button
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-pink-600 text-white p-3 rounded-full shadow-lg hover:bg-pink-700 transition-all"
-              onClick={scrollRight}
-            >
-              <FaChevronRight size={20} />
-            </button>
           </div>
         )}
       </div>
@@ -496,15 +484,17 @@ export default function Home() {
       </div>
 
       {/* Call-to-Action Section */}
-      <div className="bg-pink-600 text-white text-center p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold mb-4">
-          {t("HomePage.callToAction.readyToFindMatch")}
-        </h2>
-        <p className="text-lg mb-6"> {t("HomePage.callToAction.joinNow")}</p>
-        <button className="bg-white text-pink-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-200">
-          {t("HomePage.buttons.registerNow")}
-        </button>
-      </div>
+      {!isAuthenticated ? (
+        <div className="bg-pink-600 text-white text-center p-8 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-semibold mb-4">
+            {t("HomePage.callToAction.readyToFindMatch")}
+          </h2>
+          <p className="text-lg mb-6"> {t("HomePage.callToAction.joinNow")}</p>
+          <button className="bg-white text-pink-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-200">
+            {t("HomePage.buttons.registerNow")}
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

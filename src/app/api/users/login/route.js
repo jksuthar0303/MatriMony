@@ -40,19 +40,20 @@ export async function POST(req) {
       const token = jwt.sign(
         { userId: user._id, email: user.email },
         process.env.JWT_SECRET,
-        { expiresIn: '7d' }
+        { expiresIn: '30d' }
       );
   
       // Set token in HTTP-only cookie (secure option, prevent client-side access)
       const cookieOptions = {
         httpOnly: true,
         // secure: process.env.NODE_ENV === 'production', // Ensure it's only sent over HTTPS in production
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+
         path: '/',
       };
   
       return new Response(
-        JSON.stringify({ message: 'Login successful' }),
+        JSON.stringify({ message: 'Login successful',token }),
         {
           status: 200,
           headers: {
@@ -68,6 +69,8 @@ export async function POST(req) {
       );
     }
 }
+
+
 export async function GET(req) {
   const cookies = req.headers.get('cookie') || '';
   const parsedCookies = parse(cookies);
@@ -94,3 +97,4 @@ export async function GET(req) {
     );
   }
 }
+

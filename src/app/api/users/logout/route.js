@@ -1,13 +1,25 @@
-export async function POST() {
+export async function DELETE(req) {
+  try {
+    const cookieOptions = {
+      httpOnly: true,
+      maxAge: 0, 
+      path: '/',
+    };
+
     return new Response(
-      JSON.stringify({ message: "Logged out successfully" }),
+      JSON.stringify({ message: 'Logout successful' }), 
       {
         status: 200,
         headers: {
-          "Set-Cookie": "authToken=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0",
-          "Content-Type": "application/json",
+          'Set-Cookie': `authToken=; ${Object.entries(cookieOptions).map(([key, value]) => `${key}=${value}`).join('; ')}`,
         },
       }
     );
+  } catch (error) {
+    console.error(error);
+    return new Response(
+      JSON.stringify({ message: 'Error logging out user', error: error.message }),
+      { status: 500 }
+    );
   }
-  
+}

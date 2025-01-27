@@ -15,7 +15,6 @@ const Header = () => {
   const [currentLanguage, setCurrentLanguage] = useState('en');
 
   useEffect(() => {
-    // Check if the user is authenticated
     const checkAuth = async () => {
       const res = await fetch('/api/users/login');
       const data = await res.json();
@@ -25,12 +24,34 @@ const Header = () => {
     checkAuth();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/users/logout', {
+        method: 'DELETE',
+        credentials: 'same-origin',
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Re-fetch authentication status after logout
+        setIsAuthenticated(false);
+        window.location.reload();
+        router.push('/');
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   const handleLanguageToggle = () => {
     const newLanguage = currentLanguage === 'en' ? 'hi' : 'en';
     setCurrentLanguage(newLanguage);
 
     const currentPath = window.location.pathname;
-    const regex = /^\/(en|hi)/; // Match the language code at the start
+    const regex = /^\/(en|hi)/;
     const newPath = currentPath.match(regex)
       ? currentPath.replace(regex, `/${newLanguage}`)
       : `/${newLanguage}${currentPath}`;
@@ -40,16 +61,17 @@ const Header = () => {
 
   return (
     <header className="bg-white text-pink-600 p-4 shadow-md sticky top-0 z-50">
-      <div className="container mx-auto flex flex-wrap justify-between items-center">
+      <div className="container mx-auto flex justify-between  items-center">
         {/* Logo */}
         <h1 className="text-2xl md:text-3xl font-playwrite font-extrabold">
           <Link href="/" className="flex items-center">
-            Sagairisthe <span className='text-sm mt-2'>.com</span>
+            Sagairisthe <span className="text-sm mt-2">.com</span>
           </Link>
         </h1>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex space-x-6 xl:space-x-8 font-medium">
+       <div>
+       <nav className="hidden lg:flex space-x-6 xl:space-x-8 font-medium">
           <Link href="/" className="hover:text-pink-500 transition-all">
             {t('navLinks.home')}
           </Link>
@@ -63,6 +85,7 @@ const Header = () => {
             {t('navLinks.contactUs')}
           </Link>
         </nav>
+       </div>
 
         {/* Language Toggle Button */}
         <button
@@ -73,7 +96,7 @@ const Header = () => {
         </button>
 
         {/* CTA and User Actions */}
-        <div className="hidden md:flex items-center space-x-4 md:space-x-6">
+        <div className="hidden lg:flex items-center space-x-4 md:space-x-6">
           {!isAuthenticated ? (
             <>
               <Link href="/register">
@@ -87,15 +110,27 @@ const Header = () => {
               </Link>
             </>
           ) : (
-            <Link href="/profile" className="flex items-center space-x-2 hover:text-pink-500 transition-all">
-              <FaUserCircle className="text-xl md:text-2xl" />
-              <span className="hidden sm:block">{t('navLinks.profile')}</span>
-            </Link>
-          )}
-          <Link href="/wishlist" className="flex items-center space-x-2 hover:text-pink-500 transition-all">
+            <div className='flex'>
+              <Link href="/profile" className="flex mr-6 items-center space-x-2 hover:text-pink-500 transition-all">
+                <FaUserCircle className="text-xl md:text-2xl" />
+                <span className="hidden sm:block">{t('navLinks.profile')}</span>
+              </Link>
+              <Link href="/wishlist" className="flex items-center space-x-2 hover:text-pink-500 transition-all">
             <FaHeart className="text-xl md:text-2xl" />
             <span className="hidden sm:block">{t('navLinks.wishlist')}</span>
           </Link>
+            </div>
+          )}
+          
+          {isAuthenticated ? (
+            <button
+                onClick={handleLogout}
+                className="bg-pink-600 text-white px-4 md:px-6 py-2 rounded-full font-semibold hover:bg-pink-600 transition-all"
+              >
+                {t('navLinks.logout')}
+              </button>
+           ): null }
+         
         </div>
 
         {/* Mobile Menu Button */}
@@ -134,24 +169,37 @@ const Header = () => {
           </Link>
           {!isAuthenticated ? (
             <>
-              <Link href="/register" className="bg-pink-600 text-white text-center py-3 rounded-lg font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
-                {t('navLinks.register')}
-              </Link>
               <Link href="/login" className="flex items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
                 <FaUserCircle className="text-2xl" />
                 <span>{t('navLinks.login')}</span>
               </Link>
             </>
           ) : (
+            
+            <div>
             <Link href="/profile" className="flex items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
               <FaUserCircle className="text-2xl" />
               <span>{t('navLinks.profile')}</span>
             </Link>
-          )}
-          <Link href="/wishlist" className="flex items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/wishlist" className="flex mt-4 items-center space-x-3 text-lg hover:text-pink-500" onClick={() => setIsMobileMenuOpen(false)}>
             <FaHeart className="text-2xl" />
             <span>{t('navLinks.wishlist')}</span>
           </Link>
+            </div>
+          )}
+         
+          {!isAuthenticated ? (
+            <Link href="/register" className="bg-pink-600 text-white text-center py-2 w-56 rounded-full font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
+                {t('navLinks.register')}
+              </Link>
+          ): <button
+                onClick={handleLogout}
+                className="bg-pink-600 w-56 text-white px-4 md:px-6 py-2 rounded-full font-semibold hover:bg-pink-600 transition-all"
+              >
+                {t('navLinks.logout')}
+              </button>}
+         
+         
         </div>
       </div>
     </header>

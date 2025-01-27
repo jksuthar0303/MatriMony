@@ -1,6 +1,8 @@
 {
   "HomePage": {
     "title": "Find Your Perfect Match",
+    "welcome": "Welcome To",
+    "domain": "Sagairisthe.com",
     "description": "Your journey to a happy and fulfilling life starts",
     "buttons": {
       "getStarted": "Get Started",
@@ -21,7 +23,8 @@
     "title": "Find Your Perfect Match",
     "fields": {
       "lookingFor": "Looking for...",
-      "age":"Age",
+      "minAge": "Min-Age",
+      "maxAge": "Max-Age",
       "caste": {
         "selectCaste": "Caste",
         "selectSubCaste": "Sub-Caste"
@@ -51,12 +54,31 @@
       "suthar": "Suthar"
     },
     "subCaste": {
+      "ashdev": "Ashdev",
+      "bardwa": "Bardwa",
+      "bamniya": "Bamniya",
+      "Bhadrecha": "Bhadrecha",
+      "chadiya": "Chadiya",
+      "chuyal": "Chuyal",
+      "dhamu": "Dhamu",
+      "dhanerava": "Dhanerava",
+      "doyal": "Doyal",
+      "durgesar": "Durgesar",
+      "gepal": "Gepal",
+      "khokha": "Khokha",
       "kulriya": "Kulriya",
-      "jhambad": "Jhambad",
-      "mandan": "Mandan",
+      "karal": "Karal",
+      "ladrecha": "Ladrecha",
       "makad": "Makad",
-      "nagal": "Nagal"
+      "mandan": "Mandan",
+      "marotiya": "Marotiya",
+      "motiyar": "Motiyar",
+      "nagal": "Nagal",
+      "nishan": "Nishan",
+      "padwa": "Padwa",
+      "jhambad": "Jhambad"
     },
+
     "qualification": {
       "secondary": "Secondary",
       "sr_sec": "Sr. Sec",
@@ -67,7 +89,7 @@
       "phd": "PhD",
       "diploma": "Diploma",
       "other_professional": "Other (Professional)",
-      "nil": "NIL"
+      "none": "None"
     },
     "occupation": {
       "doctor": "Doctor",
@@ -86,8 +108,39 @@
         "rajasthan": "Rajasthan"
       },
       "city": {
+        "ajmer": "Ajmer",
+        "alwar": "Alwar",
+        "banswara": "Banswara",
+        "baran": "Baran",
+        "barmer": "Barmer",
+        "bharatpur": "Bharatpur",
+        "bhilwara": "Bhilwara",
         "bikaner": "Bikaner",
-        "jaipur": "Jaipur"
+        "bundi": "Bundi",
+        "chittorgarh": "Chittorgarh",
+        "churu": "Churu",
+        "dausa": "Dausa",
+        "dholpur": "Dholpur",
+        "shri_dungargarh": "Shri Dungargarh",
+        "shri_ganganagar": "Shri Ganganagar",
+        "hanumangarh": "Hanumangarh",
+        "jaipur": "Jaipur",
+        "jaisalmer": "Jaisalmer",
+        "jalore": "Jalore",
+        "jhalawar": "Jhalawar",
+        "jhunjhunu": "Jhunjhunu",
+        "jodhpur": "Jodhpur",
+        "karauli": "Karauli",
+        "kota": "Kota",
+        "nagaur": "Nagaur",
+        "pali": "Pali",
+        "pratapgarh": "Pratapgarh",
+        "rajsamand": "Rajsamand",
+        "sawai_madhopur": "Sawai Madhopur",
+        "sikar": "Sikar",
+        "sirohi": "Sirohi",
+        "tonk": "Tonk",
+        "udaipur": "Udaipur"
       }
     },
     "preferences": {
@@ -107,7 +160,7 @@
   },
 
   "Profiles": {
-    "title": "Profiles"
+    "title": "Latest Profiles"
   },
   "SuccessStories": {
     "title": "Success Stories",
@@ -121,6 +174,7 @@
       "contactUs": "Contact Us",
       "register": "Register",
       "login": "Login",
+      "logout": "Log Out",
       "wishlist": "Wishlist",
       "profile": "Profile"
     }
@@ -162,32 +216,73 @@
       "gender": "Gender",
       "fullName": "Full Name",
       "enterFullName": "Enter Your Full Name",
+      "fatherName": "Father's Name",
+      "enterFatherName": "Enter Your Father's Name",
+      "motherName": "Mother's Name",
+      "enterMotherName": "Enter YourMother's Name",
       "mobileNo": "Mobile No",
       "enterMobileNo": "Enter Your Mobile No.",
+      "whatsapp": "Whatsapp Number",
       "email": "Email ID",
       "enterEmail": "Enter Your Email",
-      "createPassword": "Create Password",
-      "enterCreatePassword": "Create Your Password",
+      "age": "Age",
+      "enterAge": "Age",
+      "dob": "Date of Birth",
+      "caste": "Caste",
+      "subCaste": "Sub Caste",
+      "motherSubCaste": "Mother's Sub Caste",
+      "qualification": "Qualification",
+      "occupation": "Occupation",
+      "manglik": "Manglik Status",
+      "divyang": "Divyang Status",
+      "yes": "Yes",
+      "no": "No",
+      "sibling": "Siblings",
+      "siblings": {
+        "brothers": "Brothers",
+        "enterBrothersCount": "Enter Number of Brothers",
+        "sisters": "Sisters",
+        "enterSistersCount": "Enter Number of Sisters",
+        "older": "Older Siblings",
+        "enterOlderSiblingsCount": "Enter Number of Older Siblings",
+        "younger": "Younger Siblings",
+        "enterYoungerSiblingsCount": "Enter Number of Younger Siblings",
+        "married": "Married Siblings",
+        "enterMarriedSiblingsCount": "Enter Number of Married Siblings",
+        "unmarried": "Unmarried Siblings",
+        "enterUnmarriedSiblingsCount": "Enter Number of Unmarried Siblings"
+      },
+      "paternalUncle": "Paternal Uncle's Name",
+      "enterPaternalUncleName": "Enter Your Paternal Uncle's Name",
+      "paternalAunt": "Paternal Aunt's Name",
+      "enterPaternalAuntName": "Enter Your Paternal Aunt's Name",
+      "maternalUncle": "Maternal Uncle's Name",
+      "enterMaternalUncleName": "Enter Your Maternal Uncle's Name",
+      "maternalAunt": "Maternal Aunt's Name",
+      "enterMaternalAuntName": "Enter Your Maternal Aunt's Name",
+      "state": "State",
+      "city": "City",
+      "pincode": "Pincode",
+      "enterPincode": "Enter Your Pincode",
+      "address": "Address",
+      "enterAddress": "Enter Your Full Address",
+      "password": "Create Password",
+      "enterPassword": "Create Your Password",
       "confirmPassword": "Confirm Password",
       "enterConfirmPassword": "Confirm Your Password",
-      "dob": "Date of Birth",
+      "agree": "I Agree to the Terms and Conditions",
+      "profilePic": "Profile Picture",
       "maritalStatus": "Marital Status"
     },
+
     "buttons": {
-      "continue": "Continue",
+      "continue": "Register",
       "alreadyAccount": "Already have an account?",
       "login": " Log in"
     },
     "genderOptions": {
       "male": "Male",
       "female": "Female"
-    },
-    "maritalStatusOptions": {
-      "select": "select",
-      "single": "Single",
-      "married": "Married",
-      "divorced": "Divorced",
-      "widowed": "Widowed"
     },
     "agreeTerms": {
       "agreeTerms": "I agree to the",
@@ -233,5 +328,28 @@
       "email": "Email",
       "address": "Address"
     }
+  },
+  "learnMore": {
+    "title": "Learn More About Our Matrimony Services",
+    "howItWorks": "How It Works",
+    "howItWorksDescription": "Our platform helps you find your perfect match in just a few easy steps:",
+    "steps": {
+      "step1": "Register and create your profile with verified details.",
+      "step2": "Set your partner preferences based on your requirements.",
+      "step3": "Browse through thousands of verified profiles.",
+      "step4": "Connect securely and start your journey towards a happy future."
+    },
+    "whyChooseUs": "Why Choose Us?",
+    "whyChooseUsPoints": {
+      "point1": "100% verified and trusted profiles.",
+      "point2": "AI-powered personalized matchmaking.",
+      "point3": "Privacy-first approach to keep your data safe.",
+      "point4": "24/7 customer support to assist you."
+    },
+    "successStories": "Success Stories",
+    "successStoriesDescription": "Thousands of happy couples have found their soulmates through our platform. Join them and start your success story today!",
+    "membershipPlans": "Membership Plans",
+    "membershipPlansDescription": "Choose from our free and premium membership plans to unlock additional features such as priority support, enhanced visibility, and unlimited messaging.",
+    "registerNow": "Register Now"
   }
 }

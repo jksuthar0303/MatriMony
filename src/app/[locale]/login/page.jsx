@@ -41,6 +41,7 @@ export default function Login() {
   
       if (res.ok) {
         router.push("/");
+        window.location.reload();
       } else {
         setError(result.message || t("invalidCredentials"));
       }
