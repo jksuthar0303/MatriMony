@@ -399,13 +399,13 @@ export default function Home() {
                 className="bg-white h-[450px] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-100"
               >
                 <img
-                  src={profile.image}
+                  src={profile.profilePic}
                   alt="Profile"
                   className="w-full h-72 object-cover rounded-md mb-4"
                 />
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-lg md:text-xl font-bold text-center text-pink-600">
-                    {profile.name}
+                    {profile.fullName}
                   </h3>
                   <div
                     onClick={() => handleLikeClick(profile._id)}
@@ -425,7 +425,7 @@ export default function Home() {
                 </div>
 
                 <p className="text-center text-gray-600 text-sm md:text-base">
-                  Age: {profile.age} | {profile.occupation} | {profile.location}
+                  Age: {profile.age} | {profile.occupation} | {profile.city}
                 </p>
                 <button className="w-full mt-4 bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all">
                   View Profile
