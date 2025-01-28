@@ -8,42 +8,30 @@ const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [addedInWishlist, setAddedInWishlist] = useState({});
   const [likedProfiles, setLikedProfiles] = useState({});
 
-  // Fetch wishlist from the API
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
         const response = await fetch("/api/wishlists", {
           method: "GET",
-          credentials: "include", // Ensures cookies are sent with the request
         });
 
         if (!response.ok) {
           const errorData = await response.json();
-          // Throw an error with the message from the response
           throw new Error(errorData.message || "Failed to fetch wishlist");
         }
 
         const data = await response.json();
 
         if (data.message) {
-          // Handle specific messages from the API (e.g., user not logged in, no wishlist available)
           setError(data.message);
-          return; // Stop further processing if there's a specific error message
+          return;
         }
 
-        // Now you can access data.wishlist as per the backend response
-        setWishlist(data.wishlist || []); // Set the wishlist data
-
-        // Initialize likedProfiles to true for profiles already in the wishlist
-        const initialLikedProfiles = {};
-        data.wishlist.forEach((profile) => {
-          initialLikedProfiles[profile.profileId] = true;
-        });
-        setLikedProfiles(initialLikedProfiles);
+        setWishlist(data.wishlist || []);
       } catch (err) {
-        // Catch any error (including network errors) and set it
         setError(err.message || "An unexpected error occurred");
       } finally {
         setLoading(false);
@@ -53,31 +41,6 @@ const Wishlist = () => {
     fetchWishlist();
   }, []);
 
-  const handleAddinWishlist = async (wishlistUserId) => {
-    try {
-      const response = await fetch("/api/wishlists", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Ensure cookies are sent
-        body: JSON.stringify({ wishlistUserId }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message);
-
-      // Toggle the like status in the likedProfiles state
-      setLikedProfiles((prev) => ({
-        ...prev,
-        [wishlistUserId]: !prev[wishlistUserId],
-      }));
-
-      alert(data.message);
-    } catch (error) {
-      alert(error.message || "Failed to update wishlist");
-    }
-  };
   const handleRemoveFromWishlist = async (wishlistUserId) => {
     try {
       const response = await fetch("/api/wishlists", {
@@ -85,19 +48,18 @@ const Wishlist = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Ensure cookies are sent
+        credentials: "include",
         body: JSON.stringify({ wishlistUserId }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message);
 
-      // Update the wishlist state by filtering out the removed user
       setWishlist((prevWishlist) =>
         prevWishlist.filter((item) => item.profileId !== wishlistUserId)
       );
 
-      alert(data.message); // Show success message
+      alert(data.message);
     } catch (error) {
       alert(error.message || "Failed to remove from wishlist");
     }
@@ -116,61 +78,71 @@ const Wishlist = () => {
         <p className="text-center text-xl font-bold text-gray-500">{error}</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {wishlist.length > 0 ? (
-            wishlist.map((profile) => (
-              <div
-                key={profile.profileId}
-                className="bg-white h-[450px] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-100"
-              >
-                <img
-                  src={profile.image || "https://via.placeholder.com/150"}
-                  alt={profile.name}
-                  className="w-full h-72 object-cover rounded-md"
-                />
-                <div className="mt-4 text-center">
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-lg md:text-xl font-bold text-center text-pink-600">
-                      {profile.name}
-                    </h2>
-                    <div
-                      onClick={() => {
-                        if (likedProfiles[profile.profileId]) {
-                          handleRemoveFromWishlist(profile.profileId); // Remove from wishlist if already liked
-                        } else {
-                          handleAddinWishlist(profile.profileId); // Add to wishlist if not liked
-                        }
-                      }}
-                      className="cursor-pointer"
-                      title={
-                        likedProfiles[profile.profileId]
-                          ? "Remove from wishlist"
-                          : "Add to wishlist"
-                      }
-                    >
-                      {likedProfiles[profile.profileId] ? (
-                        <FaHeart color="red" size={20} /> // Filled heart when in wishlist
-                      ) : (
-                        <FaRegHeart color="red" size={20} /> // Outlined heart when not in wishlist
-                      )}
+          {wishlist.length > 0
+            ? wishlist.map((profile) => (
+                <div
+                  key={profile.profileId}
+                  className="bg-white h-[480px] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-100"
+                >
+                  <img
+                    src={profile.profilePic}
+                    alt={profile.name}
+                    className="w-full h-72 object-cover rounded-md"
+                  />
+                  <div className="mt-4 text-center">
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-lg md:text-xl font-bold text-center text-pink-600">
+                        {profile.fullName}
+                      </h2>
+                      <span className=" text-green-600 font-bold">Both Like It</span>
+                      <div className="cursor-pointer flex items-center gap-2">
+                        {likedProfiles[profile._id] ? (
+                          <FaHeart color="red" size={20} />
+                        ) : (
+                          <FaRegHeart color="red" size={20} />
+                        )}
+                        {/* Likes Count */}
+                        <span className="text-gray-600 text-sm">
+                          {profile.likesCount || 0}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex  justify-center gap-4 text-gray-600 items-center mt-4">
+                      <div className="flex flex-col items-center">
+                        <span className="font-medium">Age</span>
+                        <p className="text-sm">{profile.age}</p>
+                      </div>
+                      |
+                      <div className="flex flex-col items-center">
+                        <span className="font-medium">Occupation</span>
+                        <p className="text-sm uppercase">
+                          {profile.occupation}
+                        </p>
+                      </div>
+                      |
+                      <div className="flex flex-col items-center">
+                        <span className="font-medium">City</span>
+                        <p className="text-sm  uppercase"> {profile.city}</p>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-center mt-2 text-gray-600 text-sm md:text-base">
-                    Age: {profile.age} | {profile.occupation} |{" "}
-                    {profile.location}
-                  </p>
-                </div>
-                <div className="flex justify-center items-center mt-4">
-                  <Link href={`/profile/${profile.profileId}`} passHref>
-                    <button className="text-white p-2 rounded-lg w-56 bg-pink-600 hover:bg-pink-700 transition-all">
+                  <div className="flex gap-4">
+                    <button className="w-full mt-4  bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all">
                       View Profile
                     </button>
-                  </Link>
+                    <button
+                      onClick={() =>
+                        handleRemoveFromWishlist(profile.profileId)
+                      }
+                      className="w-full text-sm mt-4 border-2 border-pink-600 text-pink-600 py-2 rounded-lg transition-all"
+                    >
+                      You Don't Like
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
-          ) : (
-         null
-          )}
+              ))
+            : null}
         </div>
       )}
     </div>

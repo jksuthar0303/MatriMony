@@ -70,7 +70,7 @@ export async function POST(req) {
       JSON.stringify({
         message: mutualLike
           ? 'Mutual wishlist! Both users liked each other'
-          : 'User added to wishlist',
+          : 'User added to You Likes',
       }),
       { status: 200 }
     );
@@ -98,7 +98,7 @@ export async function GET(req) {
     }
 
     // Fetch the logged-in user's data
-    const user = await User.findById(userId).populate("wishlist.userId", "name age occupation location image");
+    const user = await User.findById(userId).populate("wishlist.userId", "fullName age occupation city profilePic");
 
     if (!user) {
       // If user not found
@@ -121,11 +121,11 @@ export async function GET(req) {
       JSON.stringify({
         wishlist: user.wishlist.map((item) => ({
           profileId: item.userId._id,
-          name: item.userId.name,
+          fullName: item.userId.fullName,
           age: item.userId.age,
           occupation: item.userId.occupation,
-          location: item.userId.location,
-          image: item.userId.image,
+          city: item.userId.city,
+          profilePic: item.userId.profilePic,
           isMutual: item.isMutual,
         })),
       }),
@@ -162,7 +162,7 @@ export async function DELETE(req) {
     await user.save();
 
     return new Response(
-      JSON.stringify({ message: "User removed from wishlist" }),
+      JSON.stringify({ message: "User removed from Your Likes" }),
       { status: 200 }
     );
   } catch (error) {

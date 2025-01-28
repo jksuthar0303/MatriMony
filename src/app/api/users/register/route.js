@@ -86,7 +86,7 @@ export async function POST(req) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user and save to MongoDB
-    const newUser = new User({
+    const user = new User({
       fullName,
       gender,
       fatherName,
@@ -121,7 +121,7 @@ export async function POST(req) {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: newUser._id, email: newUser.email },
+      { userId: user._id, email: user.email,subCaste: user.subCaste,motherSubCaste: user.motherSubCaste },
       process.env.JWT_SECRET,
       { expiresIn: "30d" }
     );
