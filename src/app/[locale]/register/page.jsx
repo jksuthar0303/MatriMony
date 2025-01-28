@@ -2,47 +2,47 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/routing";
 import { options } from "@/option/dropDownOptions";
 import Dropdown from "@/components/Dropdown";
+import { Link, useRouter } from "@/i18n/routing";
 export default function Register() {
   const t = useTranslations();
 
   const [formData, setFormData] = useState({
-    gender: "",
-    fullName: "",
-    fatherName: "",
-    motherName: "",
-    mobile: "",
-    whatsapp: "",
-    email: "",
-    age: "",
+    gender: "Male",
+    fullName: "Jaikishan Suthar",
+    fatherName: "Omprakash",
+    motherName: "Laxmi Devi",
+    mobile: "9001505613",
+    whatsapp: "9001505613",
+    email: "jksuthar2022@gmail.com",
+    age: "18",
     dob: "",
-    caste: "",
-    subCaste: "",
-    motherSubCaste: "",
-    qualification: "",
-    occupation: "",
-    manglik: "",
-    divyang: "",
+    caste: "suthar",
+    subCaste: "kulriya",
+    motherSubCaste: "motiyar",
+    qualification: "none",
+    occupation: "labour",
+    manglik: "No",
+    divyang: "No",
     siblings: {
-      brothers: "",
-      sisters: "",
-      older: "",
-      younger: "",
-      married: "",
-      unmarried: "",
+      brothers: ["Ayush", "Ravi"],
+      sisters: ["Neha", "Simran"],
+      older: "1",
+      younger: "2",
+      married: "3",
+      unmarried: "4",
     },
-    paternalUncle: "",
-    paternalAunt: "",
-    maternalUncle: "",
-    maternalAunt: "",
-    state: "",
-    city: "",
-    pincode: "",
-    address: "",
-    password: "",
-    confirmPassword: "",
+    paternalUncle: ["Uncle1", "Uncle2"],
+    paternalAunt: ["Aunt1", "Aunt2"],
+    maternalUncle: ["Uncle3", "Uncle4"],
+    maternalAunt: ["Aunt3", "Aunt4"],
+    state: "rajasthan",
+    city: "bikaner",
+    pincode: "334004",
+    address: "Near Old Shiv temple bangla nagar",
+    password: "12345678",
+    confirmPassword: "12345678",
     agree: false,
     profilePic: null,
   });
@@ -54,7 +54,8 @@ export default function Register() {
   const [state, setState] = useState("rajasthan");
   const [city, setCity] = useState("bikaner");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const {
     cities,
     casteOptions,
@@ -66,45 +67,106 @@ export default function Register() {
   const router = useRouter();
 
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, type, checked } = e.target;
 
-    if (name === "profilePic") {
-      setFormData({ ...formData, profilePic: files[0] });
-    } else if (name.includes(".")) {
-      // Handle nested fields
-      const keys = name.split(".");
-      setFormData((prev) => {
-        const updatedData = { ...prev };
-        let nested = updatedData;
+    if (name.includes("siblings")) {
+      const siblingKey = name.split(".")[1];
+      setFormData((prevData) => ({
+        ...prevData,
+        siblings: {
+          ...prevData.siblings,
+          [siblingKey]: value,
+        },
+      }));
+    } else if (
+      name.includes("paternalUncle") ||
+      name.includes("paternalAunt") ||
+      name.includes("maternalUncle") ||
+      name.includes("maternalAunt")
+    ) {
+      const key = name;
+      const arrayValue = value.split(",").map((item) => item.trim());
 
-        for (let i = 0; i < keys.length - 1; i++) {
-          if (!nested[keys[i]]) nested[keys[i]] = {}; // Create the object if it doesn't exist
-          nested = nested[keys[i]];
-        }
-        nested[keys[keys.length - 1]] = type === "checkbox" ? checked : value;
-
-        return updatedData;
-      });
+      setFormData((prevData) => ({
+        ...prevData,
+        [key]: arrayValue,
+      }));
+    } else if (type === "checkbox") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
     } else {
-      setFormData({
-        ...formData,
-        [name]: type === "checkbox" ? checked : value,
-      });
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          profilePic: reader.result, // Store base64 image data
+        }));
+      };
+    }
+  };
+  // Function to add new sibling (brother or sister)
+  const handleAddSibling = (type) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      siblings: {
+        ...prevData.siblings,
+        [type]: [...prevData.siblings[type], ""], // Adding an empty string as a new sibling input
+      },
+    }));
+  };
+
+  // Function to add new uncle or aunt (paternal or maternal)
+  const handleAddUncleAunt = (type) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [type]: [...prevData[type], ""], // Adding an empty string as a new uncle/aunt input
+    }));
+  };
+
+  // Function to remove a sibling
+  const handleRemoveSibling = (type, index) => {
+    const updatedSiblings = [...formData.siblings[type]];
+    updatedSiblings.splice(index, 1); // Removing the sibling at the specified index
+    setFormData((prevData) => ({
+      ...prevData,
+      siblings: {
+        ...prevData.siblings,
+        [type]: updatedSiblings,
+      },
+    }));
+  };
+
+  // Function to remove an uncle or aunt
+  const handleRemoveUncleAunt = (type, index) => {
+    const updatedUnclesAunts = [...formData[type]];
+    updatedUnclesAunts.splice(index, 1); // Removing the uncle/aunt at the specified index
+    setFormData((prevData) => ({
+      ...prevData,
+      [type]: updatedUnclesAunts,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
-    setSuccess("");
-
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-
-    // Prepare data to send to the API
-    const data = { ...formData, siblings: { ...formData.siblings } };
 
     try {
       const response = await fetch("/api/users/register", {
@@ -112,63 +174,23 @@ export default function Register() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
-        credentials: "same-origin",
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        setSuccess(result.message);
-
-        // Clear form fields
-        setFormData({
-          gender: "",
-          fullName: "",
-          fatherName: "",
-          motherName: "",
-          mobile: "",
-          whatsapp: "",
-          email: "",
-          age: "",
-          dob: "",
-          caste: "",
-          subCaste: "",
-          motherSubCaste: "",
-          qualification: "",
-          occupation: "",
-          manglik: "",
-          divyang: "",
-          siblings: {
-            brothers: "",
-            sisters: "",
-            older: "",
-            younger: "",
-            married: "",
-            unmarried: "",
-          },
-          paternalUncle: "",
-          paternalAunt: "",
-          maternalUncle: "",
-          maternalAunt: "",
-          state: "",
-          city: "",
-          pincode: "",
-          address: "",
-          password: "",
-          confirmPassword: "",
-          agree: false,
-          profilePic: null,
-        });
-
-        setTimeout(() => {
-          router.push("/");
-        }, 1500);
+        setFormData("");
+        router.push("/");
+        window.location.reload();
       } else {
-        setError(result.message || "Registration failed.");
+        alert(result.message || "Something went wrong!");
       }
     } catch (error) {
-      setError("Error registering user. Please try again.");
+      setError(t("Registration Failed"));
+      alert("Error registering user: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -196,29 +218,24 @@ export default function Register() {
           {error && (
             <div className="text-red-500 text-center mb-4">{error}</div>
           )}
-          {success && (
-            <div className="text-green-500 text-center mb-4">{success}</div>
-          )}
 
           <div className="md:h-[350px] lg:h-[500px] overflow-y-auto">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Profile Pic */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.profilePic")}
                 </label>
                 <input
                   type="file"
-                  name="profilePic"
-                  accept="image/*"
-                  onChange={handleChange}
+                  onChange={handleFileChange}
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 />
               </div>
 
               {/* Full Name */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.fullName")}
                 </label>
                 <input
@@ -234,7 +251,7 @@ export default function Register() {
 
               {/* Father Name */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.fatherName")}
                 </label>
                 <input
@@ -250,7 +267,7 @@ export default function Register() {
 
               {/* Mother Name */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.motherName")}
                 </label>
                 <input
@@ -266,7 +283,7 @@ export default function Register() {
 
               {/* Gender */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.gender")}
                 </label>
                 <div className="flex gap-4">
@@ -299,7 +316,7 @@ export default function Register() {
 
               {/* Mobile */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.mobileNo")}
                 </label>
                 <input
@@ -312,14 +329,29 @@ export default function Register() {
                   required
                 />
               </div>
-
-              {/* Age */}
+              {/* Email */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  {t("Register.fields.age")}
+                <label className="block font-bold text-pink-600 mb-2">
+                  {t("Register.fields.email")}
                 </label>
                 <input
                   type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t("Register.fields.enterEmail")}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                  required
+                />
+              </div>
+
+              {/* Age */}
+              <div>
+                <label className="block font-bold text-pink-600 mb-2">
+                  {t("Register.fields.age")}
+                </label>
+                <input
+                  type="number"
                   name="age"
                   value={formData.age}
                   onChange={handleChange}
@@ -331,7 +363,7 @@ export default function Register() {
 
               {/* Date of Birth */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.dob")}
                 </label>
                 <input
@@ -360,50 +392,125 @@ export default function Register() {
                   options={subCasteOptions}
                   selectedValue={subCaste}
                   onChange={setSubCaste}
-                  label="Select SubCaste"
+                  label={t("Filters.fields.caste.selectSubCaste")}
+                />
+              </div>
+              {/*Mother Sub Caste */}
+              <div>
+                <Dropdown
+                  options={subCasteOptions}
+                  selectedValue={motherSubCaste}
+                  onChange={setMotherSubCaste}
+                  label={t("Register.fields.motherSubCaste")}
                 />
               </div>
 
               {/* Siblings Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                <h3 className="text-lg font-bold text-pink-600 mb-4">
                   {t("Register.fields.sibling")}
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-400 font-medium mb-2">
                       {t("Register.fields.siblings.brothers")}
                     </label>
-                    <input
-                      type="number"
-                      name="siblings.brothers"
-                      value={formData.siblings.brothers}
-                      onChange={handleChange}
-                      placeholder={t(
-                        "Register.fields.siblings.enterBrothersCount"
-                      )}
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                      min="0"
-                    />
+                    <div>
+                      {formData.siblings.brothers.map((brother, index) => (
+                        <div key={index} className="flex items-center mb-2">
+                          <input
+                            type="text"
+                            name="siblings.brothers"
+                            value={brother}
+                            placeholder={t(
+                              "Register.fields.siblings.enterBrothersName"
+                            )}
+                            onChange={(e) => {
+                              const updatedBrothers = [
+                                ...formData.siblings.brothers,
+                              ];
+                              updatedBrothers[index] = e.target.value;
+                              setFormData((prevData) => ({
+                                ...prevData,
+                                siblings: {
+                                  ...prevData.siblings,
+                                  brothers: updatedBrothers,
+                                },
+                              }));
+                            }}
+                            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleRemoveSibling("brothers", index)
+                            }
+                            className="ml-2 text-red-500"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => handleAddSibling("brothers")}
+                        className="mt-2 text-blue-500"
+                      >
+                        Add Brother
+                      </button>
+                    </div>
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-400 font-medium mb-2">
                       {t("Register.fields.siblings.sisters")}
                     </label>
-                    <input
-                      type="number"
-                      name="siblings.sisters"
-                      value={formData.siblings.sisters}
-                      onChange={handleChange}
-                      placeholder={t(
-                        "Register.fields.siblings.enterSistersCount"
-                      )}
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                      min="0"
-                    />
+                    <div>
+                      {formData.siblings.sisters.map((sister, index) => (
+                        <div key={index} className="flex items-center mb-2">
+                          <input
+                            type="text"
+                            name="siblings.sisters"
+                            value={sister}
+                            placeholder={t(
+                              "Register.fields.siblings.enterSistersName"
+                            )}
+                            onChange={(e) => {
+                              const updatedSisters = [
+                                ...formData.siblings.sisters,
+                              ];
+                              updatedSisters[index] = e.target.value;
+                              setFormData((prevData) => ({
+                                ...prevData,
+                                siblings: {
+                                  ...prevData.siblings,
+                                  sisters: updatedSisters,
+                                },
+                              }));
+                            }}
+                            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleRemoveSibling("sisters", index)
+                            }
+                            className="ml-2 text-red-500"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => handleAddSibling("sisters")}
+                        className="mt-2 text-blue-500"
+                      >
+                        Add Sister
+                      </button>
+                    </div>
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-400 font-medium mb-2">
                       {t("Register.fields.siblings.older")}
                     </label>
                     <input
@@ -419,7 +526,7 @@ export default function Register() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-400 font-medium mb-2">
                       {t("Register.fields.siblings.younger")}
                     </label>
                     <input
@@ -435,7 +542,7 @@ export default function Register() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-400 font-medium mb-2">
                       {t("Register.fields.siblings.married")}
                     </label>
                     <input
@@ -451,7 +558,7 @@ export default function Register() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">
+                    <label className="block text-gray-400 font-medium mb-2">
                       {t("Register.fields.siblings.unmarried")}
                     </label>
                     <input
@@ -472,56 +579,180 @@ export default function Register() {
               {/* Uncle and Aunt Section */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-400 font-medium mb-2">
                     {t("Register.fields.paternalUncle")}
                   </label>
-                  <input
-                    type="text"
-                    name="paternalUncle"
-                    value={formData.paternalUncle}
-                    onChange={handleChange}
-                    placeholder={t("Register.fields.enterPaternalUncleName")}
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  />
+                  <div>
+                    {formData.paternalUncle.map((uncle, index) => (
+                      <div key={index} className="flex items-center mb-2">
+                        <input
+                          type="text"
+                          name="paternalUncle"
+                          value={uncle}
+                          placeholder={t(
+                            "Register.fields.enterPaternalUncleName"
+                          )}
+                          onChange={(e) => {
+                            const updatedUncles = [...formData.paternalUncle];
+                            updatedUncles[index] = e.target.value;
+                            setFormData((prevData) => ({
+                              ...prevData,
+                              paternalUncle: updatedUncles,
+                            }));
+                          }}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemoveUncleAunt("paternalUncle", index)
+                          }
+                          className="ml-2 text-red-500"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => handleAddUncleAunt("paternalUncle")}
+                      className="mt-2 text-blue-500"
+                    >
+                      Add Paternal Uncle
+                    </button>
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-400 font-medium mb-2">
                     {t("Register.fields.paternalAunt")}
                   </label>
-                  <input
-                    type="text"
-                    name="paternalAunt"
-                    value={formData.paternalAunt}
-                    onChange={handleChange}
-                    placeholder={t("Register.fields.enterPaternalAuntName")}
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  />
+                  <div>
+                    {formData.paternalAunt.map((aunt, index) => (
+                      <div key={index} className="flex items-center mb-2">
+                        <input
+                          type="text"
+                          name="paternalAunt"
+                          value={aunt}
+                          placeholder={t(
+                            "Register.fields.enterPaternalAuntName"
+                          )}
+                          onChange={(e) => {
+                            const updatedAunts = [...formData.paternalAunt];
+                            updatedAunts[index] = e.target.value;
+                            setFormData((prevData) => ({
+                              ...prevData,
+                              paternalAunt: updatedAunts,
+                            }));
+                          }}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemoveUncleAunt("paternalAunt", index)
+                          }
+                          className="ml-2 text-red-500"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => handleAddUncleAunt("paternalAunt")}
+                      className="mt-2 text-blue-500"
+                    >
+                      Add Paternal Aunt
+                    </button>
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-400 font-medium mb-2">
                     {t("Register.fields.maternalUncle")}
                   </label>
-                  <input
-                    type="text"
-                    name="maternalUncle"
-                    value={formData.maternalUncle}
-                    onChange={handleChange}
-                    placeholder={t("Register.fields.enterMaternalUncleName")}
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  />
+                  <div>
+                    {formData.maternalUncle.map((uncle, index) => (
+                      <div key={index} className="flex items-center mb-2">
+                        <input
+                          type="text"
+                          name="maternalUncle"
+                          value={uncle}
+                          placeholder={t(
+                            "Register.fields.enterMaternalUncleName"
+                          )}
+                          onChange={(e) => {
+                            const updatedUncles = [...formData.maternalUncle];
+                            updatedUncles[index] = e.target.value;
+                            setFormData((prevData) => ({
+                              ...prevData,
+                              maternalUncle: updatedUncles,
+                            }));
+                          }}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemoveUncleAunt("maternalUncle", index)
+                          }
+                          className="ml-2 text-red-500"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => handleAddUncleAunt("maternalUncle")}
+                      className="mt-2 text-blue-500"
+                    >
+                      Add Maternal Uncle
+                    </button>
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-gray-400 font-medium mb-2">
                     {t("Register.fields.maternalAunt")}
                   </label>
-                  <input
-                    type="text"
-                    name="maternalAunt"
-                    value={formData.maternalAunt}
-                    onChange={handleChange}
-                    placeholder={t("Register.fields.enterMaternalAuntName")}
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  />
+                  <div>
+                    {formData.maternalAunt.map((aunt, index) => (
+                      <div key={index} className="flex items-center mb-2">
+                        <input
+                          type="text"
+                          name="maternalAunt"
+                          value={aunt}
+                          placeholder={t(
+                            "Register.fields.enterMaternalAuntName"
+                          )}
+                          onChange={(e) => {
+                            const updatedAunts = [...formData.maternalAunt];
+                            updatedAunts[index] = e.target.value;
+                            setFormData((prevData) => ({
+                              ...prevData,
+                              maternalAunt: updatedAunts,
+                            }));
+                          }}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemoveUncleAunt("maternalAunt", index)
+                          }
+                          className="ml-2 text-red-500"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => handleAddUncleAunt("maternalAunt")}
+                      className="mt-2 text-blue-500"
+                    >
+                      Add Maternal Aunt
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -547,7 +778,7 @@ export default function Register() {
 
               {/* Manglik Section */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block text-pink-600 font-bold mb-2">
                   {t("Register.fields.manglik")}
                 </label>
                 <div className="flex gap-4">
@@ -578,7 +809,7 @@ export default function Register() {
 
               {/* Divyang Section */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block text-pink-600 font-bold mb-2">
                   {t("Register.fields.divyang")}
                 </label>
                 <div className="flex gap-4">
@@ -609,7 +840,7 @@ export default function Register() {
 
               {/* Address Section */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block text-pink-600 font-bold mb-2">
                   {t("Register.fields.address")}
                 </label>
                 <input
@@ -623,7 +854,7 @@ export default function Register() {
               </div>
 
               {/* State, City, Pincode Section */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <Dropdown
                     options={stateOptions}
@@ -641,7 +872,7 @@ export default function Register() {
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">
+                  <label className="block text-pink-600 font-bold mb-2">
                     {t("Register.fields.pincode")}
                   </label>
                   <input
@@ -658,7 +889,7 @@ export default function Register() {
 
               {/* Password Section */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block text-pink-600 font-bold mb-2">
                   {t("Register.fields.password")}
                 </label>
                 <input
@@ -674,7 +905,7 @@ export default function Register() {
 
               {/* Confirm Password Section */}
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="block text-pink-600 font-bold mb-2">
                   {t("Register.fields.confirmPassword")}
                 </label>
                 <input
@@ -707,11 +938,51 @@ export default function Register() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700 transition duration-300"
+                className={`w-full bg-pink-600 text-white py-3 rounded-lg font-semibold ${
+                  loading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-pink-500"
+                }`}
+                disabled={loading}
               >
-                {t("Register.buttons.continue")}
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        strokeWidth="4"
+                        className="opacity-25"
+                      />
+                      <path
+                        fill="none"
+                        strokeWidth="4"
+                        d="M4 12a8 8 0 1 1 16 0 8 8 0 1 1-16 0"
+                        className="opacity-75"
+                      />
+                    </svg>
+                  </div>
+                ) : (
+                  t("Register.buttons.continue")
+                )}
               </button>
             </form>
+            <p className="text-center mt-4">
+              {t("Register.buttons.alreadyAccount")}{" "}
+              <Link
+                href="/login"
+                className="text-pink-600 font-semibold underline"
+              >
+                {t("Register.buttons.login")}
+              </Link>
+            </p>
           </div>
         </div>
       </div>

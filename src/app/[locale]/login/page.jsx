@@ -2,7 +2,7 @@
 
 import { Link, useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import {  useState} from "react";
+import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
@@ -17,9 +17,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-
-
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -28,17 +25,17 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
-  
+
     try {
       const res = await fetch("/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-        credentials: "same-origin",  
+        credentials: "same-origin",
       });
-  
+
       const result = await res.json();
-  
+
       if (res.ok) {
         router.push("/");
         window.location.reload();
@@ -55,7 +52,6 @@ export default function Login() {
   return (
     <div className="bg-gray-50 min-h-screen flex items-center justify-center p-8">
       <div className="max-w-3xl w-full bg-white shadow-lg rounded-lg p-8 flex flex-col lg:flex-row">
-        
         {/* Welcome Section */}
         <div className="lg:w-1/3 bg-pink-600 text-white p-6 rounded-lg mb-8 lg:mb-0 lg:mr-8 flex flex-col justify-center">
           <h2 className="text-2xl font-bold mb-4">{t("welcomeBack")}</h2>
@@ -115,42 +111,50 @@ export default function Login() {
                 onChange={() => setRememberMe(!rememberMe)}
                 className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
               />
-              <span className="ml-2 text-gray-700">{t("fields.rememberMe")}</span>
+              <span className="ml-2 text-gray-700">
+                {t("fields.rememberMe")}
+              </span>
             </div>
 
             <button
-  type="submit"
-  className={`w-full bg-pink-600 text-white py-3 rounded-lg font-semibold ${
-    loading ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-500"
-  }`}
-  disabled={loading}
->
-  {loading ? (
-    <div className="flex justify-center items-center">
-      <svg
-        className="animate-spin h-5 w-5 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-      >
-        <circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" />
-        <path
-          fill="none"
-          strokeWidth="4"
-          d="M4 12a8 8 0 1 1 16 0 8 8 0 1 1-16 0"
-          className="opacity-75"
-        />
-      </svg>
-    </div>
-  ) : (
-    t("buttons.login")
-  )}
-</button>
+              type="submit"
+              className={`w-full bg-pink-600 text-white py-3 rounded-lg font-semibold ${
+                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-500"
+              }`}
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex justify-center items-center">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      strokeWidth="4"
+                      className="opacity-25"
+                    />
+                    <path
+                      fill="none"
+                      strokeWidth="4"
+                      d="M4 12a8 8 0 1 1 16 0 8 8 0 1 1-16 0"
+                      className="opacity-75"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                t("buttons.login")
+              )}
+            </button>
 
             <p className="text-center mt-4">
               {t("buttons.noAccount")}{" "}
-              <Link href="/register" className="text-pink-600 font-semibold">
+              <Link href="/register" className="text-pink-600 font-semibold underline">
                 {t("buttons.createAccount")}
               </Link>
             </p>

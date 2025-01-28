@@ -46,8 +46,6 @@ export const options = (t) => ({
         { value: "sr_sec", label: t("Options.qualification.sr_sec") },
         { value: "graduation", label: t("Options.qualification.graduation") },
         { value: "pg", label: t("Options.qualification.pg") },
-        { value: "bachelor", label: t("Options.qualification.bachelor") },
-        { value: "master", label: t("Options.qualification.master") },
         { value: "phd", label: t("Options.qualification.phd") },
         { value: "diploma", label: t("Options.qualification.diploma") },
         { value: "other_professional", label: t("Options.qualification.other_professional") },

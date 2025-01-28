@@ -240,9 +240,9 @@
       "sibling": "Siblings",
       "siblings": {
         "brothers": "Brothers",
-        "enterBrothersCount": "Enter Number of Brothers",
+        "enterBrothersName": "Enter Your Brother's Name",
         "sisters": "Sisters",
-        "enterSistersCount": "Enter Number of Sisters",
+        "enterSistersName": "Enter Your Sister's Name",
         "older": "Older Siblings",
         "enterOlderSiblingsCount": "Enter Number of Older Siblings",
         "younger": "Younger Siblings",

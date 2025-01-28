@@ -12,7 +12,7 @@ export async function GET(req) {
 
     if (!userId) {
       // If no valid userId, return all users (no exclusion) with selected fields
-      const users = await User.find().select('name image age occupation location');  // Specify the fields to return
+      const users = await User.find().select('fullName profilePic occupation age');  // Specify the fields to return
       return new Response(JSON.stringify(users), { status: 200 });
     }
 
@@ -33,7 +33,7 @@ export async function GET(req) {
     // Exclude users in the logged-in user's wishlist and only return selected fields
     const users = await User.find({
       '_id': { $nin: userWishlist }
-    }).select('name age image occupation location');  // Specify the fields to return
+    }).select('fullName profilePic occupation age');  // Specify the fields to return
 
     // Return the filtered users list with selected fields
     return new Response(JSON.stringify(users), { status: 200 });
