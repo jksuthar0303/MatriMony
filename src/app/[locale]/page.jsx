@@ -166,7 +166,7 @@ export default function Home() {
   return (
     <div className="p-4 space-y-12">
       {/* Hero Section */}
-      <div className="relative w-full h-[600px] flex flex-col items-center justify-center text-center p-8 rounded-2xl shadow-lg overflow-hidden">
+      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] flex flex-col items-center justify-center text-center p-8 rounded-2xl shadow-lg overflow-hidden">
         {/* Scrollable Image Container */}
         {/* Image Carousel */}
         <div className="absolute inset-0 overflow-hidden">
