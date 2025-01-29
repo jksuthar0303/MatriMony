@@ -10,7 +10,6 @@ export async function POST(req) {
   
       const { email, password } = await req.json();
   
-      // Validate required fields
       if (!email || !password) {
         return new Response(
           JSON.stringify({ message: 'Email and password are required' }),
@@ -18,7 +17,6 @@ export async function POST(req) {
         );
       }
   
-      // Find the user by email
       const user = await User.findOne({ email });
       if (!user) {
         return new Response(
@@ -27,7 +25,6 @@ export async function POST(req) {
         );
       }
   
-      // Compare provided password with stored hash
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if (!isPasswordCorrect) {
         return new Response(
@@ -36,18 +33,17 @@ export async function POST(req) {
         );
       }
   
-      // Generate a JWT token
       const token = jwt.sign(
         { userId: user._id, email: user.email,subCaste: user.subCaste,motherSubCaste: user.motherSubCaste },
         process.env.JWT_SECRET,
         { expiresIn: '30d' }
       );
   
-      // Set token in HTTP-only cookie (secure option, prevent client-side access)
+      
       const cookieOptions = {
         httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production', // Ensure it's only sent over HTTPS in production
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+       
+        maxAge: 30 * 24 * 60 * 60 * 1000,
 
         path: '/',
       };
@@ -71,30 +67,50 @@ export async function POST(req) {
 }
 
 
+
 export async function GET(req) {
-  const cookies = req.headers.get('cookie') || '';
-  const parsedCookies = parse(cookies);
-  const token = parsedCookies.authToken;
+    try {
+        // Parse cookies to extract authToken
+        const cookies = req.headers.get('cookie') || '';
+        const parsedCookies = parse(cookies);
+        const token = parsedCookies.authToken;
 
-  if (!token) {
-    return new Response(
-      JSON.stringify({ isAuthenticated: false }),
-      { status: 200 }
-    );
-  }
+        if (!token) {
+            return new Response(
+                JSON.stringify({ message: 'No authentication token found', isAuthenticated: false }),
+                { status: 401 }
+            );
+        }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // Verify the JWT token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.userId;
 
-    return new Response(
-      JSON.stringify({ isAuthenticated: true, userId: decoded.userId }),
-      { status: 200 }
-    );
-  } catch (error) {
-    return new Response(
-      JSON.stringify({ isAuthenticated: false }),
-      { status: 200 }
-    );
-  }
+        // Connect to MongoDB
+        await connectMongo();
+
+        // Fetch user details excluding password
+        const user = await User.findById(userId).select('-password');
+
+        if (!user) {
+            return new Response(
+                JSON.stringify({ message: 'User not found' }),
+                { status: 404 }
+            );
+        }
+
+        return new Response(
+            JSON.stringify({ isAuthenticated: true, user }),
+            { status: 200 }
+        );
+
+    } catch (error) {
+        console.error("Error fetching user details:", error);
+        return new Response(
+            JSON.stringify({ message: 'Error fetching user details', error: error.message }),
+            { status: 500 }
+        );
+    }
 }
+
 

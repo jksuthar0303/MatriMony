@@ -26,17 +26,59 @@ export default function Register() {
     manglik: "No",
     divyang: "No",
     siblings: {
-      brothers: ["Ayush", "Ravi"],
-      sisters: ["Neha", "Simran"],
-      older: "1",
-      younger: "2",
-      married: "3",
-      unmarried: "4",
+      brothers: {
+        older: {
+          married: 0,
+          unmarried: 0,
+        },
+        younger: {
+          married: 0,
+          unmarried: 0,
+        },
+      },
+      sisters: {
+        older: {
+          married: 0,
+          unmarried: 0,
+        },
+        younger: {
+          married: 0,
+          unmarried: 0,
+        },
+      },
+      paternals: [
+        {
+          uncle: [
+            {
+              name: "",
+              spouseName: "",
+            },
+          ],
+          aunt: [
+            {
+              name: "",
+              spouseName: "",
+            },
+          ],
+        },
+      ],
+      maternals: [
+        {
+          uncle: [
+            {
+              name: "",
+              spouseName: "",
+            },
+          ],
+          aunt: [
+            {
+              name: "",
+              spouseName: "",
+            },
+          ],
+        },
+      ],
     },
-    paternalUncle: ["Uncle1", "Uncle2"],
-    paternalAunt: ["Aunt1", "Aunt2"],
-    maternalUncle: ["Uncle3", "Uncle4"],
-    maternalAunt: ["Aunt3", "Aunt4"],
     state: "rajasthan",
     city: "bikaner",
     pincode: "334004",
@@ -67,43 +109,83 @@ export default function Register() {
   const router = useRouter();
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-    if (name.includes("siblings")) {
-      const siblingKey = name.split(".")[1];
-      setFormData((prevData) => ({
+  const handleSiblingsChange = (e, siblingType, relationType) => {
+    const { name, value } = e.target;
+
+    setFormData((prevData) => {
+      const updatedSiblings = { ...prevData.siblings };
+      // Dynamically update the nested property using siblingType and relationType
+      updatedSiblings[siblingType][relationType][name] = value;
+
+      return {
+        ...prevData,
+        siblings: updatedSiblings,
+      };
+    });
+  };
+
+  const handleFamilyChange = (
+    e,
+    familyType,
+    familyIndex,
+    relationType,
+    relationIndex,
+    fieldType
+  ) => {
+    const { value } = e.target;
+
+    setFormData((prevData) => {
+      const updatedFamily = [...prevData.siblings[familyType]];
+
+      // Update the specific uncle or aunt inside the paternals/maternals array
+      updatedFamily[familyIndex][relationType][relationIndex][fieldType] =
+        value;
+
+      return {
         ...prevData,
         siblings: {
           ...prevData.siblings,
-          [siblingKey]: value,
+          [familyType]: updatedFamily,
         },
-      }));
-    } else if (
-      name.includes("paternalUncle") ||
-      name.includes("paternalAunt") ||
-      name.includes("maternalUncle") ||
-      name.includes("maternalAunt")
-    ) {
-      const key = name;
-      const arrayValue = value.split(",").map((item) => item.trim());
-
-      setFormData((prevData) => ({
-        ...prevData,
-        [key]: arrayValue,
-      }));
-    } else if (type === "checkbox") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: checked,
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+      };
+    });
   };
 
+  // Add a new paternal/maternal entry
+  const addRelative = (type) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      siblings: {
+        ...prevState.siblings,
+        [type]: [
+          ...prevState.siblings[type],
+          { uncleName: "", spouseName: "" },
+        ],
+      },
+    }));
+  };
+
+  // Remove a paternal/maternal entry
+  const removeRelative = (type, index) => {
+    setFormData((prevState) => {
+      const updatedRelatives = [...prevState.siblings[type]];
+      updatedRelatives.splice(index, 1);
+      return {
+        ...prevState,
+        siblings: {
+          ...prevState.siblings,
+          [type]: updatedRelatives,
+        },
+      };
+    });
+  };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -116,47 +198,6 @@ export default function Register() {
         }));
       };
     }
-  };
-  // Function to add new sibling (brother or sister)
-  const handleAddSibling = (type) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      siblings: {
-        ...prevData.siblings,
-        [type]: [...prevData.siblings[type], ""], // Adding an empty string as a new sibling input
-      },
-    }));
-  };
-
-  // Function to add new uncle or aunt (paternal or maternal)
-  const handleAddUncleAunt = (type) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [type]: [...prevData[type], ""], // Adding an empty string as a new uncle/aunt input
-    }));
-  };
-
-  // Function to remove a sibling
-  const handleRemoveSibling = (type, index) => {
-    const updatedSiblings = [...formData.siblings[type]];
-    updatedSiblings.splice(index, 1); // Removing the sibling at the specified index
-    setFormData((prevData) => ({
-      ...prevData,
-      siblings: {
-        ...prevData.siblings,
-        [type]: updatedSiblings,
-      },
-    }));
-  };
-
-  // Function to remove an uncle or aunt
-  const handleRemoveUncleAunt = (type, index) => {
-    const updatedUnclesAunts = [...formData[type]];
-    updatedUnclesAunts.splice(index, 1); // Removing the uncle/aunt at the specified index
-    setFormData((prevData) => ({
-      ...prevData,
-      [type]: updatedUnclesAunts,
-    }));
   };
 
   const handleSubmit = async (e) => {
@@ -410,348 +451,368 @@ export default function Register() {
                 <h3 className="text-lg font-bold text-pink-600 mb-4">
                   {t("Register.fields.sibling")}
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-400 font-medium mb-2">
-                      {t("Register.fields.siblings.brothers")}
-                    </label>
-                    <div>
-                      {formData.siblings.brothers.map((brother, index) => (
-                        <div key={index} className="flex items-center mb-2">
-                          <input
-                            type="text"
-                            name="siblings.brothers"
-                            value={brother}
-                            placeholder={t(
-                              "Register.fields.siblings.enterBrothersName"
-                            )}
-                            onChange={(e) => {
-                              const updatedBrothers = [
-                                ...formData.siblings.brothers,
-                              ];
-                              updatedBrothers[index] = e.target.value;
-                              setFormData((prevData) => ({
-                                ...prevData,
-                                siblings: {
-                                  ...prevData.siblings,
-                                  brothers: updatedBrothers,
-                                },
-                              }));
-                            }}
-                            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleRemoveSibling("brothers", index)
-                            }
-                            className="ml-2 text-red-500"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => handleAddSibling("brothers")}
-                        className="mt-2 text-blue-500"
-                      >
-                        Add Brother
-                      </button>
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Brothers Section */}
+                  <div className="flex flex-col justify-between space-y-4">
+                    <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
+                      <span>{t("Register.fields.siblings.brothers")}</span>
+                      <span>Married</span>
+                      <span>Unmarried</span>
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-gray-400 font-medium mb-2">
-                      {t("Register.fields.siblings.sisters")}
-                    </label>
-                    <div>
-                      {formData.siblings.sisters.map((sister, index) => (
-                        <div key={index} className="flex items-center mb-2">
-                          <input
-                            type="text"
-                            name="siblings.sisters"
-                            value={sister}
-                            placeholder={t(
-                              "Register.fields.siblings.enterSistersName"
-                            )}
-                            onChange={(e) => {
-                              const updatedSisters = [
-                                ...formData.siblings.sisters,
-                              ];
-                              updatedSisters[index] = e.target.value;
-                              setFormData((prevData) => ({
-                                ...prevData,
-                                siblings: {
-                                  ...prevData.siblings,
-                                  sisters: updatedSisters,
-                                },
-                              }));
-                            }}
-                            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleRemoveSibling("sisters", index)
-                            }
-                            className="ml-2 text-red-500"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => handleAddSibling("sisters")}
-                        className="mt-2 text-blue-500"
-                      >
-                        Add Sister
-                      </button>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-gray-400 font-medium mb-2">
-                      {t("Register.fields.siblings.older")}
-                    </label>
-                    <input
-                      type="number"
-                      name="siblings.older"
-                      value={formData.siblings.older}
-                      onChange={handleChange}
-                      placeholder={t(
-                        "Register.fields.siblings.enterOlderSiblingsCount"
-                      )}
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                      min="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-400 font-medium mb-2">
-                      {t("Register.fields.siblings.younger")}
-                    </label>
-                    <input
-                      type="number"
-                      name="siblings.younger"
-                      value={formData.siblings.younger}
-                      onChange={handleChange}
-                      placeholder={t(
-                        "Register.fields.siblings.enterYoungerSiblingsCount"
-                      )}
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                      min="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-400 font-medium mb-2">
-                      {t("Register.fields.siblings.married")}
-                    </label>
-                    <input
-                      type="number"
-                      name="siblings.married"
-                      value={formData.siblings.married}
-                      onChange={handleChange}
-                      placeholder={t(
-                        "Register.fields.siblings.enterMarriedSiblingsCount"
-                      )}
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                      min="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-400 font-medium mb-2">
-                      {t("Register.fields.siblings.unmarried")}
-                    </label>
-                    <input
-                      type="number"
-                      name="siblings.unmarried"
-                      value={formData.siblings.unmarried}
-                      onChange={handleChange}
-                      placeholder={t(
-                        "Register.fields.siblings.enterUnmarriedSiblingsCount"
-                      )}
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                      min="0"
-                    />
-                  </div>
-                </div>
-              </div>
 
-              {/* Uncle and Aunt Section */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-400 font-medium mb-2">
-                    {t("Register.fields.paternalUncle")}
-                  </label>
-                  <div>
-                    {formData.paternalUncle.map((uncle, index) => (
-                      <div key={index} className="flex items-center mb-2">
-                        <input
-                          type="text"
-                          name="paternalUncle"
-                          value={uncle}
-                          placeholder={t(
-                            "Register.fields.enterPaternalUncleName"
-                          )}
-                          onChange={(e) => {
-                            const updatedUncles = [...formData.paternalUncle];
-                            updatedUncles[index] = e.target.value;
-                            setFormData((prevData) => ({
-                              ...prevData,
-                              paternalUncle: updatedUncles,
-                            }));
-                          }}
-                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleRemoveUncleAunt("paternalUncle", index)
-                          }
-                          className="ml-2 text-red-500"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => handleAddUncleAunt("paternalUncle")}
-                      className="mt-2 text-blue-500"
-                    >
-                      Add Paternal Uncle
-                    </button>
+                    <div className="grid grid-cols-3 gap-4 w-full">
+                      <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                        Younger
+                      </span>
+                      <select
+                        name="married"
+                        value={formData.siblings.brothers.younger.married}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "brothers", "younger")
+                        }
+                        className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        name="married"
+                        value={formData.siblings.brothers.younger.unmarried}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "brothers", "younger")
+                        }
+                        className="p-2 border border-gray-300 rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 w-full">
+                      <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                        Older
+                      </span>
+                      <select
+                        name="married"
+                        value={formData.siblings.brothers.older.married}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "brothers", "older")
+                        }
+                        className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        name="married"
+                        value={formData.siblings.brothers.older.unmarried}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "brothers", "older")
+                        }
+                        className="p-2 border border-gray-300 rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <label className="block text-gray-400 font-medium mb-2">
-                    {t("Register.fields.paternalAunt")}
-                  </label>
-                  <div>
-                    {formData.paternalAunt.map((aunt, index) => (
-                      <div key={index} className="flex items-center mb-2">
-                        <input
-                          type="text"
-                          name="paternalAunt"
-                          value={aunt}
-                          placeholder={t(
-                            "Register.fields.enterPaternalAuntName"
-                          )}
-                          onChange={(e) => {
-                            const updatedAunts = [...formData.paternalAunt];
-                            updatedAunts[index] = e.target.value;
-                            setFormData((prevData) => ({
-                              ...prevData,
-                              paternalAunt: updatedAunts,
-                            }));
-                          }}
-                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleRemoveUncleAunt("paternalAunt", index)
-                          }
-                          className="ml-2 text-red-500"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => handleAddUncleAunt("paternalAunt")}
-                      className="mt-2 text-blue-500"
-                    >
-                      Add Paternal Aunt
-                    </button>
+
+                  {/* Sisters Section */}
+                  <div className="flex flex-col justify-between space-y-4">
+                    <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
+                      <span>{t("Register.fields.siblings.sisters")}</span>
+                      <span>Married</span>
+                      <span>Unmarried</span>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4 w-full">
+                      <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                        Younger
+                      </span>
+                      <select
+                        name="married"
+                        value={formData.siblings.sisters.younger.married}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "sisters", "younger")
+                        }
+                        className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        name="married"
+                        value={formData.siblings.sisters.younger.unmarried}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "sisters", "younger")
+                        }
+                        className="p-2 border border-gray-300 rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4 w-full">
+                      <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                        Older
+                      </span>
+                      <select
+                        name="married"
+                        value={formData.siblings.sisters.older.married}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "sisters", "older")
+                        }
+                        className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        name="married"
+                        value={formData.siblings.sisters.older.unmarried}
+                        onChange={(e) =>
+                          handleSiblingsChange(e, "sisters", "older")
+                        }
+                        className="p-2 border border-gray-300 rounded-md"
+                      >
+                        {[...Array(10)].map((_, index) => (
+                          <option key={index + 1} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <label className="block text-gray-400 font-medium mb-2">
-                    {t("Register.fields.maternalUncle")}
-                  </label>
-                  <div>
-                    {formData.maternalUncle.map((uncle, index) => (
-                      <div key={index} className="flex items-center mb-2">
+
+                  {/* Paternals Section */}
+                  <div className="flex flex-col justify-between space-y-4">
+                    <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
+                      <span>Paternals</span>
+                      <span>Name</span>
+                      <span>Spouse's Name</span>
+                    </div>
+
+                    {formData.siblings.paternals.map((paternal, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-3 gap-4 w-full"
+                      >
+                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                          Uncle
+                        </span>
                         <input
                           type="text"
-                          name="maternalUncle"
-                          value={uncle}
-                          placeholder={t(
-                            "Register.fields.enterMaternalUncleName"
-                          )}
-                          onChange={(e) => {
-                            const updatedUncles = [...formData.maternalUncle];
-                            updatedUncles[index] = e.target.value;
-                            setFormData((prevData) => ({
-                              ...prevData,
-                              maternalUncle: updatedUncles,
-                            }));
-                          }}
-                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleRemoveUncleAunt("maternalUncle", index)
+                          name="name"
+                          value={formData.siblings.paternals[0].uncle[0].name}
+                          placeholder="Enter Name"
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "paternals",
+                              0,
+                              "uncle",
+                              0,
+                              "name"
+                            )
                           }
-                          className="ml-2 text-red-500"
-                        >
-                          Remove
-                        </button>
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
+
+                        <input
+                          type="text"
+                          name="spouseName"
+                          placeholder="Enter Name"
+                          value={
+                            formData.siblings.paternals[0].uncle[0].spouseName
+                          }
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "paternals",
+                              0,
+                              "uncle",
+                              0,
+                              "spouseName"
+                            )
+                          }
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
                       </div>
                     ))}
-                    <button
-                      type="button"
-                      onClick={() => handleAddUncleAunt("maternalUncle")}
-                      className="mt-2 text-blue-500"
-                    >
-                      Add Maternal Uncle
-                    </button>
+
+                    {formData.siblings.paternals.map((paternal, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-3 gap-4 w-full"
+                      >
+                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                          Aunt
+                        </span>
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder="Enter Name"
+                          value={formData.siblings.paternals[0].aunt[0].name}
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "paternals",
+                              0,
+                              "aunt",
+                              0,
+                              "name"
+                            )
+                          }
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
+
+                        <input
+                          type="text"
+                          name="spouseName"
+                          placeholder="Enter Name"
+                          value={
+                            formData.siblings.paternals[0].aunt[0].spouseName
+                          }
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "paternals",
+                              0,
+                              "aunt",
+                              0,
+                              "spouseName"
+                            )
+                          }
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
+                      </div>
+                    ))}
                   </div>
-                </div>
-                <div>
-                  <label className="block text-gray-400 font-medium mb-2">
-                    {t("Register.fields.maternalAunt")}
-                  </label>
-                  <div>
-                    {formData.maternalAunt.map((aunt, index) => (
-                      <div key={index} className="flex items-center mb-2">
+
+                  {/* maternals Section */}
+                  <div className="flex flex-col justify-between space-y-4">
+                    <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
+                      <span>Maternals</span>
+                      <span>Name</span>
+                      <span>Spouse's Name</span>
+                    </div>
+
+                    {formData.siblings.maternals.map((maternal, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-3 gap-4 w-full"
+                      >
+                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                          Uncle
+                        </span>
                         <input
                           type="text"
-                          name="maternalAunt"
-                          value={aunt}
-                          placeholder={t(
-                            "Register.fields.enterMaternalAuntName"
-                          )}
-                          onChange={(e) => {
-                            const updatedAunts = [...formData.maternalAunt];
-                            updatedAunts[index] = e.target.value;
-                            setFormData((prevData) => ({
-                              ...prevData,
-                              maternalAunt: updatedAunts,
-                            }));
-                          }}
-                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleRemoveUncleAunt("maternalAunt", index)
+                          name="name"
+                          placeholder="Enter Name"
+                          value={formData.siblings.maternals[0].uncle[0].name}
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "maternals",
+                              0,
+                              "uncle",
+                              0,
+                              "name"
+                            )
                           }
-                          className="ml-2 text-red-500"
-                        >
-                          Remove
-                        </button>
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
+
+                        <input
+                          type="text"
+                          name="spouseName"
+                          placeholder="Enter Name"
+                          value={
+                            formData.siblings.maternals[0].uncle[0].spouseName
+                          }
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "maternals",
+                              0,
+                              "uncle",
+                              0,
+                              "spouseName"
+                            )
+                          }
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
                       </div>
                     ))}
-                    <button
-                      type="button"
-                      onClick={() => handleAddUncleAunt("maternalAunt")}
-                      className="mt-2 text-blue-500"
-                    >
-                      Add Maternal Aunt
-                    </button>
+
+                    {formData.siblings.maternals.map((maternal, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-3 gap-4 w-full"
+                      >
+                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
+                          Aunt
+                        </span>
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder="Enter Name"
+                          value={formData.siblings.maternals[0].aunt[0].name}
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "maternals",
+                              0,
+                              "aunt",
+                              0,
+                              "name"
+                            )
+                          }
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
+
+                        <input
+                          type="text"
+                          name="spouseName"
+                          placeholder="Enter Name"
+                          value={
+                            formData.siblings.maternals[0].aunt[0].spouseName
+                          }
+                          onChange={(e) =>
+                            handleFamilyChange(
+                              e,
+                              "maternals",
+                              0,
+                              "aunt",
+                              0,
+                              "spouseName"
+                            )
+                          }
+                          className="p-2  border border-gray-300 rounded-md"
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -924,10 +985,14 @@ export default function Register() {
                 <input
                   type="checkbox"
                   name="agree"
-                  checked={formData.agree}
-                  onChange={handleChange}
-                  className="accent-pink-600"
-                  required
+                  checked={formData.agree || false} // Ensures it's either true or false
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      agree: e.target.checked, // Sets the value to a boolean (true or false)
+                    })
+                  }
+                  className="p-2 border border-gray-300 rounded-md"
                 />
                 <span>{t("Register.agreeTerms.agreeTerms")}</span>
                 <span className="text-pink-600 underline cursor-pointer">

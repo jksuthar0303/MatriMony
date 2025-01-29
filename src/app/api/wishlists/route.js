@@ -5,7 +5,13 @@ import { authenticate } from '../../../lib/authMiddleware';
 export async function POST(req) {
   try {
     // Authenticate the user
-    const userId = authenticate(req); // Extract logged-in user ID
+    const userId = authenticate(req);
+    if(!userId){
+      return new Response(
+        JSON.stringify({ message: 'Logged in to add Users in Wishlist' }),
+        { status: 401 }
+      );
+    } // Extract logged-in user ID
     const { wishlistUserId } = await req.json();
 
     if (!wishlistUserId) {

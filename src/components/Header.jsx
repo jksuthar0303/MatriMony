@@ -6,7 +6,6 @@ import { IoMenu, IoClose } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import { FaLanguage } from "react-icons/fa";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -17,7 +16,7 @@ const Header = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const res = await fetch("/api/users/login");
+      const res = await fetch("/api/auth");
       const data = await res.json();
       setIsAuthenticated(data.isAuthenticated);
     };

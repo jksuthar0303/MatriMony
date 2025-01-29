@@ -4,13 +4,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "cloudinary";
 
-// Configure Cloudinary directly within the same file
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
 
 export async function POST(req) {
   try {
@@ -34,10 +32,6 @@ export async function POST(req) {
       manglik,
       divyang,
       siblings,
-      paternalUncle,
-      paternalAunt,
-      maternalUncle,
-      maternalAunt,
       state,
       city,
       pincode,
@@ -49,14 +43,32 @@ export async function POST(req) {
 
     // Validate required fields
     const requiredFields = [
-      fullName, gender, fatherName, motherName, mobile, whatsapp, email, dob,
-      caste, subCaste, motherSubCaste, qualification, occupation, state, city, pincode, address, password, agree,
+      fullName,
+      gender,
+      fatherName,
+      motherName,
+      mobile,
+      whatsapp,
+      email,
+      dob,
+      caste,
+      subCaste,
+      motherSubCaste,
+      qualification,
+      occupation,
+      state,
+      city,
+      pincode,
+      address,
+      password,
+      agree,
     ];
 
     if (requiredFields.includes(undefined) || !agree) {
       return new Response(
         JSON.stringify({
-          message: "All required fields must be filled, and terms must be agreed to.",
+          message:
+            "All required fields must be filled, and terms must be agreed to.",
         }),
         { status: 400 }
       );
@@ -65,18 +77,17 @@ export async function POST(req) {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return new Response(
-        JSON.stringify({ message: "User already exists" }),
-        { status: 400 }
-      );
+      return new Response(JSON.stringify({ message: "User already exists" }), {
+        status: 400,
+      });
     }
 
     // Handle image upload to Cloudinary if profilePic exists
     let profilePicUrl = "";
     if (profilePic) {
       const uploadResponse = await cloudinary.uploader.upload(profilePic, {
-        folder: "user_profiles", 
-        transformation: [{ width: 200, height: 200, crop: "thumb" }], 
+        folder: "user_profiles",
+        transformation: [{ width: 200, height: 200, crop: "thumb" }],
       });
 
       profilePicUrl = uploadResponse.secure_url;
@@ -94,34 +105,40 @@ export async function POST(req) {
       mobile,
       whatsapp,
       email,
-      age: age || 18, 
+      age: age || 18,
       dob,
       caste,
       subCaste,
       motherSubCaste,
       qualification,
       occupation,
-      manglik: manglik || "No", 
-      divyang: divyang || "No", 
-      siblings,
-      paternalUncle,
-      paternalAunt,
-      maternalUncle,
-      maternalAunt,
+      manglik: manglik || "No",
+      divyang: divyang || "No",
+      siblings: {
+        brothers: siblings.brothers,
+        sisters: siblings.sisters,
+        paternals: siblings.paternals,
+        maternals: siblings.maternals,
+      },
       state,
       city,
       pincode,
-      address,
+      address, 
       password: hashedPassword,
       agree,
-      profilePic: profilePicUrl, 
+      profilePic: profilePicUrl,
     });
 
-    await newUser.save();
+    await user.save();
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email,subCaste: user.subCaste,motherSubCaste: user.motherSubCaste },
+      {
+        userId: user._id,
+        email: user.email,
+        subCaste: user.subCaste,
+        motherSubCaste: user.motherSubCaste,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "30d" }
     );
@@ -137,6 +154,7 @@ export async function POST(req) {
       JSON.stringify({
         message: "User registered successfully",
         token,
+        user
       }),
       {
         status: 200,
@@ -148,7 +166,7 @@ export async function POST(req) {
       }
     );
   } catch (error) {
-    console.error('Error registering user:', error);
+    console.error("Error registering user:", error);
     return new Response(
       JSON.stringify({
         message: "Error registering user",
@@ -158,4 +176,3 @@ export async function POST(req) {
     );
   }
 }
-

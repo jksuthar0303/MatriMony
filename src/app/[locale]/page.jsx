@@ -10,26 +10,7 @@ import { options } from "@/option/dropDownOptions";
 import DropdownWithCheck from "@/components/DropdownWithCheck";
 
 export default function Home() {
-  const [lookingFor, setLookingFor] = useState("bride");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [minAge, setMinAge] = useState("18");
-  const [maxAge, setMaxAge] = useState("30");
-  const [caste, setCaste] = useState("suthar");
-  const [subCaste, setSubCaste] = useState(["kularia"]);
-  const [qualification, setQualification] = useState(["none"]);
-  const [occupation, setOccupation] = useState(["labour"]);
-  const [state, setState] = useState(["rajasthan"]);
-  const [city, setCity] = useState(["bikaner"]);
-  const [manglik, setManglik] = useState("No");
-  const [divyang, setDivyang] = useState("No");
-  const [secondMarriage, setSecondMarriage] = useState("No");
-  const [profiles, setProfiles] = useState([]);
-  const [stories, setStories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [likedProfiles, setLikedProfiles] = useState({});
   const t = useTranslations();
-  const router = useRouter();
-
   const {
     cities,
     gender,
@@ -41,6 +22,30 @@ export default function Home() {
     occupationOptions,
     stateOptions,
   } = options(t);
+
+  const [lookingFor, setLookingFor] = useState("bride");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [minAge, setMinAge] = useState("18");
+  const [maxAge, setMaxAge] = useState("30");
+  const [caste, setCaste] = useState("suthar");
+  const [user, setUser] = useState("");
+  const [subCaste, setSubCaste] = useState([]);
+  const [qualification, setQualification] = useState(
+    qualificationOptions.map((qualification) => qualification.value)
+  );
+  const [occupation, setOccupation] = useState(
+    occupationOptions.map((occupation) => occupation.value)
+  );
+  const [state, setState] = useState(["rajasthan"]);
+  const [city, setCity] = useState(cities.map((city) => city.value));
+  const [manglik, setManglik] = useState("No");
+  const [divyang, setDivyang] = useState("No");
+  const [secondMarriage, setSecondMarriage] = useState("No");
+  const [profiles, setProfiles] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [likedProfiles, setLikedProfiles] = useState({});
+  const router = useRouter();
 
   const settings = {
     infinite: true, // Infinite scrolling
@@ -75,42 +80,38 @@ export default function Home() {
   const handleClick = () => {
     router.push("/success-stories");
   };
-  const handleSubCasteChange = (selectedValues) => {
-    // Assuming logged-in user subCaste and motherSubcaste are available as variables
-    const loggedInUserSubCaste = "kularia"; // Replace with actual logged-in user subCaste value
-    const loggedInUserMotherSubCaste = "motiyar"; // Replace with actual logged-in user mother's subCaste value
-  
-    if (selectedValues.includes("all")) {
-      // Get all values except the logged-in user's subCaste and mother's subCaste
-      const allValues = subCasteOptions
-        .map(option => option.value)
-        .filter(value => value !== loggedInUserSubCaste && value !== loggedInUserMotherSubCaste);
-      
-      // Log the excluded values
-      console.log("Excluded values:", [loggedInUserSubCaste, loggedInUserMotherSubCaste]);
-  
-      // Update the state with the filtered values
-      setSubCaste(allValues);
-      console.log("Selected values after excluding:", allValues); // Log all selected values excluding logged-in user's subCaste and motherSubcaste
-    } else {
-      // Set selected values normally
-      setSubCaste(selectedValues);
-      console.log("Selected values:", selectedValues); // Log selected values when individual options are selected
-    }
+  const handleChange = (setter, updatedValues) => {
+    setter(updatedValues); // Update the state for the corresponding filter
   };
-  
-  
-  
-  const displaySubCaste = subCaste.includes("all") ? ["all"] : subCaste;
+
   useEffect(() => {
-    const checkAuth = async () => {
-      const res = await fetch("/api/users/login");
-      const data = await res.json();
-      setIsAuthenticated(data.isAuthenticated);
+    const getLoggedUserDetails = async () => {
+      try {
+        const request = new Request("/api/users/login", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const res = await fetch(request);
+        const data = await res.json();
+
+        if (data.isAuthenticated) {
+          setIsAuthenticated(true);
+
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error checking auth:", error);
+      }
     };
 
-    checkAuth();
+    getLoggedUserDetails();
   }, []);
+
+  const loggedInUserSubCaste = user.subCaste;
+  const loggedInUserMotherSubCaste = user.motherSubCaste;
 
   useEffect(() => {
     async function fetchUsers() {
@@ -166,7 +167,7 @@ export default function Home() {
   return (
     <div className="p-4 space-y-12">
       {/* Hero Section */}
-      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] flex flex-col items-center justify-center text-center p-8 rounded-2xl shadow-lg overflow-hidden">
+      <div className="relative w-full h-[300px] md:h-[500px] lg:h-[600px] flex flex-col items-center justify-center text-center p-8 rounded-2xl shadow-lg overflow-hidden">
         {/* Scrollable Image Container */}
         {/* Image Carousel */}
         <div className="absolute inset-0 overflow-hidden">
@@ -175,28 +176,28 @@ export default function Home() {
               <img
                 src="/images/weeding1.jpg"
                 alt="Slide 1"
-                className="w-full h-[600px] object-cover"
+                className="w-full h-[300px] md:h-[500px] lg:h-[600px] object-cover"
               />
             </div>
             <div>
               <img
                 src="/images/weeding2.jpg"
                 alt="Slide 2"
-                className="w-full h-[600px] object-cover"
+                className="w-full h-[300px] md:h-[500px] lg:h-[600px]  object-cover"
               />
             </div>
             <div>
               <img
                 src="/images/weeding3.jpg"
                 alt="Slide 3"
-                className="w-full h-[600px] object-cover"
+                className="w-full h-[300px] md:h-[500px] lg:h-[600px]  object-cover"
               />
             </div>
             <div>
               <img
                 src="/images/weeding4.jpg"
                 alt="Slide 4"
-                className="w-full h-[600px] object-cover"
+                className="w-full h-[300px] md:h-[500px] lg:h-[600px] object-cover"
               />
             </div>
           </Slider>
@@ -217,33 +218,25 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="flex-col items-center justify-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+            <div className="flex items-center justify-center">
+              <span className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
                 {t("HomePage.welcome")}
-              </h1>
-              <span className="text-4xl md:text-4xl ml-2 mt-3 lg:text-6xl font-extrabold text-pink-600 font-playwrite">
-                {t("HomePage.domain")}
+                <span className="ml-4 font-extrabold text-pink-600 font-playwrite">
+                  {user.fullName}
+                </span>
               </span>
-              <div className="mt-6 bg-white bg-opacity-20 p-6 rounded-lg shadow-md">
-            <p className="text-xl text-center text-gray-100 font-medium">
-              {t("HomePage.description1")}
-            </p>
-          </div>
             </div>
           )}
-
-          
-          
 
           {!isAuthenticated ? (
             <div className="mt-6 flex justify-center gap-4">
               <Link href="/register">
-                <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
+                <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold p-4 text-sm rounded-lg shadow-lg transition-all">
                   {t("HomePage.buttons.getStarted")}
                 </button>
               </Link>
               <Link href="/learn-more">
-                <button className="bg-white text-pink-600 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-all">
+                <button className="bg-white text-pink-600 font-bold py-3 p-4 rounded-lg shadow-lg hover:bg-gray-200 transition-all">
                   {t("HomePage.buttons.learnMore")}
                 </button>
               </Link>
@@ -259,11 +252,33 @@ export default function Home() {
         </div>
       </div>
 
+      <div className="flex justify-center items-center px-4 md:px-10 lg:px-20 py-6">
+        <div className="bg-white shadow-2xl rounded-2xl p-6 md:p-8 lg:p-10 w-full max-w-5xl text-gray-700 text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-400 to-pink-500 opacity-30 rounded-2xl"></div>
+
+          <div className="relative z-10 space-y-4">
+            <p className="text-md md:text-lg lg:text-xl font-medium text-gray-600">
+              {t("HomePage.description1")}
+            </p>
+            <p className="text-md md:text-lg lg:text-xl font-medium text-gray-600">
+              {t("HomePage.description2")}
+            </p>
+            <p className="text-md md:text-lg lg:text-xl font-medium text-gray-600">
+              {t("HomePage.description3")}
+            </p>
+            <p className="text-md md:text-lg lg:text-xl font-medium text-gray-600">
+              {t("HomePage.description4")}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Search Filters Section */}
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold text-center mb-6 text-pink-600">
+      <div className="bg-white p-8 rounded-lg shadow-2xl">
+        <h2 className="text-2xl text-center md:text-3xl lg:text-3xl font-semibold  mb-2 text-pink-600">
           {t("Filters.title")}
         </h2>
+        <hr className="border-pink-600 border-t-2 w-56 mx-auto mb-6" />
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {/* Looking For */}
@@ -301,29 +316,36 @@ export default function Home() {
             />
           </div>
           <div>
-          <DropdownWithCheck
-      options={subCasteOptions}
-      selectedValues={displaySubCaste}
-      onChange={handleSubCasteChange}
-      label={t("Filters.fields.caste.selectSubCaste")}
-    />
-
+            <DropdownWithCheck
+              options={subCasteOptions}
+              selectedValues={subCaste}
+              onChange={(updatedValues) =>
+                handleChange(setSubCaste, updatedValues)
+              }
+              loggedInUserSubCaste={loggedInUserSubCaste}
+              loggedInUserMotherSubCaste={loggedInUserMotherSubCaste}
+              label={t("Filters.fields.caste.selectSubCaste")}
+            />
           </div>
           <div>
             <DropdownWithCheck
               options={qualificationOptions}
               selectedValues={qualification}
-              onChange={setQualification}
+              onChange={(updatedValues) =>
+                handleChange(setQualification, updatedValues)
+              }
               label={t("Filters.fields.qualification")}
             />
           </div>
 
           <div>
             <DropdownWithCheck
+              label="Select Occupation"
               options={occupationOptions}
-              selectedValues={occupation}
-              onChange={setOccupation}
-              label={t("Filters.fields.occupation")}
+              selectedValues={occupation} // Use the occupation state here
+              onChange={(updatedValues) =>
+                handleChange(setOccupation, updatedValues)
+              }
             />
           </div>
           <div>
@@ -338,7 +360,7 @@ export default function Home() {
             <DropdownWithCheck
               options={cities}
               selectedValues={city}
-              onChange={setCity}
+              onChange={(updatedValues) => handleChange(setCity, updatedValues)}
               label={t("Filters.fields.location.city")}
             />
           </div>
@@ -445,11 +467,11 @@ export default function Home() {
 
       {/* Featured Profiles Section */}
 
-      <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg relative">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4 md:mb-6 text-pink-600">
+      <div className="bg-white p-6 md:p-8 rounded-lg shadow-2xl relative">
+        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-2 text-pink-600">
           {t("Profiles.title")}
         </h2>
-
+        <hr className="border-pink-600 border-t-2 w-56 mx-auto mb-6" />
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="loader"></div>
@@ -531,20 +553,21 @@ export default function Home() {
       </div>
 
       {/* Success Stories Section */}
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold text-center mb-8 text-pink-600">
+      <div className="bg-white p-8 rounded-lg shadow-2xl">
+        <h2 className="text-3xl font-semibold text-center mb-4 text-pink-600">
           {t("SuccessStories.title")}
         </h2>
+        <hr className="border-pink-600 border-t-2 w-28 mx-auto mb-6" />
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="loader"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stories.slice(0, 4).map((story, index) => (
               <div
                 key={index}
-                className="group bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="group mt-2 bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="flex flex-col items-center">
                   <div className="w-32 h-32 mb-4">
