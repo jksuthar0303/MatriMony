@@ -1,6 +1,6 @@
 {
   "HomePage": {
-    "title": "अपना आदर्श साथी खोजें",
+    "title": "अपना जीवन साथी खोजें",
     "welcome": "स्वागत",
     "domain": "Sagairisthe.com",
     "description": "आपकी खुशहाल और पूर्ण जीवन यात्रा यहाँ से शुरू होती है।",
@@ -22,7 +22,7 @@
     }
   },
   "Filters": {
-    "title": "अपना आदर्श साथी खोजें",
+    "title": "अपना जीवन साथी खोजें",
     "fields": {
       "lookingFor": "खोज रहे हैं...",
       "minAge": "न्यूनतम आयु",
@@ -314,8 +314,9 @@
       "motherSubCaste": "माँ की उप जाति",
       "qualification": "योग्यता",
       "occupation": "व्यवसाय",
-      "manglik": "मंगलिक स्थिति",
-      "divyang": "दिव्यांग स्थिति",
+      "manglik": "मांगलिक",
+      "divyang": "दिव्यांग",
+      "remarriage":"पुनर्विवाह",
       "yes": "हाँ",
       "no": "नहीं",
       "sibling": "भाई-बहन",
@@ -325,7 +326,7 @@
         "paternals": "पैतृक भाई-बहन",
         "maternals": "मातृक भाई-बहन",
         "enterName": "नाम दर्ज करें",
-        "enterSpouseName": "पति/पत्नी का नाम दर्ज करें",
+        "enterSpouseName": "जीवनसाथी का नाम दर्ज करें",
         "married": "विवाहित",
         "unMarried": "अविवाहित",
         "younger": "छोटे",
@@ -346,8 +347,7 @@
       "confirmPassword": "पासवर्ड की पुष्टि करें",
       "enterConfirmPassword": "अपना पासवर्ड फिर से दर्ज करें",
       "agree": "मैं शर्तों और नियमों से सहमत हूं",
-      "profilePic": "प्रोफाइल तस्वीर",
-      "maritalStatus": "वैवाहिक स्थिति"
+      "profilePic": "प्रोफाइल तस्वीर"
     },
 
     "buttons": {

@@ -1,34 +1,35 @@
 "use client";
 import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/solid";
-import { useState, useCallback } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { options } from "@/option/dropDownOptions";
 import Dropdown from "@/components/Dropdown";
 import { Link, useRouter } from "@/i18n/routing";
 import Cropper from "react-easy-crop";
-import getCroppedImg from "@/utils/cropImage"; // Utility function to crop image
-import { Slider } from "@/components/Slider"; // Ensure you have a slider component installed
+import getCroppedImg from "@/utils/cropImage";
+import { Slider } from "@/components/Slider";
 import { Dialog } from "@/components/Dailog";
 export default function Register() {
   const t = useTranslations();
 
   const [formData, setFormData] = useState({
-    gender: "Male",
-    fullName: "Jaikishan Suthar",
-    fatherName: "Omprakash",
-    motherName: "Laxmi Devi",
-    mobile: "9001505613",
-    whatsapp: "9001505613",
-    email: "jksuthar2022@gmail.com",
-    age: "18",
+    gender: "",
+    fullName: "",
+    fatherName: "",
+    motherName: "",
+    mobile: "",
+    email: "",
+    age: "",
     dob: "",
-    caste: "suthar",
-    subCaste: "kulriya",
-    motherSubCaste: "motiyar",
+    caste: "",
+    subCaste: "",
+    motherSubCaste: "",
     qualification: "none",
-    occupation: "labour",
+    occupation: "none",
     manglik: "No",
     divyang: "No",
+    remarriage: "No",
     siblings: {
       brothers: {
         older: {
@@ -83,12 +84,12 @@ export default function Register() {
         },
       ],
     },
-    state: "rajasthan",
-    city: "bikaner",
+    state: "Rajasthan",
+    city: "",
     pincode: "334004",
-    address: "Near Old Shiv temple bangla nagar",
-    password: "12345678",
-    confirmPassword: "12345678",
+    address: "",
+    password: "",
+    confirmPassword: "",
     agree: false,
     profilePic: null,
   });
@@ -97,15 +98,10 @@ export default function Register() {
   const [zoom, setZoom] = useState(1);
   const [croppedImage, setCroppedImage] = useState(null);
   const [showCropModal, setShowCropModal] = useState(false);
-  const [caste, setCaste] = useState("suthar");
-  const [subCaste, setSubCaste] = useState("kulriya");
-  const [motherSubCaste, setMotherSubCaste] = useState("motiyar");
-  const [qualification, setQualification] = useState("none");
-  const [occupation, setOccupation] = useState("labour");
-  const [state, setState] = useState("rajasthan");
-  const [city, setCity] = useState("bikaner");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [showPasswords, setShowPasswords] = useState(false);
 
   const {
     cities,
@@ -117,12 +113,64 @@ export default function Register() {
   } = options(t);
   const router = useRouter();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
+  const handleChange = (eOrValue, name) => {
+    if (typeof eOrValue === "object" && eOrValue.target) {
+      // For normal input fields
+      const { name, value } = eOrValue.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    } else {
+      // For custom components (Dropdowns, DatePickers, etc.)
+      setFormData((prev) => ({ ...prev, [name]: eOrValue }));
+    }
+
+    // Remove validation error dynamically
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      if (file.size > 300 * 1024) {
+        alert("Profile picture size must not exceed 300KB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+        setFormData((prev) => ({
+          ...prev,
+          profilePic: reader.result, // Store the image data
+        }));
+
+        // Clear profile picture validation error
+        setErrors((prev) => ({
+          ...prev,
+          profilePic: "",
+        }));
+
+        setShowCropModal(true);
+      };
+    }
+  };
+
+  const handleCheckboxChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      agree: e.target.checked,
     }));
+
+    // Clear error when checkbox is checked
+    setErrors((prev) => ({
+      ...prev,
+      agree: "",
+    }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPasswords(!showPasswords);
   };
 
   const handleSiblingsChange = (e, siblingType, relationType) => {
@@ -176,17 +224,6 @@ export default function Register() {
       siblings: updatedSiblings,
     });
   };
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setImageSrc(reader.result);
-        setShowCropModal(true);
-      };
-    }
-  };
 
   const onCropComplete = useCallback(
     async (_, croppedAreaPixels) => {
@@ -206,12 +243,81 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+
+    // Focus on the first invalid field
+    if (Object.keys(validationErrors).length > 0) {
+      for (let field in validationErrors) {
+        switch (field) {
+          case "gender":
+            genderRef.current.focus();
+            break;
+          case "fullName":
+            fullNameRef.current.focus();
+            break;
+          case "fatherName":
+            fatherNameRef.current.focus();
+            break;
+          case "motherName":
+            motherNameRef.current.focus();
+            break;
+          case "mobile":
+            mobileRef.current.focus();
+            break;
+          case "email":
+            emailRef.current.focus();
+            break;
+          case "age":
+            ageRef.current.focus();
+            break;
+          case "dob":
+            dobRef.current.focus();
+            break;
+          case "caste":
+            casteRef.current.focus();
+            break;
+          case "subCaste":
+            subCasteRef.current.focus();
+            break;
+          case "motherSubCaste":
+            motherSubCasteRef.current.focus();
+            break;
+          case "address":
+            addressRef.current.focus();
+            break;
+          case "city":
+            cityRef.current.focus();
+            break;
+          case "pincode":
+            pincodeRef.current.focus();
+            break;
+          case "password":
+            passwordRef.current.focus();
+            break;
+          case "confirmPassword":
+            confirmPasswordRef.current.focus();
+            break;
+          case "agree":
+            agreeRef.current.focus();
+            break;
+          case "profilePic":
+            profilePicRef.current.focus();
+            break;
+          default:
+            break;
+        }
+        break; // Stop after focusing the first invalid field
+      }
+      return; // Prevent form submission
     }
+
+    // Form is valid, proceed with submission
+    console.log("Form is valid, submitting...");
+
+    setLoading(true);
+    setError(""); // Reset any previous error state
 
     try {
       const response = await fetch("/api/users/register", {
@@ -225,9 +331,9 @@ export default function Register() {
       const result = await response.json();
 
       if (response.ok) {
-        setFormData("");
-        router.push("/");
-        window.location.reload();
+        setFormData(""); // Clear form after successful registration
+        router.push("/"); // Redirect to home page
+        window.location.reload(); // Reload the page
       } else {
         alert(result.message || "Something went wrong!");
       }
@@ -235,8 +341,59 @@ export default function Register() {
       setError(t("Registration Failed"));
       alert("Error registering user: " + error.message);
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading regardless of success or failure
     }
+  };
+
+  const profilePicRef = useRef(null);
+  const fullNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
+  const genderRef = useRef(null);
+  const fatherNameRef = useRef(null);
+  const motherNameRef = useRef(null);
+  const mobileRef = useRef(null);
+  const ageRef = useRef(null);
+  const dobRef = useRef(null);
+  const casteRef = useRef(null);
+  const subCasteRef = useRef(null);
+  const motherSubCasteRef = useRef(null);
+  const addressRef = useRef(null);
+  const cityRef = useRef(null);
+  const pincodeRef = useRef(null);
+  const agreeRef = useRef(null);
+
+  // Validation function
+  const validateForm = () => {
+    const errors = {};
+
+    if (!formData.gender) errors.gender = "Gender is required";
+    if (!formData.fullName) errors.fullName = "Full Name is required";
+    if (!formData.fatherName) errors.fatherName = "Father Name is required";
+    if (!formData.motherName) errors.motherName = "Mother Name is required";
+    if (!formData.mobile) errors.mobile = "Mobile Number is required";
+    if (!formData.email) errors.email = "Email is required";
+    if (!formData.age) errors.age = "Age is required";
+    if (!formData.dob) errors.dob = "D.O.B is required";
+
+    if (!formData.caste) errors.caste = "Caste is required";
+    if (!formData.subCaste) errors.subCaste = "SubCaste is required";
+    if (!formData.motherSubCaste)
+      errors.motherSubCaste = "Mother's SubCaste is required";
+
+    if (!formData.address) errors.address = "Address is required";
+    if (!formData.city) errors.city = "City is required";
+    if (!formData.pincode) errors.pincode = "Pincode is required";
+    if (!formData.password) errors.password = "Password is required";
+    if (!formData.confirmPassword)
+      errors.confirmPassword = "Confirm Password is required";
+    if (formData.password !== formData.confirmPassword)
+      errors.confirmPassword = "Passwords do not match";
+    if (!formData.agree)
+      errors.agree = "Please Agree to the Terms and Conditions";
+    if (!formData.profilePic) errors.profilePic = "Profile Picture is required";
+    return errors;
   };
 
   return (
@@ -273,10 +430,14 @@ export default function Register() {
                 </label>
                 <input
                   type="file"
+                  accept="image/*"
+                  ref={profilePicRef}
                   onChange={handleFileChange}
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 />
-
+                {errors.profilePic && (
+                  <span style={{ color: "red" }}>{errors.profilePic}</span>
+                )}
                 {showCropModal && (
                   <Dialog
                     open={showCropModal}
@@ -328,14 +489,19 @@ export default function Register() {
                   {t("Register.fields.fullName")}
                 </label>
                 <input
+                  ref={fullNameRef}
                   type="text"
                   name="fullName"
                   value={formData.fullName}
-                  onChange={handleChange}
+                  onChange={(value) => handleChange(value, "fullName")}
                   placeholder={t("Register.fields.enterFullName")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.fullName ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.fullName && (
+                  <span style={{ color: "red" }}>{errors.fullName}</span>
+                )}
               </div>
 
               {/* Father Name */}
@@ -344,14 +510,19 @@ export default function Register() {
                   {t("Register.fields.fatherName")}
                 </label>
                 <input
+                  ref={fatherNameRef}
                   type="text"
                   name="fatherName"
                   value={formData.fatherName}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "fatherName")} // Added onChange for fatherName
                   placeholder={t("Register.fields.enterFatherName")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.fatherName ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.fatherName && (
+                  <span style={{ color: "red" }}>{errors.fatherName}</span>
+                )}
               </div>
 
               {/* Mother Name */}
@@ -360,14 +531,19 @@ export default function Register() {
                   {t("Register.fields.motherName")}
                 </label>
                 <input
+                  ref={motherNameRef}
                   type="text"
                   name="motherName"
                   value={formData.motherName}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "motherName")} // Added onChange for motherName
                   placeholder={t("Register.fields.enterMotherName")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.motherName ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.motherName && (
+                  <span style={{ color: "red" }}>{errors.motherName}</span>
+                )}
               </div>
 
               {/* Gender */}
@@ -378,13 +554,13 @@ export default function Register() {
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2">
                     <input
+                      ref={genderRef}
                       type="radio"
                       name="gender"
                       value="Male"
                       className="accent-pink-600"
                       checked={formData.gender === "Male"}
-                      onChange={handleChange}
-                      required
+                      onChange={(e) => handleChange(e, "gender")} // Added onChange for gender
                     />
                     {t("Register.genderOptions.male")}
                   </label>
@@ -395,12 +571,14 @@ export default function Register() {
                       value="Female"
                       className="accent-pink-600"
                       checked={formData.gender === "Female"}
-                      onChange={handleChange}
-                      required
+                      onChange={(e) => handleChange(e, "gender")} // Added onChange for gender
                     />
                     {t("Register.genderOptions.female")}
                   </label>
                 </div>
+                {errors.gender && (
+                  <span style={{ color: "red" }}>{errors.gender}</span>
+                )}
               </div>
 
               {/* Mobile */}
@@ -409,29 +587,38 @@ export default function Register() {
                   {t("Register.fields.mobileNo")}
                 </label>
                 <input
+                  ref={mobileRef}
                   type="tel"
                   name="mobile"
                   value={formData.mobile}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "mobile")} // Added onChange for mobile
                   placeholder={t("Register.fields.enterMobileNo")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.mobile ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.mobile && (
+                  <span style={{ color: "red" }}>{errors.mobile}</span>
+                )}
               </div>
+
               {/* Email */}
               <div>
                 <label className="block font-bold text-pink-600 mb-2">
                   {t("Register.fields.email")}
                 </label>
                 <input
+                  ref={emailRef}
                   type="text"
                   name="email"
                   value={formData.email}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "email")} // Added onChange for email
                   placeholder={t("Register.fields.enterEmail")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.email && <p className="text-red-500">{errors.email}</p>}
               </div>
 
               {/* Age */}
@@ -440,14 +627,19 @@ export default function Register() {
                   {t("Register.fields.age")}
                 </label>
                 <input
+                  ref={ageRef}
                   type="number"
                   name="age"
                   value={formData.age}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "age")} // Added onChange for age
                   placeholder={t("Register.fields.enterAge")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.age ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.age && (
+                  <span style={{ color: "red" }}>{errors.age}</span>
+                )}
               </div>
 
               {/* Date of Birth */}
@@ -456,43 +648,62 @@ export default function Register() {
                   {t("Register.fields.dob")}
                 </label>
                 <input
+                  ref={dobRef}
                   type="date"
                   name="dob"
                   value={formData.dob}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  onChange={(e) => handleChange(e, "dob")} // Added onChange for dob
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.dob ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.dob && (
+                  <span style={{ color: "red" }}>{errors.dob}</span>
+                )}
               </div>
 
               {/* Caste */}
               <div>
                 <Dropdown
+                  ref={casteRef}
                   options={casteOptions}
-                  selectedValue={caste}
-                  onChange={setCaste}
+                  selectedValue={formData.caste}
+                  onChange={(value) => handleChange(value, "caste")}
                   label={t("Filters.fields.caste.selectCaste")}
                 />
+                {errors.caste && (
+                  <span style={{ color: "red" }}>{errors.caste}</span>
+                )}
               </div>
 
               {/* Sub Caste */}
               <div>
                 <Dropdown
+                  ref={subCasteRef}
                   options={subCasteOptions}
-                  selectedValue={subCaste}
-                  onChange={setSubCaste}
+                  selectedValue={formData.subCaste}
+                  onChange={(value) => handleChange(value, "subCaste")}
                   label={t("Filters.fields.caste.selectSubCaste")}
                 />
+                {errors.subCaste && (
+                  <span style={{ color: "red" }}>{errors.subCaste}</span>
+                )}
               </div>
+
               {/*Mother Sub Caste */}
               <div>
                 <Dropdown
+                  ref={motherSubCasteRef}
                   options={subCasteOptions}
-                  selectedValue={motherSubCaste}
-                  onChange={setMotherSubCaste}
+                  selectedValue={formData.motherSubCaste}
+                  onChange={(value) => handleChange(value, "motherSubCaste")}
                   label={t("Register.fields.motherSubCaste")}
                 />
+                {errors.motherSubCaste && (
+                  <span style={{ color: "red" }}>{errors.motherSubCaste}</span>
+                )}
               </div>
+
               {/*Siblings Section */}
               <div>
                 <h3 className="text-lg font-bold text-pink-600 mb-4">
@@ -817,7 +1028,6 @@ export default function Register() {
                         ))}
                       </div>
                     ))}
-                    
                   </div>
 
                   {/* Maternals Section */}
@@ -986,7 +1196,6 @@ export default function Register() {
                       </div>
                     ))}
                   </div>
-
                 </div>
               </div>
 
@@ -994,8 +1203,8 @@ export default function Register() {
               <div>
                 <Dropdown
                   options={qualificationOptions}
-                  selectedValue={qualification}
-                  onChange={setQualification}
+                  selectedValue={formData.qualification}
+                  onChange={(value) => handleChange(value, "qualification")}
                   label={t("Filters.fields.qualification")}
                 />
               </div>
@@ -1004,71 +1213,103 @@ export default function Register() {
               <div>
                 <Dropdown
                   options={occupationOptions}
-                  selectedValue={occupation}
-                  onChange={setOccupation}
+                  selectedValue={formData.occupation}
+                  onChange={(value) => handleChange(value, "occupation")}
                   label={t("Filters.fields.occupation")}
                 />
               </div>
 
-              {/* Manglik Section */}
-              <div>
-                <label className="block text-pink-600 font-bold mb-2">
-                  {t("Register.fields.manglik")}
-                </label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="manglik"
-                      value="Yes"
-                      className="accent-pink-600"
-                      checked={formData.manglik === "Yes"}
-                      onChange={handleChange}
-                    />
-                    {t("Register.fields.yes")}
+              <div className="flex justify-between">
+                {/* Manglik Section */}
+                <div>
+                  <label className="block text-pink-600 font-bold mb-2">
+                    {t("Register.fields.manglik")}
                   </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="manglik"
-                      value="No"
-                      className="accent-pink-600"
-                      checked={formData.manglik === "No"}
-                      onChange={handleChange}
-                    />
-                    {t("Register.fields.no")}
-                  </label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="manglik"
+                        value="Yes"
+                        className="accent-pink-600"
+                        checked={formData.manglik === "Yes"}
+                        onChange={handleChange}
+                      />
+                      {t("Register.fields.yes")}
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="manglik"
+                        value="No"
+                        className="accent-pink-600"
+                        checked={formData.manglik === "No"}
+                        onChange={handleChange}
+                      />
+                      {t("Register.fields.no")}
+                    </label>
+                  </div>
                 </div>
-              </div>
 
-              {/* Divyang Section */}
-              <div>
-                <label className="block text-pink-600 font-bold mb-2">
-                  {t("Register.fields.divyang")}
-                </label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="divyang"
-                      value="Yes"
-                      className="accent-pink-600"
-                      checked={formData.divyang === "Yes"}
-                      onChange={handleChange}
-                    />
-                    {t("Register.fields.yes")}
+                {/* Divyang Section */}
+                <div>
+                  <label className="block text-pink-600 font-bold mb-2">
+                    {t("Register.fields.divyang")}
                   </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="divyang"
-                      value="No"
-                      className="accent-pink-600"
-                      checked={formData.divyang === "No"}
-                      onChange={handleChange}
-                    />
-                    {t("Register.fields.no")}
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="divyang"
+                        value="Yes"
+                        className="accent-pink-600"
+                        checked={formData.divyang === "Yes"}
+                        onChange={handleChange}
+                      />
+                      {t("Register.fields.yes")}
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="divyang"
+                        value="No"
+                        className="accent-pink-600"
+                        checked={formData.divyang === "No"}
+                        onChange={handleChange}
+                      />
+                      {t("Register.fields.no")}
+                    </label>
+                  </div>
+                </div>
+                {/* Remarrige Section */}
+                <div>
+                  <label className="block text-pink-600 font-bold mb-2">
+                    {t("Register.fields.remarriage")}
                   </label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="remarriage"
+                        value="Yes"
+                        className="accent-pink-600"
+                        checked={formData.remarriage === "Yes"}
+                        onChange={handleChange}
+                      />
+                      {t("Register.fields.yes")}
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="remarriage"
+                        value="No"
+                        className="accent-pink-600"
+                        checked={formData.remarriage === "No"}
+                        onChange={handleChange}
+                      />
+                      {t("Register.fields.no")}
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -1078,13 +1319,19 @@ export default function Register() {
                   {t("Register.fields.address")}
                 </label>
                 <input
+                  ref={addressRef}
                   type="text"
                   name="address"
                   value={formData.address}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "address")} // Added onChange for address
                   placeholder={t("Register.fields.enterAddress")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                  className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.address ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.address && (
+                  <span style={{ color: "red" }}>{errors.address}</span>
+                )}
               </div>
 
               {/* State, City, Pincode Section */}
@@ -1092,79 +1339,108 @@ export default function Register() {
                 <div>
                   <Dropdown
                     options={stateOptions}
-                    selectedValue={state}
-                    onChange={setState}
+                    selectedValue={formData.state}
+                    onChange={(value) => handleChange(value, "state")}
                     label={t("Filters.fields.location.state")}
                   />
                 </div>
                 <div>
                   <Dropdown
+                    ref={cityRef}
                     options={cities}
-                    selectedValue={city}
-                    onChange={setCity}
+                    selectedValue={formData.city}
+                    onChange={(value) => handleChange(value, "city")}
                     label={t("Filters.fields.location.city")}
                   />
+                  {errors.city && (
+                    <span style={{ color: "red" }}>{errors.city}</span>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-pink-600 font-bold mb-2">
                     {t("Register.fields.pincode")}
                   </label>
                   <input
+                    ref={pincodeRef}
                     type="number"
                     name="pincode"
                     value={formData.pincode}
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e, "pincode")} // Call handleChange with 'pincode'
                     placeholder={t("Register.fields.enterPincode")}
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
+                    className={`w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                      errors.pincode ? "border-red-500" : "border-gray-300"
+                    }`}
                     min="0"
                   />
+                  {errors.pincode && (
+                    <span style={{ color: "red" }}>{errors.pincode}</span>
+                  )}
                 </div>
               </div>
 
-              {/* Password Section */}
-              <div>
+              <div className="relative">
                 <label className="block text-pink-600 font-bold mb-2">
                   {t("Register.fields.password")}
                 </label>
                 <input
-                  type="password"
+                  ref={passwordRef}
+                  type={showPasswords ? "text" : "password"} // Controlled by one state
                   name="password"
                   value={formData.password}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "password")} // Handle change
                   placeholder={t("Register.fields.enterPassword")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 pr-10 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
                 />
+                {errors.password && (
+                  <p className="text-red-500">{errors.password}</p>
+                )}
               </div>
 
-              {/* Confirm Password Section */}
-              <div>
+              {/* Confirm Password Section with Eye Icon */}
+              <div className="relative">
                 <label className="block text-pink-600 font-bold mb-2">
                   {t("Register.fields.confirmPassword")}
                 </label>
                 <input
-                  type="password"
+                  ref={confirmPasswordRef}
+                  type={showPasswords ? "text" : "password"} // Controlled by one state
                   name="confirmPassword"
                   value={formData.confirmPassword}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, "confirmPassword")} // Handle change
                   placeholder={t("Register.fields.confirmPassword")}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
-                  required
+                  className={`w-full border border-gray-300 rounded-lg p-3 pr-10 focus:ring-pink-500 focus:border-pink-500 outline-none ${
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
                 />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute top-12 right-3 text-gray-500"
+                >
+                  {showPasswords ? (
+                    <FaEyeSlash size={20} />
+                  ) : (
+                    <FaEye size={20} />
+                  )}
+                </button>
+                {errors.confirmPassword && (
+                  <p className="text-red-500">{errors.confirmPassword}</p>
+                )}
               </div>
 
               {/* Agree to Terms */}
               <div className="flex items-center gap-2">
                 <input
+                  ref={agreeRef}
                   type="checkbox"
                   name="agree"
-                  checked={formData.agree || false} // Ensures it's either true or false
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      agree: e.target.checked, // Sets the value to a boolean (true or false)
-                    })
-                  }
+                  checked={formData.agree || false}
+                  onChange={handleCheckboxChange}
                   className="p-2 border border-gray-300 rounded-md"
                 />
                 <span>{t("Register.agreeTerms.agreeTerms")}</span>
@@ -1172,6 +1448,9 @@ export default function Register() {
                   {t("Register.agreeTerms.termsAndConditions")}
                 </span>
               </div>
+
+              {/* ✅ Ensure error message is displayed correctly */}
+              {errors.agree && <p className="text-red-500">{errors.agree}</p>}
 
               {/* Submit Button */}
               <button
