@@ -25,3 +25,5 @@ export function middleware(req) {
 export const config = {
   matcher: ['/', '/(hi|en)/:path*'], // Protect /wishlist and /profile routes
 };
+
+

@@ -31,8 +31,9 @@ const Footer = () => {
               <h3 className="text-lg font-semibold">{t('contactInfo.title')}</h3>
               <ul className="text-sm space-y-2">
                 <li>{t('contactInfo.email')} <a href="mailto:support@mylifepair.com" className="hover:text-gray-200">support@sagairisthe.com</a></li>
-                <li>{t('contactInfo.phone')} +1 (800) 123-4567</li>
-                <li>{t('contactInfo.address')} 123 Matrimony Street, City, Country</li>
+                <li>{t('contactInfo.phone')} +91 9214871959 , 7737458369
+</li>
+                <li>{t('contactInfo.address')} Jayamala Vishwakarma, near Kali Ji Mandir, inside Vishwakarma Gate, Bikaner - 334004 </li>
               </ul>
             </div>
   

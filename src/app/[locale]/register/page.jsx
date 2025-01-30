@@ -1,10 +1,14 @@
 "use client";
-
-import { useState } from "react";
+import { PlusCircleIcon, MinusCircleIcon } from "@heroicons/react/24/solid";
+import { useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { options } from "@/option/dropDownOptions";
 import Dropdown from "@/components/Dropdown";
 import { Link, useRouter } from "@/i18n/routing";
+import Cropper from "react-easy-crop";
+import getCroppedImg from "@/utils/cropImage"; // Utility function to crop image
+import { Slider } from "@/components/Slider"; // Ensure you have a slider component installed
+import { Dialog } from "@/components/Dailog";
 export default function Register() {
   const t = useTranslations();
 
@@ -88,6 +92,11 @@ export default function Register() {
     agree: false,
     profilePic: null,
   });
+  const [imageSrc, setImageSrc] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [showCropModal, setShowCropModal] = useState(false);
   const [caste, setCaste] = useState("suthar");
   const [subCaste, setSubCaste] = useState("kulriya");
   const [motherSubCaste, setMotherSubCaste] = useState("motiyar");
@@ -121,7 +130,6 @@ export default function Register() {
 
     setFormData((prevData) => {
       const updatedSiblings = { ...prevData.siblings };
-      // Dynamically update the nested property using siblingType and relationType
       updatedSiblings[siblingType][relationType][name] = value;
 
       return {
@@ -133,57 +141,39 @@ export default function Register() {
 
   const handleFamilyChange = (
     e,
-    familyType,
-    familyIndex,
     relationType,
-    relationIndex,
-    fieldType
+    index,
+    role,
+    subIndex,
+    field
   ) => {
-    const { value } = e.target;
-
-    setFormData((prevData) => {
-      const updatedFamily = [...prevData.siblings[familyType]];
-
-      // Update the specific uncle or aunt inside the paternals/maternals array
-      updatedFamily[familyIndex][relationType][relationIndex][fieldType] =
-        value;
-
-      return {
-        ...prevData,
-        siblings: {
-          ...prevData.siblings,
-          [familyType]: updatedFamily,
-        },
-      };
+    const updatedSiblings = { ...formData.siblings };
+    updatedSiblings[relationType][index][role][subIndex][field] =
+      e.target.value;
+    setFormData({
+      ...formData,
+      siblings: updatedSiblings,
     });
   };
 
-  // Add a new paternal/maternal entry
-  const addRelative = (type) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      siblings: {
-        ...prevState.siblings,
-        [type]: [
-          ...prevState.siblings[type],
-          { uncleName: "", spouseName: "" },
-        ],
-      },
-    }));
+  const addFamilyMember = (relationType, index, role) => {
+    const updatedSiblings = { ...formData.siblings };
+    updatedSiblings[relationType][index][role].push({
+      name: "",
+      spouseName: "",
+    });
+    setFormData({
+      ...formData,
+      siblings: updatedSiblings,
+    });
   };
 
-  // Remove a paternal/maternal entry
-  const removeRelative = (type, index) => {
-    setFormData((prevState) => {
-      const updatedRelatives = [...prevState.siblings[type]];
-      updatedRelatives.splice(index, 1);
-      return {
-        ...prevState,
-        siblings: {
-          ...prevState.siblings,
-          [type]: updatedRelatives,
-        },
-      };
+  const removeFamilyMember = (relationType, index, role, subIndex) => {
+    const updatedSiblings = { ...formData.siblings };
+    updatedSiblings[relationType][index][role].splice(subIndex, 1);
+    setFormData({
+      ...formData,
+      siblings: updatedSiblings,
     });
   };
   const handleFileChange = (e) => {
@@ -192,12 +182,26 @@ export default function Register() {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          profilePic: reader.result, // Store base64 image data
-        }));
+        setImageSrc(reader.result);
+        setShowCropModal(true);
       };
     }
+  };
+
+  const onCropComplete = useCallback(
+    async (_, croppedAreaPixels) => {
+      const croppedImageUrl = await getCroppedImg(imageSrc, croppedAreaPixels);
+      setCroppedImage(croppedImageUrl);
+    },
+    [imageSrc]
+  );
+
+  const handleSave = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      profilePic: croppedImage,
+    }));
+    setShowCropModal(false);
   };
 
   const handleSubmit = async (e) => {
@@ -265,13 +269,57 @@ export default function Register() {
               {/* Profile Pic */}
               <div>
                 <label className="block font-bold text-pink-600 mb-2">
-                  {t("Register.fields.profilePic")}
+                  Profile Picture
                 </label>
                 <input
                   type="file"
                   onChange={handleFileChange}
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-pink-500 focus:border-pink-500 outline-none"
                 />
+
+                {showCropModal && (
+                  <Dialog
+                    open={showCropModal}
+                    onClose={() => setShowCropModal(false)}
+                  >
+                    <div className="relative w-full h-96">
+                      <Cropper
+                        image={imageSrc}
+                        crop={crop}
+                        zoom={zoom}
+                        aspect={1}
+                        onCropChange={setCrop}
+                        onZoomChange={setZoom}
+                        onCropComplete={onCropComplete}
+                      />
+                    </div>
+                    <div className="flex flex-col items-center gap-4">
+                      <Slider
+                        value={zoom}
+                        min={1}
+                        max={3}
+                        step={0.1}
+                        onChange={setZoom}
+                      />
+                      <button
+                        className="bg-pink-500 text-white p-2 rounded"
+                        onClick={handleSave}
+                      >
+                        Save Cropped Image
+                      </button>
+                    </div>
+                  </Dialog>
+                )}
+
+                {croppedImage && (
+                  <div className="mt-4">
+                    <img
+                      src={croppedImage}
+                      alt="Cropped Preview"
+                      className="w-32 h-32 rounded-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Full Name */}
@@ -445,8 +493,7 @@ export default function Register() {
                   label={t("Register.fields.motherSubCaste")}
                 />
               </div>
-
-              {/* Siblings Section */}
+              {/*Siblings Section */}
               <div>
                 <h3 className="text-lg font-bold text-pink-600 mb-4">
                   {t("Register.fields.sibling")}
@@ -456,13 +503,13 @@ export default function Register() {
                   <div className="flex flex-col justify-between space-y-4">
                     <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
                       <span>{t("Register.fields.siblings.brothers")}</span>
-                      <span>Married</span>
-                      <span>Unmarried</span>
+                      <span>{t("Register.fields.siblings.married")}</span>
+                      <span>{t("Register.fields.siblings.unMarried")}</span>
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 w-full">
                       <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                        Younger
+                        {t("Register.fields.siblings.younger")}
                       </span>
                       <select
                         name="married"
@@ -472,30 +519,30 @@ export default function Register() {
                         }
                         className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
                       <select
-                        name="married"
+                        name="unmarried"
                         value={formData.siblings.brothers.younger.unmarried}
                         onChange={(e) =>
                           handleSiblingsChange(e, "brothers", "younger")
                         }
                         className="p-2 border border-gray-300 rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
                     </div>
                     <div className="grid grid-cols-3 gap-4 w-full">
                       <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                        Older
+                        {t("Register.fields.siblings.older")}
                       </span>
                       <select
                         name="married"
@@ -505,23 +552,23 @@ export default function Register() {
                         }
                         className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
                       <select
-                        name="married"
+                        name="unmarried"
                         value={formData.siblings.brothers.older.unmarried}
                         onChange={(e) =>
                           handleSiblingsChange(e, "brothers", "older")
                         }
                         className="p-2 border border-gray-300 rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
@@ -532,13 +579,13 @@ export default function Register() {
                   <div className="flex flex-col justify-between space-y-4">
                     <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
                       <span>{t("Register.fields.siblings.sisters")}</span>
-                      <span>Married</span>
-                      <span>Unmarried</span>
+                      <span> {t("Register.fields.siblings.married")}</span>
+                      <span> {t("Register.fields.siblings.unMarried")}</span>
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 w-full">
                       <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                        Younger
+                        {t("Register.fields.siblings.younger")}
                       </span>
                       <select
                         name="married"
@@ -548,23 +595,23 @@ export default function Register() {
                         }
                         className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
                       <select
-                        name="married"
+                        name="unmarried"
                         value={formData.siblings.sisters.younger.unmarried}
                         onChange={(e) =>
                           handleSiblingsChange(e, "sisters", "younger")
                         }
                         className="p-2 border border-gray-300 rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
@@ -572,7 +619,7 @@ export default function Register() {
 
                     <div className="grid grid-cols-3 gap-4 w-full">
                       <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                        Older
+                        {t("Register.fields.siblings.older")}
                       </span>
                       <select
                         name="married"
@@ -582,23 +629,23 @@ export default function Register() {
                         }
                         className="p-2 border border-gray-300 focus:border-pink-600  rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
                       <select
-                        name="married"
+                        name="unmarried"
                         value={formData.siblings.sisters.older.unmarried}
                         onChange={(e) =>
                           handleSiblingsChange(e, "sisters", "older")
                         }
                         className="p-2 border border-gray-300 rounded-md"
                       >
-                        {[...Array(10)].map((_, index) => (
-                          <option key={index + 1} value={index + 1}>
-                            {index + 1}
+                        {[...Array(11)].map((_, index) => (
+                          <option key={index} value={index}>
+                            {index}
                           </option>
                         ))}
                       </select>
@@ -606,214 +653,340 @@ export default function Register() {
                   </div>
 
                   {/* Paternals Section */}
-                  <div className="flex flex-col justify-between space-y-4">
-                    <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
-                      <span>Paternals</span>
-                      <span>Name</span>
-                      <span>Spouse's Name</span>
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex items-center justify-between bg-pink-600 text-white p-3 rounded-lg font-bold">
+                      <span className="flex-1 text-center">
+                        {t("Register.fields.siblings.paternals")}
+                      </span>
                     </div>
 
                     {formData.siblings.paternals.map((paternal, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-3 gap-4 w-full"
-                      >
-                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                          Uncle
-                        </span>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.siblings.paternals[0].uncle[0].name}
-                          placeholder="Enter Name"
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "paternals",
-                              0,
-                              "uncle",
-                              0,
-                              "name"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
+                      <div key={index} className="space-y-4">
+                        {paternal.uncle.map((uncle, subIndex) => (
+                          <div
+                            key={subIndex}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+                          >
+                            <div className="flex justify-between items-center gap-4 lg:col-span-1 md:col-span-2">
+                              <span className="text-pink-600 font-bold">
+                                {t("Register.fields.siblings.paternalUncle")}
+                              </span>
+                              <div className="flex space-x-2">
+                                <PlusCircleIcon
+                                  className="h-6 w-6 text-green-600 cursor-pointer"
+                                  onClick={() =>
+                                    addFamilyMember("paternals", index, "uncle")
+                                  }
+                                />
+                                {paternal.uncle.length > 1 && (
+                                  <MinusCircleIcon
+                                    className="h-6 w-6 text-red-600 cursor-pointer"
+                                    onClick={() =>
+                                      removeFamilyMember(
+                                        "paternals",
+                                        index,
+                                        "uncle",
+                                        subIndex
+                                      )
+                                    }
+                                  />
+                                )}
+                              </div>
+                            </div>
 
-                        <input
-                          type="text"
-                          name="spouseName"
-                          placeholder="Enter Name"
-                          value={
-                            formData.siblings.paternals[0].uncle[0].spouseName
-                          }
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "paternals",
-                              0,
-                              "uncle",
-                              0,
-                              "spouseName"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
+                            <div>
+                              <input
+                                type="text"
+                                name="name"
+                                value={uncle.name}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "paternals",
+                                    index,
+                                    "uncle",
+                                    subIndex,
+                                    "name"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="text"
+                                name="spouseName"
+                                value={uncle.spouseName}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterSpouseName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "paternals",
+                                    index,
+                                    "uncle",
+                                    subIndex,
+                                    "spouseName"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        ))}
+
+                        {paternal.aunt.map((aunt, subIndex) => (
+                          <div
+                            key={subIndex}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+                          >
+                            <div className="flex justify-between items-center gap-4 lg:col-span-1 md:col-span-2">
+                              <span className="text-pink-600 font-bold">
+                                {t("Register.fields.siblings.paternalAunt")}
+                              </span>
+                              <div className="flex space-x-2">
+                                <PlusCircleIcon
+                                  className="h-6 w-6 text-green-600 cursor-pointer"
+                                  onClick={() =>
+                                    addFamilyMember("paternals", index, "aunt")
+                                  }
+                                />
+                                {paternal.aunt.length > 1 && (
+                                  <MinusCircleIcon
+                                    className="h-6 w-6 text-red-600 cursor-pointer"
+                                    onClick={() =>
+                                      removeFamilyMember(
+                                        "paternals",
+                                        index,
+                                        "aunt",
+                                        subIndex
+                                      )
+                                    }
+                                  />
+                                )}
+                              </div>
+                            </div>
+
+                            <div>
+                              <input
+                                type="text"
+                                name="name"
+                                value={aunt.name}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "paternals",
+                                    index,
+                                    "aunt",
+                                    subIndex,
+                                    "name"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="text"
+                                name="spouseName"
+                                value={aunt.spouseName}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterSpouseName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "paternals",
+                                    index,
+                                    "aunt",
+                                    subIndex,
+                                    "spouseName"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     ))}
+                    
+                  </div>
 
-                    {formData.siblings.paternals.map((paternal, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-3 gap-4 w-full"
-                      >
-                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                          Aunt
-                        </span>
-                        <input
-                          type="text"
-                          name="name"
-                          placeholder="Enter Name"
-                          value={formData.siblings.paternals[0].aunt[0].name}
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "paternals",
-                              0,
-                              "aunt",
-                              0,
-                              "name"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
+                  {/* Maternals Section */}
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex items-center justify-between bg-pink-600 text-white p-3 rounded-lg font-bold">
+                      <span className="flex-1 text-center">
+                        {t("Register.fields.siblings.maternals")}
+                      </span>
+                    </div>
 
-                        <input
-                          type="text"
-                          name="spouseName"
-                          placeholder="Enter Name"
-                          value={
-                            formData.siblings.paternals[0].aunt[0].spouseName
-                          }
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "paternals",
-                              0,
-                              "aunt",
-                              0,
-                              "spouseName"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
+                    {formData.siblings.maternals.map((maternal, index) => (
+                      <div key={index} className="space-y-4">
+                        {maternal.uncle.map((uncle, subIndex) => (
+                          <div
+                            key={subIndex}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+                          >
+                            <div className="flex justify-between items-center gap-4 lg:col-span-1 md:col-span-2">
+                              <span className="text-pink-600 font-bold">
+                                {t("Register.fields.siblings.maternalUncle")}
+                              </span>
+                              <div className="flex space-x-2">
+                                <PlusCircleIcon
+                                  className="h-6 w-6 text-green-600 cursor-pointer"
+                                  onClick={() =>
+                                    addFamilyMember("maternals", index, "uncle")
+                                  }
+                                />
+                                {maternal.uncle.length > 1 && (
+                                  <MinusCircleIcon
+                                    className="h-6 w-6 text-red-600 cursor-pointer"
+                                    onClick={() =>
+                                      removeFamilyMember(
+                                        "maternals",
+                                        index,
+                                        "uncle",
+                                        subIndex
+                                      )
+                                    }
+                                  />
+                                )}
+                              </div>
+                            </div>
+
+                            <div>
+                              <input
+                                type="text"
+                                name="name"
+                                value={uncle.name}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "maternals",
+                                    index,
+                                    "uncle",
+                                    subIndex,
+                                    "name"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="text"
+                                name="spouseName"
+                                value={uncle.spouseName}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterSpouseName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "maternals",
+                                    index,
+                                    "uncle",
+                                    subIndex,
+                                    "spouseName"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        ))}
+
+                        {maternal.aunt.map((aunt, subIndex) => (
+                          <div
+                            key={subIndex}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+                          >
+                            <div className="flex justify-between items-center gap-4 lg:col-span-1 md:col-span-2">
+                              <span className="text-pink-600 font-bold">
+                                {t("Register.fields.siblings.maternalAunt")}
+                              </span>
+                              <div className="flex space-x-2">
+                                <PlusCircleIcon
+                                  className="h-6 w-6 text-green-600 cursor-pointer"
+                                  onClick={() =>
+                                    addFamilyMember("maternals", index, "aunt")
+                                  }
+                                />
+                                {maternal.aunt.length > 1 && (
+                                  <MinusCircleIcon
+                                    className="h-6 w-6 text-red-600 cursor-pointer"
+                                    onClick={() =>
+                                      removeFamilyMember(
+                                        "maternals",
+                                        index,
+                                        "aunt",
+                                        subIndex
+                                      )
+                                    }
+                                  />
+                                )}
+                              </div>
+                            </div>
+
+                            <div>
+                              <input
+                                type="text"
+                                name="name"
+                                value={aunt.name}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "maternals",
+                                    index,
+                                    "aunt",
+                                    subIndex,
+                                    "name"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="text"
+                                name="spouseName"
+                                value={aunt.spouseName}
+                                placeholder={t(
+                                  "Register.fields.siblings.enterSpouseName"
+                                )}
+                                onChange={(e) =>
+                                  handleFamilyChange(
+                                    e,
+                                    "maternals",
+                                    index,
+                                    "aunt",
+                                    subIndex,
+                                    "spouseName"
+                                  )
+                                }
+                                className="p-3 border border-gray-300 rounded-md w-full text-sm sm:text-base focus:border-pink-600 focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     ))}
                   </div>
 
-                  {/* maternals Section */}
-                  <div className="flex flex-col justify-between space-y-4">
-                    <div className="flex text-white p-2 rounded-lg font-bold justify-between bg-pink-600">
-                      <span>Maternals</span>
-                      <span>Name</span>
-                      <span>Spouse's Name</span>
-                    </div>
-
-                    {formData.siblings.maternals.map((maternal, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-3 gap-4 w-full"
-                      >
-                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                          Uncle
-                        </span>
-                        <input
-                          type="text"
-                          name="name"
-                          placeholder="Enter Name"
-                          value={formData.siblings.maternals[0].uncle[0].name}
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "maternals",
-                              0,
-                              "uncle",
-                              0,
-                              "name"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
-
-                        <input
-                          type="text"
-                          name="spouseName"
-                          placeholder="Enter Name"
-                          value={
-                            formData.siblings.maternals[0].uncle[0].spouseName
-                          }
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "maternals",
-                              0,
-                              "uncle",
-                              0,
-                              "spouseName"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
-                      </div>
-                    ))}
-
-                    {formData.siblings.maternals.map((maternal, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-3 gap-4 w-full"
-                      >
-                        <span className="flex  text-pink-600 justify-center items-center rounded-lg font-bold">
-                          Aunt
-                        </span>
-                        <input
-                          type="text"
-                          name="name"
-                          placeholder="Enter Name"
-                          value={formData.siblings.maternals[0].aunt[0].name}
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "maternals",
-                              0,
-                              "aunt",
-                              0,
-                              "name"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
-
-                        <input
-                          type="text"
-                          name="spouseName"
-                          placeholder="Enter Name"
-                          value={
-                            formData.siblings.maternals[0].aunt[0].spouseName
-                          }
-                          onChange={(e) =>
-                            handleFamilyChange(
-                              e,
-                              "maternals",
-                              0,
-                              "aunt",
-                              0,
-                              "spouseName"
-                            )
-                          }
-                          className="p-2  border border-gray-300 rounded-md"
-                        />
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
 

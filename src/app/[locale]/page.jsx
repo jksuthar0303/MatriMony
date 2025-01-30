@@ -253,7 +253,7 @@ export default function Home() {
       </div>
 
       <div className="flex justify-center items-center px-4 md:px-10 lg:px-20 py-6">
-        <div className="bg-white shadow-2xl rounded-2xl p-6 md:p-8 lg:p-10 w-full max-w-5xl text-gray-700 text-center relative overflow-hidden">
+        <div className="bg-white shadow-2xl rounded-2xl p-4 md:p-6 lg:p-8 lg:w-full  max-w-5xl text-gray-700 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-red-400 to-pink-500 opacity-30 rounded-2xl"></div>
 
           <div className="relative z-10 space-y-4">
