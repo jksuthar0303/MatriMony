@@ -146,7 +146,9 @@ export const options = (t) => ({
     ],
     
      stateOptions : [
-        { value: "rajasthan", label: t("Options.location.state.rajasthan") },
+
+      { value: "rajasthan", label: t("Options.location.state.rajasthan") },
+    
     ],
     
     cities: [

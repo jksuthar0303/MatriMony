@@ -1,6 +1,6 @@
 {
   "HomePage": {
-    "title": "Find Your Perfect Match",
+    "title": "Find Your Life Partner",
     "welcome": "Welcome",
     "domain": "Sagairisthe.com",
     "description": "Your journey to a happy and fulfilling life starts",
@@ -11,11 +11,11 @@
     "buttons": {
       "getStarted": "Get Started",
       "learnMore": "Learn More",
-      "registerNow": "Register Now"
+      "registerNow": "Register Now",
+      "showmore":"Show More"
+
     },
-    "highlights": {
-      "verifiedProfiles": "100% Verified Profiles"
-    },
+
     "callToAction": {
       "readyToFindMatch": "Ready to Find Your Match?",
       "joinNow": "Join now and start your journey with us!"
@@ -23,7 +23,7 @@
   },
 
   "Filters": {
-    "title": "Find Your Perfect Match",
+    "title": "Find Your Life Partner",
     "fields": {
       "lookingFor": "Looking for...",
       "minAge": "Min-Age",
@@ -241,7 +241,12 @@
       }
     }
   },
-
+"compliments":{
+  "title": "What Our Customer Say",
+  "feedback":"Share Your Feedback",
+  "discription":"We'd love to hear about your experience with us.",
+  "button":"Share Your Compliments"
+},
   "Profiles": {
     "title": "Latest Profiles"
   },
@@ -253,7 +258,7 @@
     "navLinks": {
       "home": "Home",
       "memberships": "Memberships",
-      "successStories": "Success Stories",
+      "successStories": "Stories",
       "contactUs": "Contact Us",
       "register": "Register",
       "login": "Login",
@@ -296,6 +301,7 @@
     "createAccount": "Create New Account",
     "matchmakingService": "We provide the best match-making service.",
     "fields": {
+      "profilepic":"Profile Pic",
       "gender": "Gender",
       "fullName": "Full Name",
       "enterFullName": "Enter Your Full Name",

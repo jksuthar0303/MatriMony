@@ -1,6 +1,6 @@
 {
   "HomePage": {
-    "title": "अपना जीवन साथी खोजें",
+    "title": "सुथार अपना जीवन साथी खोजें",
     "welcome": "स्वागत",
     "domain": "Sagairisthe.com",
     "description": "आपकी खुशहाल और पूर्ण जीवन यात्रा यहाँ से शुरू होती है।",
@@ -11,7 +11,8 @@
     "buttons": {
       "getStarted": "शुरू करें",
       "learnMore": "और जानें",
-      "registerNow": "रजिस्टर करें"
+      "registerNow": "रजिस्टर करें",
+      "showmore": "और देखे"
     },
     "highlights": {
       "verifiedProfiles": "100% सत्यापित प्रोफाइल"
@@ -22,7 +23,7 @@
     }
   },
   "Filters": {
-    "title": "अपना जीवन साथी खोजें",
+    "title": "सुथार अपना जीवन साथी खोजें",
     "fields": {
       "lookingFor": "खोज रहे हैं...",
       "minAge": "न्यूनतम आयु",
@@ -239,6 +240,12 @@
       }
     }
   },
+  "compliments":{
+  "title": "हमारे ग्राहक क्या कहते हैं",
+  "feedback":"अपनी प्रतिक्रिया साझा करें",
+  "discription":"हमें हमारे साथ आपके अनुभव के बारे में सुनना अच्छा लगेगा।",
+  "button":"अपनी प्रशंसाएँ साझा करें"
+},
   "Profiles": {
     "title": "नवीनतम प्रोफाइल्स"
   },
@@ -294,6 +301,7 @@
     "createAccount": "नया खाता बनाएं",
     "matchmakingService": "हम सबसे अच्छा मैचमेकिंग सेवा प्रदान करते हैं।",
     "fields": {
+      "profilepic": "अपनी फोटो ",
       "gender": "लिंग",
       "fullName": "पूरा नाम",
       "enterFullName": "अपना पूरा नाम दर्ज करें",
@@ -316,15 +324,15 @@
       "occupation": "व्यवसाय",
       "manglik": "मांगलिक",
       "divyang": "दिव्यांग",
-      "remarriage":"पुनर्विवाह",
+      "remarriage": "पुनर्विवाह",
       "yes": "हाँ",
       "no": "नहीं",
       "sibling": "भाई-बहन",
       "siblings": {
         "brothers": "भाई",
         "sisters": "बहनें",
-        "paternals": "पैतृक भाई-बहन",
-        "maternals": "मातृक भाई-बहन",
+        "paternals": "पितृ पक्ष रिश्तेदार",
+        "maternals": "मातृ पक्ष रिश्तेदार",
         "enterName": "नाम दर्ज करें",
         "enterSpouseName": "जीवनसाथी का नाम दर्ज करें",
         "married": "विवाहित",

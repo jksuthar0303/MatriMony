@@ -17,11 +17,6 @@ const DropdownWithCheck = ({
   const t = useTranslations("Options");
 
   const handleSelect = (value) => {
-    console.log("Clicked Value:", value);
-    console.log("Logged-in User SubCaste:", loggedInUserSubCaste);
-    console.log("Logged-in User Mother SubCaste:", loggedInUserMotherSubCaste);
-    console.log("kulriya" === "kulriya"); // Should be true
-    console.log("kulriya" === loggedInUserSubCaste);
     if (
       value === loggedInUserSubCaste ||
       value === loggedInUserMotherSubCaste
@@ -64,14 +59,14 @@ const DropdownWithCheck = ({
     };
   }, []);
 
-  // Determine the label to show in the dropdown header
+
   const getLabelText = () => {
     if (selectedValues.length === options.length) {
-      return `${t("selectAll")}`; // All are selected
+      return `${t("selectAll")}`; 
     } else if (selectedValues.length === 0) {
-      return `${t("selectOption")}`; // None selected
+      return `${t("selectOption")}`;
     } else {
-      return `${selectedValues.length} ${t("selected")}`; // Some selected
+      return `${selectedValues.length} ${t("selected")}`; 
     }
   };
 
@@ -96,7 +91,6 @@ const DropdownWithCheck = ({
           className="absolute w-full bg-white border rounded-lg mt-1 shadow-lg z-10 
                      max-h-60 min-h-10 overflow-y-auto"
         >
-          {/* Select All Option */}
           <li
             className="p-3 flex items-center space-x-2 hover:bg-pink-100 cursor-pointer"
             onClick={handleSelectAll}

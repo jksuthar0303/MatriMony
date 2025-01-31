@@ -9,7 +9,6 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import the default styles for the carousel
 
 export default async function LocaleLayout({ children, params }) {
   // Await the params before using them

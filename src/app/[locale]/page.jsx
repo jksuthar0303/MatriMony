@@ -9,6 +9,8 @@ import { FaComment, FaHeart, FaRegHeart, FaShare } from "react-icons/fa";
 import { options } from "@/option/dropDownOptions";
 import DropdownWithCheck from "@/components/DropdownWithCheck";
 import StoryCarousel from "@/components/StoryCarausel";
+import Compliments from "@/components/Compliments";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const t = useTranslations();
@@ -49,12 +51,14 @@ export default function Home() {
   const router = useRouter();
 
   const settings = {
-    infinite: true, // Infinite scrolling
-    speed: 500, // Animation speed
-    slidesToShow: 1, // Show one image at a time
-    slidesToScroll: 1, // Scroll one image at a time
-    autoplay: true, // Auto-scroll images
-    autoplaySpeed: 3000, // Time between scrolls (in ms)
+    infinite: true,
+    speed: 700,
+    autoplay: true,
+    autoplaySpeed: 4000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    fade: true,
+    arrows: false,
   };
 
   const handleWishlistClick = async (wishlistUserId) => {
@@ -122,10 +126,9 @@ export default function Home() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", 
+          credentials: "include",
         });
 
-       
         if (!res.ok) {
           throw new Error("Failed to fetch users");
         }
@@ -137,12 +140,9 @@ export default function Home() {
           throw new Error("No data received");
         }
 
-       
         if (data.message === "No token found") {
-      
           setProfiles(data.users);
         } else {
-         
           setProfiles(data);
         }
       } catch (error) {
@@ -166,109 +166,83 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="p-4 space-y-12">
+    <div className="p-2 space-y-12">
       {/* Hero Section */}
-      <div className="relative w-full h-[300px] md:h-[500px] lg:h-[600px] flex flex-col items-center justify-center text-center p-8 rounded-2xl shadow-lg overflow-hidden">
-        {/* Image Carousel */}
-        <div className="absolute inset-0 overflow-hidden">
-          <Slider {...settings}>
-            <div>
-              <img
-                src="/images/weeding1.jpg"
-                alt="Slide 1"
-                className="w-full h-[300px] md:h-[500px] lg:h-[600px] object-cover"
-              />
-            </div>
-            <div>
-              <img
-                src="/images/weeding2.jpg"
-                alt="Slide 2"
-                className="w-full h-[300px] md:h-[500px] lg:h-[600px]  object-cover"
-              />
-            </div>
-            <div>
-              <img
-                src="/images/weeding3.jpg"
-                alt="Slide 3"
-                className="w-full h-[300px] md:h-[500px] lg:h-[600px]  object-cover"
-              />
-            </div>
-            <div>
-              <img
-                src="/images/weeding4.jpg"
-                alt="Slide 4"
-                className="w-full h-[300px] md:h-[500px] lg:h-[600px] object-cover"
-              />
-            </div>
-          </Slider>
-        </div>
+      <div className="flex flex-col justify-center items-center text-center mt-6 p-6">
+   <div className="max-w-3xl">
+    {/* Title & Description */}
+    {!isAuthenticated ? (
+      <div className="animate-fadeIn">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-pink-600">
+          {t("HomePage.title")}
+        </h1>
+        <p className="mt-4 text-lg md:text-xl text-gray-600">
+          {t("HomePage.description")}
+        </p>
+      </div>
+    ) : (
+      <div className="flex flex-col items-center justify-center animate-fadeIn">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-800">
+          {t("HomePage.welcome")}
+          <div>
+            <span className="font-extrabold text-pink-600 font-playwrite">
+              {user.fullName}
+            </span>
+          </div>
+        </h1>
+      </div>
+    )}
 
-        {/* Overlay for better text visibility */}
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+    {/* Buttons */}
+    {!isAuthenticated && (
+      <div className="mt-6 flex sm:flex-col md:flex-row justify-center items-center  gap-4 animate-fadeIn delay-300">
+  <Link href="/register">
+    <button className="bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white font-bold py-4 px-8 text-lg rounded-full w-56 shadow-lg transition-all duration-300 transform hover:scale-105">
+      {t("HomePage.buttons.getStarted")}
+    </button>
+  </Link>
+  <Link href="/learn-more">
+    <button className="border border-pink-500 text-pink-600 font-bold py-3 px-8 text-lg rounded-full shadow-md bg-white hover:bg-pink-50 transition-all duration-300 w-56 transform hover:scale-105">
+      {t("HomePage.buttons.learnMore")}
+    </button>
+  </Link>
+</div>
 
-        {/* Main Content */}
-        <div className="relative z-10 max-w-4xl">
-          {!isAuthenticated ? (
-            <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
-                {t("HomePage.title")}
-              </h1>
-              <p className="mt-4 text-xl text-gray-200">
-                {t("HomePage.description")}
-              </p>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center">
-              <span className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
-                {t("HomePage.welcome")}
-                <span className="ml-4 font-extrabold text-pink-600 font-playwrite">
-                  {user.fullName}
-                </span>
-              </span>
-            </div>
-          )}
+    )}
+  </div>
+</div>
 
-          {!isAuthenticated ? (
-            <div className="mt-6 flex justify-center gap-4">
-              <Link href="/register">
-                <button className="bg-pink-600 hover:bg-pink-700 text-white font-bold p-4 text-sm rounded-lg shadow-lg transition-all">
-                  {t("HomePage.buttons.getStarted")}
-                </button>
-              </Link>
-              <Link href="/learn-more">
-                <button className="bg-white text-pink-600 font-bold py-3 p-4 rounded-lg shadow-lg hover:bg-gray-200 transition-all">
-                  {t("HomePage.buttons.learnMore")}
-                </button>
-              </Link>
+      <div className="relative w-full h-[350px] md:h-[500px] lg:h-[600px] flex flex-col items-center justify-center text-center p-8 rounded-2xl shadow-lg overflow-hidden">
+       
+      {/* Image Carousel */}
+      <div className="absolute inset-0 overflow-hidden">
+        <Slider {...settings}>
+          {["weeding1", "weeding2", "weeding3", "weeding4"].map((img, index) => (
+            <div key={index}>
+              <img
+                src={`/images/${img}.jpg`}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-[350px] md:h-[500px] lg:h-[600px] object-cover transition-all duration-700"
+              />
             </div>
-          ) : null}
-        </div>
+          ))}
+        </Slider>
       </div>
 
-  
-        <div className="flex flex-col justify-center text-center items-center space-y-3 text-md md:text-lg lg:text-xl font-semibold text-pink-600">
-          <p >
-            {t("HomePage.description1")}
-          </p>
-          <p>
-            {t("HomePage.description2")}
-          </p>
-          <p>
-            {t("HomePage.description3")}
-          </p>
-          <p>
-            {t("HomePage.description4")}
-          </p>
-        </div>
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20"></div>
+
+     
+    </div>
 
       {/* Search Filters Section */}
       <div className="bg-white p-8">
         <h2 className="text-2xl text-center md:text-3xl lg:text-3xl font-semibold  mb-2 text-pink-600">
           {t("Filters.title")}
         </h2>
-        <hr className="border-pink-600 border-t-2 w-56 mx-auto mb-6" />
+        <hr className="border-pink-600 border-t-2 w-40 mx-auto mb-6" />
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Looking For */}
           <div>
             <Dropdown
@@ -278,7 +252,7 @@ export default function Home() {
               label={t("Filters.fields.lookingFor")}
             />
           </div>
-          <div className="col-span-2">
+          <div className="md:col-span-2">
             <div className="flex items-center space-x-6">
               <Dropdown
                 options={minAgeOptions}
@@ -286,6 +260,7 @@ export default function Home() {
                 onChange={setMinAge}
                 label={t("Filters.fields.minAge")}
               />
+              <span className="text-gray-400 font-bold mt-6">To</span>
               <Dropdown
                 options={maxAgeOptions}
                 selectedValue={maxAge}
@@ -355,9 +330,9 @@ export default function Home() {
         </div>
 
         {/* Additional Filters - Radio Buttons */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 p-2">
           {/* Manglik */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between lg:justify-start md:justify-start space-x-4">
             <span className="font-semibold text-pink-600">
               {t("Filters.fields.preferences.manglik")}:
             </span>
@@ -386,7 +361,7 @@ export default function Home() {
           </div>
 
           {/* Divyang */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between lg:justify-start md:justify-start space-x-4">
             <span className="font-semibold text-pink-600">
               {t("Filters.fields.preferences.divyang")}:
             </span>
@@ -415,7 +390,7 @@ export default function Home() {
           </div>
 
           {/* Second Marriage */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between lg:justify-start md:justify-start space-x-4">
             <span className="font-semibold text-pink-600">
               {t("Filters.fields.preferences.secondMarriage")}:
             </span>
@@ -458,7 +433,7 @@ export default function Home() {
         <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4 text-pink-600">
           {t("Profiles.title")}
         </h2>
-        <hr className="border-pink-600 border-t-2 w-56 mx-auto mb-6" />
+        <hr className="border-pink-600 border-t-2 w-28 md:w-36 lg:w-40 mx-auto mb-6" />
 
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -467,93 +442,135 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {profiles.slice(0, 4).map((profile) => (
-              <div
-                key={profile.id}
-                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all w-full relative flex flex-col items-center text-center border border-gray-200"
-              >
-                {/* Profile Image */}
-                <img
-                  src={profile.profilePic}
-                  alt="Profile"
-                  className="w-28 h-28 object-cover rounded-full border-4 border-pink-500 shadow-lg"
-                />
-
-                {/* Name & Like Button */}
-                <h3 className="text-lg font-semibold text-pink-600 mt-3 truncate">
-                  {profile.fullName}
-                </h3>
-
-                <div
-                  className="flex items-center justify-center gap-5 cursor-pointer mt-2"
-                  title={
-                    likedProfiles[profile._id]
-                      ? "Remove from likes"
-                      : "Add to likes"
-                  }
-                >
-                  <div className="flex items-center gap-1">
-                    {likedProfiles[profile._id] ? (
-                      <FaHeart color="#CB3A80" size={18} />
-                    ) : (
-                      <FaRegHeart color="#CB3A80" size={18} />
-                    )}
-                    <span className="text-gray-600 text-sm">
-                      {profile.likesCount || 100}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FaShare color="#CB3A80" />
-                    <span className="text-gray-600 text-sm">25</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FaComment color="#CB3A80" />
-                    <span className="text-gray-600 text-sm">35</span>
-                  </div>
-                </div>
-
-                {/* Profile Details */}
-                <div className="flex justify-center text-gray-600 items-center my-4 gap-6">
-                  <div className="flex flex-col items-center">
-                    <span className="font-medium text-sm">Age</span>
-                    <p className="text-xs">{profile.age}</p>
-                  </div>
-                  |
-                  <div className="flex flex-col items-center">
-                    <span className="font-medium text-sm">Job</span>
-                    <p className="text-xs uppercase">{profile.occupation}</p>
-                  </div>
-                  |
-                  <div className="flex flex-col items-center">
-                    <span className="font-medium text-sm">City</span>
-                    <p className="text-xs uppercase">{profile.city}</p>
-                  </div>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-2 w-full">
-                  <button className="w-full bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all text-sm">
-                    View Profile
-                  </button>
-                  <button
-                    onClick={() => handleWishlistClick(profile._id)}
-                    className="w-full border-2 border-pink-600 text-pink-600 py-2 rounded-lg hover:bg-pink-600 hover:text-white transition-all text-sm"
-                  >
-                    Wishlist
-                  </button>
-                </div>
-              </div>
+              <motion.div
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
+              }}
+              transition={{ duration: 0.3 }}
+              key={profile.id}
+                className="bg-white p-6 rounded-xl shadow-lg  w-full relative flex flex-col items-center text-center border border-gray-200"
+            >
+                
+                 {/* Profile Image */}
+                 <img
+                   src={profile.profilePic}
+                   alt="Profile"
+                   className="w-28 h-28 object-cover rounded-full border-4 border-pink-500 shadow-lg"
+                 />
+ 
+                 {/* Name & Like Button */}
+                 <h3 className="text-lg font-semibold text-pink-600 mt-3 truncate">
+                   {profile.fullName}
+                 </h3>
+ 
+                 <div
+                   className="flex items-center justify-center gap-5 cursor-pointer mt-2"
+                   title={
+                     likedProfiles[profile._id]
+                       ? "Remove from likes"
+                       : "Add to likes"
+                   }
+                 >
+                   <div className="flex items-center gap-1">
+                     {likedProfiles[profile._id] ? (
+                       <FaHeart color="#CB3A80" size={18} />
+                     ) : (
+                       <FaRegHeart color="#CB3A80" size={18} />
+                     )}
+                     <span className="text-gray-600 text-sm">
+                       {profile.likesCount || 100}
+                     </span>
+                   </div>
+                   <div className="flex items-center gap-1">
+                     <FaShare color="#CB3A80" />
+                     <span className="text-gray-600 text-sm">25</span>
+                   </div>
+                   <div className="flex items-center gap-1">
+                     <FaComment color="#CB3A80" />
+                     <span className="text-gray-600 text-sm">35</span>
+                   </div>
+                 </div>
+ 
+                 {/* Profile Details */}
+                 <div className="flex justify-center text-gray-600 items-center my-4 gap-6">
+                   <div className="flex flex-col items-center">
+                     <span className="font-medium text-sm">Age</span>
+                     <p className="text-xs">{profile.age}</p>
+                   </div>
+                   |
+                   <div className="flex flex-col items-center">
+                     <span className="font-medium text-sm">Job</span>
+                     <p className="text-xs uppercase">{profile.occupation}</p>
+                   </div>
+                   |
+                   <div className="flex flex-col items-center">
+                     <span className="font-medium text-sm">City</span>
+                     <p className="text-xs uppercase">{profile.city}</p>
+                   </div>
+                 </div>
+ 
+                 {/* Buttons */}
+                 <div className="flex gap-2 w-full">
+                   <button className="w-full bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-all text-sm">
+                     View Profile
+                   </button>
+                   <button
+                     onClick={() => handleWishlistClick(profile._id)}
+                     className="w-full border-2 border-pink-600 text-pink-600 py-2 rounded-lg hover:bg-pink-600 hover:text-white transition-all text-sm"
+                   >
+                     Wishlist
+                   </button>
+                 </div>
+            </motion.div>
+            
             ))}
           </div>
         )}
       </div>
+      {/* Compliments Section */}
+      <div className="mx-2">
+        <div className="bg-gray-100 py-12">
+          <div className="mx-auto text-center">
+            <h2 className="text-2xl font-bold text-pink-600 mb-6">
+              {t("compliments.title")}
+            </h2>
+        <hr className="border-pink-600 border-t-2 w-36 mx-auto mb-6" />
+          
+            <Compliments />
 
+
+            <div className="mt-4 flex flex-col items-center">
+              <h3 className="text-2xl text-pink-600">          {t("compliments.feedback")}
+</h3>
+              <p className="mt-2 text-gray-600 break-words whitespace-normal text-center max-w-[250px] md:max-w-[400px] lg:max-w-[400px]">
+              {t("compliments.discription")}
+
+              </p>
+              <a
+                href="/contact"
+                className="mt-4 inline-block text-white bg-pink-600 px-6 py-3 rounded-full hover:bg-pink-700 transition-all"
+              >
+                {t("compliments.button")}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Success Stories Section */}
-      <div className="mx-4">
+      <div className="mx-2">
         <h2 className="text-3xl font-semibold text-center mb-4 text-pink-600">
           {t("SuccessStories.title")}
         </h2>
-        <hr className="border-pink-600 border-t-2 w-28 mx-auto mb-6" />
+        <hr className="border-pink-600 border-t-2 w-36 mx-auto mb-6" />
         <StoryCarousel stories={stories} />
+        <div className="flex justify-center mt-2">
+          <Link href="/success-stories">
+            <button className="bg-pink-600 text-white p-3 rounded-lg hover:bg-pink-700 transition-all w-56 text-md">
+              {t("HomePage.buttons.showmore")}
+            </button>
+          </Link>
+        </div>
       </div>
 
       {/* Call-to-Action Section */}

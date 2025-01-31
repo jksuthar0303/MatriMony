@@ -24,7 +24,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="mx-auto p-4">
       <h1 className="text-4xl font-bold text-pink-600 text-center mb-8">
         {t("contactUs")}
       </h1>
@@ -32,9 +32,9 @@ export default function ContactUs() {
         {t("contactDescription")}
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Contact Form */}
-        <div className="bg-white shadow-lg rounded-lg p-8">
+        <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-semibold text-pink-600 mb-6"> {t("sendMessage")}</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>

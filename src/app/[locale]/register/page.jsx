@@ -115,15 +115,12 @@ export default function Register() {
 
   const handleChange = (eOrValue, name) => {
     if (typeof eOrValue === "object" && eOrValue.target) {
-      // For normal input fields
       const { name, value } = eOrValue.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
     } else {
-      // For custom components (Dropdowns, DatePickers, etc.)
       setFormData((prev) => ({ ...prev, [name]: eOrValue }));
     }
 
-    // Remove validation error dynamically
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -142,10 +139,9 @@ export default function Register() {
         setImageSrc(reader.result);
         setFormData((prev) => ({
           ...prev,
-          profilePic: reader.result, // Store the image data
+          profilePic: reader.result, 
         }));
 
-        // Clear profile picture validation error
         setErrors((prev) => ({
           ...prev,
           profilePic: "",
@@ -364,7 +360,6 @@ export default function Register() {
   const pincodeRef = useRef(null);
   const agreeRef = useRef(null);
 
-  // Validation function
   const validateForm = () => {
     const errors = {};
 
@@ -426,7 +421,7 @@ export default function Register() {
               {/* Profile Pic */}
               <div>
                 <label className="block font-bold text-pink-600 mb-2">
-                  Profile Picture
+                {t("Register.fields.profilepic")}
                 </label>
                 <input
                   type="file"

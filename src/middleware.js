@@ -14,8 +14,8 @@ export function middleware(req) {
   }
 
   // Prevent unauthenticated users from accessing protected routes like /wishlist and /profile
-  if ((url.includes('/wishlist') || url.includes('/profile')) && !authToken) {
-    return NextResponse.redirect(new URL('/', req.url)); // Redirect to login if not authenticated
+  if ((url.includes('/wishlist') || url.includes('/profile') || url.includes('/success-stories') || url.includes('/contact-us')) && !authToken) {
+    return NextResponse.redirect(new URL('/', req.url)); 
   }
 
   // If no issues, proceed with internationalization middleware

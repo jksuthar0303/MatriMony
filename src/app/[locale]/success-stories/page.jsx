@@ -21,7 +21,7 @@ useEffect(() => {
 
 
     return (
-      <div className="container mx-auto p-8">
+      <div className="mx-auto p-8">
         <h1 className="text-4xl font-bold text-pink-600 text-center mb-8">
           Our Success Stories
         </h1>

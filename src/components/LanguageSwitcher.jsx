@@ -2,7 +2,6 @@
 
 import { usePathname, useRouter } from "@/i18n/routing";
 import { useParams } from "next/navigation";
-import { FaLanguage } from 'react-icons/fa';
 
 export default function LanguageSwitcher({defaultValue}) {
   const router = useRouter();
