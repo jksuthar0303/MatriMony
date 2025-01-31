@@ -122,10 +122,10 @@ export default function Home() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Ensure cookies are sent
+          credentials: "include", 
         });
 
-        // Check if the response is okay (status 200-299)
+       
         if (!res.ok) {
           throw new Error("Failed to fetch users");
         }
@@ -137,12 +137,12 @@ export default function Home() {
           throw new Error("No data received");
         }
 
-        // If the response data contains an error indicating no token or user is not authenticated
+       
         if (data.message === "No token found") {
-          // Handle case for no token - show all users
-          setProfiles(data.users); // Assuming data.users contains the list of all users
+      
+          setProfiles(data.users);
         } else {
-          // Handle case for logged-in users (wishlist filtering)
+         
           setProfiles(data);
         }
       } catch (error) {
@@ -328,7 +328,7 @@ export default function Home() {
 
           <div>
             <DropdownWithCheck
-              label="Select Occupation"
+              label={t("Filters.fields.occupation")}
               options={occupationOptions}
               selectedValues={occupation} // Use the occupation state here
               onChange={(updatedValues) =>
