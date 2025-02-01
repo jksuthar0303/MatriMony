@@ -76,7 +76,7 @@ const Header = () => {
 
   return (
     <header className="bg-white text-pink-600 p-4 shadow-md sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="flex justify-between p-2 items-center">
         {/* Logo */}
         <h1 className="text-2xl md:text-3xl font-playwrite font-extrabold">
           <Link href="/" className="flex items-center">
@@ -161,8 +161,9 @@ const Header = () => {
           )}
         </div>
 
-        {/* Language Toggle */}
-        <div className="flex items-center space-x-2">
+       <div className="flex justify-center gap-4">
+         {/* Language Toggle */}
+         <div className="flex items-center space-x-2">
           <span className="text-sm font-semibold">English</span>
 
           {/* Custom toggle button */}
@@ -230,6 +231,7 @@ const Header = () => {
             </button>
           ) : null}
         </div>
+       </div>
 
         {/* Mobile Menu Button */}
         <div className="lg:hidden">

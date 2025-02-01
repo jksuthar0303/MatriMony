@@ -64,47 +64,91 @@ export default function Home() {
     <div className="p-2 space-y-12">
       {/* Hero Section */}
       <div className="flex flex-col justify-center items-center text-center mt-6 p-6">
-        <div className="max-w-3xl">
-          {/* Title & Description */}
-          {!isAuthenticated ? (
-            <div className="animate-fadeIn">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-pink-600">
-                {t("HomePage.title")}
-              </h1>
-              <p className="mt-4 text-lg md:text-xl text-gray-600">
-                {t("HomePage.description")}
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center animate-fadeIn">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-800">
-                {t("HomePage.welcome")}
-                <div>
-                  <span className="font-extrabold text-pink-600 font-playwrite">
-                    {user.fullName}
-                  </span>
-                </div>
-              </h1>
-            </div>
-          )}
-
-          {/* Buttons */}
-          {!isAuthenticated && (
-            <div className="mt-6 flex sm:flex-col md:flex-row justify-center items-center  gap-4 animate-fadeIn delay-300">
-              <Link href="/register">
-                <button className="bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white font-bold py-4 px-8 text-lg rounded-full w-56 shadow-lg transition-all duration-300 transform hover:scale-105">
-                  {t("HomePage.buttons.getStarted")}
-                </button>
-              </Link>
-              <Link href="/learn-more">
-                <button className="border border-pink-500 text-pink-600 font-bold py-3 px-8 text-lg rounded-full shadow-md bg-white hover:bg-pink-50 transition-all duration-300 w-56 transform hover:scale-105">
-                  {t("HomePage.buttons.learnMore")}
-                </button>
-              </Link>
-            </div>
-          )}
-        </div>
+  <div className="max-w-3xl">
+    {/* Title & Description */}
+    {!isAuthenticated ? (
+      <div className="animate-fadeIn">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-pink-600">
+          {t("HomePage.title")}
+        </h1>
+        <p className="mt-4 text-lg md:text-xl text-gray-600">
+          {t("HomePage.description")}
+        </p>
       </div>
+    ) : (
+      <div className="flex flex-col md:flex-row lg:flex-row items-center justify-center animate-fadeIn">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-600-800">
+          {t("HomePage.welcome")}
+           
+        </h1>
+        <span className="font-extrabold md:ml-4 text-4xl md:text-5xl lg:text-6xl text-pink-600 font-playwrite">
+              {user.fullName}
+            </span>
+      </div>
+    )}
+
+    {/* Buttons */}
+    {!isAuthenticated && (
+      <div className="mt-6 flex sm:flex-col md:flex-row justify-center items-center gap-4 animate-fadeIn delay-300">
+        <Link href="/register">
+          <button className="bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white font-bold py-4 px-8 text-lg rounded-full w-56 shadow-lg transition-all duration-300 transform hover:scale-105">
+            {t("HomePage.buttons.getStarted")}
+          </button>
+        </Link>
+        <Link href="/learn-more">
+          <button className="border border-pink-500 text-pink-600 font-bold py-3 px-8 text-lg rounded-full shadow-md bg-white hover:bg-pink-50 transition-all duration-300 w-56 transform hover:scale-105">
+            {t("HomePage.buttons.learnMore")}
+          </button>
+        </Link>
+      </div>
+    )}
+
+    {/* Down Arrow Button with Scroll to 400px */}
+    <div className="mt-8 justify-center items-center flex">
+      <button
+      onClick={() => {
+    // Get the current screen width
+    const screenWidth = window.innerWidth;
+
+    // Determine the scroll distance based on the screen width
+    let scrollDistance = 1500; // Default scroll distance
+
+    if (screenWidth <= 640) {
+      // For small devices (sm), adjust scroll distance (for example, 1800px)
+      scrollDistance = 1800;
+    } else if (screenWidth <= 768) {
+      // For medium devices (md), adjust scroll distance (for example, 1500px)
+      scrollDistance = 1500;
+    } else if (screenWidth > 768) {
+      // For larger devices, keep the default scroll distance (1500px)
+      scrollDistance = 1400;
+    }
+
+    // Perform the scroll based on the calculated distance
+    window.scrollBy({ top: scrollDistance, behavior: "smooth" });
+  }}
+        className="flex justify-center items-center animate-bounce"
+      >
+        <svg
+          className="w-10 h-10 text-pink-600 hover:text-pink-700 transition-all duration-300"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 12l7 7 7-7"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
 
       <div className="relative w-full h-[350px] md:h-[500px] lg:h-[600px] flex flex-col items-center justify-center text-center p-8 rounded-2xl shadow-lg overflow-hidden">
         {/* Image Carousel */}
