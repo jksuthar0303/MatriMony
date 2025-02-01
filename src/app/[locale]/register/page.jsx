@@ -139,7 +139,7 @@ export default function Register() {
         setImageSrc(reader.result);
         setFormData((prev) => ({
           ...prev,
-          profilePic: reader.result, 
+          profilePic: reader.result,
         }));
 
         setErrors((prev) => ({
@@ -421,7 +421,7 @@ export default function Register() {
               {/* Profile Pic */}
               <div>
                 <label className="block font-bold text-pink-600 mb-2">
-                {t("Register.fields.profilepic")}
+                  {t("Register.fields.profilepic")}
                 </label>
                 <input
                   type="file"
@@ -477,7 +477,40 @@ export default function Register() {
                   </div>
                 )}
               </div>
-
+              {/* Gender */}
+              <div>
+                <label className="block font-bold text-pink-600 mb-2">
+                  {t("Register.fields.gender")}
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      ref={genderRef}
+                      type="radio"
+                      name="gender"
+                      value="Male"
+                      className="accent-pink-600"
+                      checked={formData.gender === "Male"}
+                      onChange={(e) => handleChange(e, "gender")} // Added onChange for gender
+                    />
+                    {t("Register.genderOptions.male")}
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Female"
+                      className="accent-pink-600"
+                      checked={formData.gender === "Female"}
+                      onChange={(e) => handleChange(e, "gender")} // Added onChange for gender
+                    />
+                    {t("Register.genderOptions.female")}
+                  </label>
+                </div>
+                {errors.gender && (
+                  <span style={{ color: "red" }}>{errors.gender}</span>
+                )}
+              </div>
               {/* Full Name */}
               <div>
                 <label className="block font-bold text-pink-600 mb-2">
@@ -538,41 +571,6 @@ export default function Register() {
                 />
                 {errors.motherName && (
                   <span style={{ color: "red" }}>{errors.motherName}</span>
-                )}
-              </div>
-
-              {/* Gender */}
-              <div>
-                <label className="block font-bold text-pink-600 mb-2">
-                  {t("Register.fields.gender")}
-                </label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2">
-                    <input
-                      ref={genderRef}
-                      type="radio"
-                      name="gender"
-                      value="Male"
-                      className="accent-pink-600"
-                      checked={formData.gender === "Male"}
-                      onChange={(e) => handleChange(e, "gender")} // Added onChange for gender
-                    />
-                    {t("Register.genderOptions.male")}
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="Female"
-                      className="accent-pink-600"
-                      checked={formData.gender === "Female"}
-                      onChange={(e) => handleChange(e, "gender")} // Added onChange for gender
-                    />
-                    {t("Register.genderOptions.female")}
-                  </label>
-                </div>
-                {errors.gender && (
-                  <span style={{ color: "red" }}>{errors.gender}</span>
                 )}
               </div>
 

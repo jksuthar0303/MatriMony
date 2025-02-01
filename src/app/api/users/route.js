@@ -26,16 +26,15 @@ export async function GET(req) {
       );
     }
 
-    // If the user exists and is authenticated, get the wishlist of the logged-in user
+  
     const userWishlist = loggedInUser?.wishlist.map(item => item.userId);
 
-    // Exclude users in the logged-in user's wishlist and only return selected fields
     const excludedUsers = [...userWishlist, loggedInUser._id];
 
     const users = await User.find({
       '_id': { $nin: excludedUsers }
     }).select('fullName profilePic occupation age city');
-    // Return the filtered users list with selected fields
+
     return new Response(JSON.stringify(users), { status: 200 });
   } catch (error) {
     console.error('Error fetching users:', error);  

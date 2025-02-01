@@ -247,6 +247,24 @@
   "discription":"We'd love to hear about your experience with us.",
   "button":"Share Your Compliments"
 },
+"successstories":{
+  "title": "Choose Your Membership Plan",
+  "basic":"Shubh",
+  "standard":"Sumangal",
+  "premium":"Swastik",
+  "ultimate":"Savita",
+  "discription":"Need help choosing the right plan?",
+  "button":"Contact Us"
+},
+"memberships":{
+  "title": "Choose Your Membership Plan",
+  "basic":"Shubh",
+  "standard":"Sumangal",
+  "premium":"Swastik",
+  "ultimate":"Savita",
+  "discription":"Need help choosing the right plan?",
+  "button":"Contact Us"
+},
   "Profiles": {
     "title": "Latest Profiles"
   },

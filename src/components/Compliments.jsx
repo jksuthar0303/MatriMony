@@ -36,13 +36,14 @@ export default function Compliments() {
       rating: 4, // Rating out of 5
     },
   ]);
-
+  const [isTouching, setIsTouching] = useState(false);
+  const touchTimer = useRef(null);
   const sliderRef = useRef(null);
 
   const settings = {
     infinite: true,
     speed: 500,
-    autoplay: true,
+    autoplay: !isTouching,
     autoplaySpeed: 3000,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -103,8 +104,23 @@ export default function Compliments() {
     }
   };
 
+  const handleTouchStart = () => {
+    touchTimer.current = setTimeout(() => {
+      setIsTouching(true);
+    }, 500);
+  };
+
+  const handleTouchEnd = () => {
+    clearTimeout(touchTimer.current);
+    setIsTouching(false);
+  };
+
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <Slider {...settings} ref={sliderRef}>
         {feedback.map((item, index) => (
           <div key={index} className="p-2 h-[300px]">
@@ -112,6 +128,9 @@ export default function Compliments() {
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
+              }}
+              whileTap={{
+                scale: 0.95,
               }}
               transition={{ duration: 0.3 }}
               className="bg-white shadow-md h-[250px] flex flex-col justify-center items-center p-4 rounded-lg"
@@ -125,10 +144,8 @@ export default function Compliments() {
                 "{item.text}"
               </p>
             </motion.div>
-           
           </div>
         ))}
-       
       </Slider>
 
       {/* Custom Arrows */}

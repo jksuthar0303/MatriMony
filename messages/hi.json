@@ -246,6 +246,15 @@
   "discription":"हमें हमारे साथ आपके अनुभव के बारे में सुनना अच्छा लगेगा।",
   "button":"अपनी प्रशंसाएँ साझा करें"
 },
+"memberships": {
+  "title": "अपनी सदस्यता योजना चुनें",
+  "basic": "शुभ",
+  "standard": "सुमंगल",
+  "premium": "स्वस्तिक",
+  "ultimate": "सविता",
+  "discription": "सही योजना चुनने में मदद चाहिए?",
+  "button": "संपर्क करें"
+},
   "Profiles": {
     "title": "नवीनतम प्रोफाइल्स"
   },
@@ -256,7 +265,7 @@
   "Header": {
     "navLinks": {
       "home": "होम",
-      "memberships": "सदस्यताएँ",
+      "memberships": "सदस्यता प्लान्स",
       "successStories": "सफल जोड़े",
       "contactUs": "संपर्क करें",
       "register": "रजिस्टर करें",

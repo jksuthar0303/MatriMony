@@ -15,8 +15,7 @@ const Header = () => {
   const t = useTranslations("Header");
   const router = useRouter();
 
-  const handleMobileLinkClick = () => {
-  };
+
   useEffect(() => {
     const checkAuth = async () => {
       const res = await fetch("/api/auth");

@@ -1,7 +1,10 @@
+import { useTranslations } from "next-intl";
+
 export default function Memberships() {
+  const t = useTranslations()
   const plans = [
     {
-      name: 'Basic',
+      name: t('memberships.basic'),
       price: '₹251',
       duration: '1 Month',
       features: [
@@ -14,7 +17,7 @@ export default function Memberships() {
       btnColor: 'bg-pink-500',
     },
     {
-      name: 'Standard',
+      name: t('memberships.standard'),
       price: '₹501',
       duration: '3 Months',
       features: [
@@ -28,7 +31,7 @@ export default function Memberships() {
       btnColor: 'bg-pink-600',
     },
     {
-      name: 'Premium',
+      name: t('memberships.premium'),
       price: '₹901',
       duration: '6 Months',
       features: [
@@ -42,7 +45,7 @@ export default function Memberships() {
       btnColor: 'bg-pink-700',
     },
     {
-      name: 'Ultimate',
+      name: t('memberships.ultimate'),
       price: '₹1501',
       duration: '12 Months',
       features: [
@@ -60,7 +63,7 @@ export default function Memberships() {
   return (
     <div className="mx-auto p-8">
       <h1 className="text-4xl font-bold text-pink-600 text-center mb-8">
-        Choose Your Membership Plan
+        {t('memberships.title')}
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -92,9 +95,9 @@ export default function Memberships() {
       </div>
 
       <div className="mt-12 text-center text-gray-600">
-        <p>Need help choosing the right plan?</p>
+        <p>{t('memberships.discription')}</p>
         <a href="/contact" className="text-pink-600 font-bold hover:underline">
-          Contact Us
+          {t('memberships.button')}
         </a>
       </div>
     </div>
